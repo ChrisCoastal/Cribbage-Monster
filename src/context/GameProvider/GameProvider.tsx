@@ -46,4 +46,4 @@ const GameProvider: FC<GameProviderProps> = ({ children }) => {
   );
 };
 
-export default GameProvider;
+export { GameContext, GameProvider };

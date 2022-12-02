@@ -1,9 +1,14 @@
-import { useRef } from 'react';
+import { FC, useRef } from 'react';
 import { CardType } from 'src/@types';
 import { getShuffledDeck } from 'src/utils/helpers';
 import { CARD_FACES } from 'src/utils/constants';
 
-const Cards = () => {
+type CardsProps = {
+  cardHeight: string;
+  isFaceUp: boolean;
+};
+
+const Cards: FC<CardsProps> = ({ cardHeight, isFaceUp }) => {
   const deck = useRef<CardType[]>(getShuffledDeck());
 
   const hand = deck.current.slice(0, 6);
@@ -39,19 +44,19 @@ const Cards = () => {
   ];
 
   const handUI = (
-    <div className={`grid ${cardCols[5]} grid-rows-1 h-40`}>
-      <div className="bg-red-200 col-start-1 col-end-4 row-start-1"></div>
+    <div className={`grid ${cardCols[5]} grid-rows-1 ${cardHeight}`}>
+      {/* <div className="bg-red-200 col-start-1 col-end-4 row-start-1"></div>
       <div className="bg-blue-200 col-start-2 col-end-5 row-start-1"></div>
       <div className="bg-green-200 col-start-3 col-end-6 row-start-1"></div>
       <div className="bg-orange-200 col-start-4 col-end-7 row-start-1"></div>
       <div className="bg-purple-200 col-start-5 col-end-8 row-start-1"></div>
-      <div className="bg-yellow-200 col-start-6 col-end-9 row-start-1"></div>
-      {/* {hand.map((card, i) => {
-        return (
+      <div className="bg-yellow-200 col-start-6 col-end-9 row-start-1"></div> */}
+      {hand.map((card, i) => {
+        return isFaceUp ? (
           <div
             key={i}
             onClick={() => cardClickHandler(card)}
-            className={`absolute w-20 grid grid-rows-3 grid-columns-3 bg-slate-300 border-solid border-red-200 border-2 rounded-md`}>
+            className={`grid grid-rows-3 grid-columns-3 border-solid border-black border rounded-md ${cardPos[i]}`}>
             <div className="flex flex-col col-start-1 text-sm">
               <span>{card.faceValue}</span>
               <span>{card.suit.slice(0, 2)}</span>
@@ -63,13 +68,18 @@ const Cards = () => {
               </div>
             </div>
           </div>
+        ) : (
+          <div
+            key={i}
+            onClick={() => cardClickHandler(card)}
+            className={`border-solid border-black border rounded-md ${cardPos[i]}`}></div>
         );
-      })} */}
+      })}
     </div>
   );
   return (
-    <div className="col-start-1 row-start-5 col-span-3 w-full">
-      <div className="border-2 border-black h-fit">{handUI}</div>
+    <div className="col-start-1 row-start-5 col-span-4 w-full">
+      <div className="border border-black h-fit">{handUI}</div>
     </div>
   );
 };
