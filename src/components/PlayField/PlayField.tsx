@@ -1,4 +1,4 @@
-import { CardBoxSize, CardName, CardSize, Suit } from 'src/@types';
+import { CardBoxHeight, CardBoxWidth, CardName, CardSize, Suit } from 'src/@types';
 
 import Avatar from 'src/components/Avatar/Avatar';
 import Board from 'src/components/Board/Board';
@@ -14,17 +14,20 @@ const PlayField = () => {
       <Deck />
       <Board />
       <CardBox
-        size={CardBoxSize.SM}
-        numCards={0}
+        size={{ height: CardBoxHeight.MD, width: CardBoxWidth.MD_FOUR }}
+        maxCards={6}
         placement="col-start-2 row-start-2 col-span-2"></CardBox>
-      <CardBox size={CardBoxSize.SM} numCards={0} placement="col-start-2 row-start-4 col-span-2">
+      <CardBox
+        size={{ height: CardBoxHeight.MD, width: CardBoxWidth.MD_FOUR }}
+        maxCards={4}
+        placement="col-start-2 row-start-4 col-span-2 self-end">
         <PlayingCard
-          cardSize={CardSize.SM}
+          cardSize={CardSize.MD}
+          cardIndex={0}
           isFaceUp={true}
           card={{ id: 0, suit: Suit.Spades, name: CardName.Ace, faceValue: 1 }}></PlayingCard>
       </CardBox>
-      <Cards cardHeight=" h-40" isFaceUp={true} />
-      <div className="absolute left-0 w-2/3 h-full rounded-t-full bg-teal-700 translate-x-1/4 -z-40"></div>
+      <Cards cardHeight="h-40" isFaceUp={true} />
     </div>
   );
 };

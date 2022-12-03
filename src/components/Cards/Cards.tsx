@@ -1,5 +1,5 @@
 import { FC, useRef } from 'react';
-import { CardBoxSize, CardType } from 'src/@types';
+import { CardBoxHeight, CardBoxWidth, CardType } from 'src/@types';
 import { getShuffledDeck } from 'src/utils/helpers';
 import { CARD_FACES } from 'src/utils/constants';
 import CardBox from '../CardBox/CardBox';
@@ -59,14 +59,14 @@ const Cards: FC<CardsProps> = ({ cardHeight, isFaceUp }) => {
           <div
             key={i}
             onClick={() => cardClickHandler(card)}
-            className={`grid grid-rows-3 grid-columns-3 border-solid border-black border rounded-md ${
+            className={`grid grid-rows-3 grid-columns-3 items-center border-solid border-black border rounded-[4%] ${
               cardPos[i]
             } ${cardRotation[i % 2]}`}>
-            <div className="flex flex-col col-start-1 row-start-1 text-sm">
+            <div className="flex flex-col col-start-1 row-start-1 justify-self-center text-sm">
               <span>{card.faceValue}</span>
               <span>{card.suit.slice(0, 2)}</span>
             </div>
-            <div className="flex flex-col col-start-3 row-start-3 text-sm">
+            <div className="flex flex-col col-start-3 row-start-3 justify-self-center text-sm">
               <div className="flex flex-col col-start-1 text-sm">
                 <span>{card.faceValue}</span>
                 <span>{card.suit.slice(0, 2)}</span>
@@ -77,7 +77,7 @@ const Cards: FC<CardsProps> = ({ cardHeight, isFaceUp }) => {
           <div
             key={i}
             onClick={() => cardClickHandler(card)}
-            className={`border-solid border-black border rounded-md ${cardPos[i]}`}></div>
+            className={`border-solid border-black border rounded-[4%] ${cardPos[i]}`}></div>
         );
       })}
     </div>
@@ -86,7 +86,10 @@ const Cards: FC<CardsProps> = ({ cardHeight, isFaceUp }) => {
     // <div className="col-start-1 row-start-5 col-span-4 w-full">
     //   <div className="border border-black h-fit">{handUI}</div>
     // </div>
-    <CardBox size={CardBoxSize.LG} placement="col-start-1 row-start-5 col-span-4" numCards={6}>
+    <CardBox
+      size={{ height: CardBoxHeight.LG, width: CardBoxWidth.LG_SIX }}
+      placement="col-start-1 row-start-5 col-span-4"
+      maxCards={6}>
       {handUI}
     </CardBox>
   );

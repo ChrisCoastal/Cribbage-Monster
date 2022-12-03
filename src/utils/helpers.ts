@@ -52,6 +52,21 @@ export function getShuffledDeck() {
   return shuffledDeck;
 }
 
+// TODO: does this need to be coordinated with firebase?
+// export function dealCards(shuffledDeck: CardType[]): {
+//   playerHand: CardType[];
+//   opponentHand: CardType[];
+// } {
+//   const hands = {
+//     playerHand: [],
+//     opponenthand: []
+//   };
+
+//   shuff
+
+//   return {};
+// }
+
 //TODO:
 // isPairs
 //

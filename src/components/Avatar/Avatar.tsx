@@ -1,14 +1,17 @@
-import { CardBoxSize } from 'src/@types';
+import { nanoid } from 'nanoid';
+import { CardBoxHeight, CardBoxWidth, CardSize } from 'src/@types';
 
-import Cards from 'src/components/Cards/Cards';
-import CardBox from '../CardBox/CardBox';
+import CardBox from 'src/components/CardBox/CardBox';
+import PlayingCard from 'src/components/PlayingCard/PlayingCard';
 
 import useGameContext from 'src/hooks/useGameContext';
 
 const Avatar = () => {
   const { gameState, dispatchGame } = useGameContext();
-  const opponentHand = ['card', 'card', 'card', 'card'];
-  const cards = opponentHand.map((card, i) => <span key={i} className="w-6 h-8 bg-red-300"></span>);
+
+  const opponentCards = gameState.hands.opponent.inHand.map((card, i) => (
+    <PlayingCard key={nanoid()} cardSize={CardSize.SM} isFaceUp={false} card={card} cardIndex={i} />
+  ));
 
   return (
     <div className="flex flex-col items-center col-start-3">
@@ -16,9 +19,10 @@ const Avatar = () => {
       <div className=" w-10 h-10 mb-2 bg-slate-400 rounded-full border border-black overflow-hidden">
         <img src="" alt="" />
       </div>
-      {/* <CardBox size={CardBoxSize.SM} numCards={gameState.hands.opponent.inHand.length} /> */}
-      <CardBox size={CardBoxSize.SM} numCards={0} />
-      {/* <div className="flex gap-1">{cards}</div> */}
+
+      <CardBox size={{ height: CardBoxHeight.SM, width: CardBoxWidth.SM_SIX }} maxCards={6}>
+        {opponentCards}
+      </CardBox>
     </div>
   );
 };

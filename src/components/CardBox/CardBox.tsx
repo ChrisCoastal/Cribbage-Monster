@@ -6,13 +6,16 @@ import useGameContext from 'src/hooks/useGameContext';
 
 type CardBoxProps = {
   // cards: CardType[];
-  numCards: number;
-  size: string;
+  maxCards: number;
+  size: {
+    height: string;
+    width: string;
+  };
   placement?: string;
   children?: React.ReactNode;
 };
 
-const CardBox: FC<CardBoxProps> = ({ numCards, size, placement, children }) => {
+const CardBox: FC<CardBoxProps> = ({ maxCards, size, placement, children }) => {
   const { gameState, dispatchGame } = useGameContext();
   // const { isOver, setNodeRef } = useDroppable({
   //   id: nanoid(),
@@ -40,8 +43,9 @@ const CardBox: FC<CardBoxProps> = ({ numCards, size, placement, children }) => {
   ];
 
   return (
-    <div className={`${placement} w-full`}>
-      <div className={`${size} grid grid-rows-1 ${cardCols[numCards]} border border-black h-fit`}>
+    <div className={`${placement} w-full self-center place-self-center`}>
+      <div
+        className={`${size.height} ${size.width} ${cardCols[maxCards]} grid grid-rows-1 border border-black`}>
         {children}
       </div>
     </div>
