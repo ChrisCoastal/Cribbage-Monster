@@ -1,6 +1,6 @@
 import Button from 'src/ui/Button';
 
-import { getAuth } from 'firebase/auth';
+import { auth } from 'src/firestore.config';
 
 const Nav = () => {
   function loginHandler() {

@@ -3,7 +3,6 @@ import { AuthContextType, UserState } from 'src/@types';
 import { useEffect, useState } from 'react';
 import {
   createUserWithEmailAndPassword,
-  getAuth,
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
@@ -12,9 +11,10 @@ import {
   updateProfile,
   UserCredential
 } from 'firebase/auth';
+import { auth } from 'src/firestore.config';
 
-export const useProvideAuth = (): AuthContextType => {
-  const auth = getAuth();
+const useAuthProvider = (): AuthContextType => {
+  // const auth = getAuth();
   const [userAuth, setUserAuth] = useState<UserState | null>(null);
   // const [loadingAuth, setloadingAuth] = useState<boolean>(false);
 
@@ -133,3 +133,5 @@ export const useProvideAuth = (): AuthContextType => {
     // confirmPasswordReset
   };
 };
+
+export default useAuthProvider;
