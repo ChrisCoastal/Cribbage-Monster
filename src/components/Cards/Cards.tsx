@@ -1,7 +1,8 @@
 import { FC, useRef } from 'react';
-import { CardType } from 'src/@types';
+import { CardBoxSize, CardType } from 'src/@types';
 import { getShuffledDeck } from 'src/utils/helpers';
 import { CARD_FACES } from 'src/utils/constants';
+import CardBox from '../CardBox/CardBox';
 
 type CardsProps = {
   cardHeight: string;
@@ -43,6 +44,8 @@ const Cards: FC<CardsProps> = ({ cardHeight, isFaceUp }) => {
     'grid-cols-8'
   ];
 
+  const cardRotation = ['-rotate-3', 'rotate-3'];
+
   const handUI = (
     <div className={`grid ${cardCols[5]} grid-rows-1 ${cardHeight}`}>
       {/* <div className="bg-red-200 col-start-1 col-end-4 row-start-1"></div>
@@ -56,8 +59,10 @@ const Cards: FC<CardsProps> = ({ cardHeight, isFaceUp }) => {
           <div
             key={i}
             onClick={() => cardClickHandler(card)}
-            className={`grid grid-rows-3 grid-columns-3 border-solid border-black border rounded-md ${cardPos[i]}`}>
-            <div className="flex flex-col col-start-1 text-sm">
+            className={`grid grid-rows-3 grid-columns-3 border-solid border-black border rounded-md ${
+              cardPos[i]
+            } ${cardRotation[i % 2]}`}>
+            <div className="flex flex-col col-start-1 row-start-1 text-sm">
               <span>{card.faceValue}</span>
               <span>{card.suit.slice(0, 2)}</span>
             </div>
@@ -78,9 +83,12 @@ const Cards: FC<CardsProps> = ({ cardHeight, isFaceUp }) => {
     </div>
   );
   return (
-    <div className="col-start-1 row-start-5 col-span-4 w-full">
-      <div className="border border-black h-fit">{handUI}</div>
-    </div>
+    // <div className="col-start-1 row-start-5 col-span-4 w-full">
+    //   <div className="border border-black h-fit">{handUI}</div>
+    // </div>
+    <CardBox size={CardBoxSize.LG} placement="col-start-1 row-start-5 col-span-4" numCards={6}>
+      {handUI}
+    </CardBox>
   );
 };
 
