@@ -1,6 +1,6 @@
 import { createContext, FC, ReactNode } from 'react';
 import { AuthContextType } from 'src/@types';
-import useAuthProvider from 'src/hooks/useAuthProvider';
+import useAuthProvider from 'src/hooks/useFirebaseAuth';
 
 type AuthProviderProps = {
   children?: ReactNode;

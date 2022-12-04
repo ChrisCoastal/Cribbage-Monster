@@ -11,15 +11,15 @@ import {
   updateProfile,
   UserCredential
 } from 'firebase/auth';
-import { auth } from 'src/firestore.config';
+import { firebaseAuth } from 'src/firestore.config';
 
-const useAuthProvider = (): AuthContextType => {
+const useFirebaseAuth = (): AuthContextType => {
   // const auth = getAuth();
   const [userAuth, setUserAuth] = useState<UserState | null>(null);
   // const [loadingAuth, setloadingAuth] = useState<boolean>(false);
 
   const updateDisplayName = async (newDisplayName: string) => {
-    await updateProfile(auth.currentUser!, {
+    await updateProfile(firebaseAuth.currentUser!, {
       displayName: newDisplayName
     })
       .then(() => {
@@ -29,10 +29,10 @@ const useAuthProvider = (): AuthContextType => {
       .catch((error) => console.log('update displayName error', error));
   };
 
-  const signinUser = (email: string | null, password: string | null, callback: VoidFunction) => {
+  const loginUser = (email: string | null, password: string | null, callback: VoidFunction) => {
     if (typeof email !== 'string' || typeof password !== 'string')
       return console.log('Error email or password is invalid!');
-    signInWithEmailAndPassword(auth, email, password)
+    signInWithEmailAndPassword(firebaseAuth, email, password)
       .then((userDataObj: UserCredential) => {
         console.log('User has logged in', userDataObj);
 
@@ -48,12 +48,13 @@ const useAuthProvider = (): AuthContextType => {
       });
   };
 
-  const createUser = (
+  const createUser = async (
     displayName: string,
     email: string,
     password: string,
     callback: VoidFunction
   ) => {
+    // TODO: validation
     if (
       typeof displayName !== 'string' ||
       typeof email !== 'string' ||
@@ -61,7 +62,7 @@ const useAuthProvider = (): AuthContextType => {
     )
       return console.log('Error name, email, or password is invalid!');
 
-    createUserWithEmailAndPassword(auth, email, password)
+    createUserWithEmailAndPassword(firebaseAuth, email, password)
       .then(async (userDataObj: UserCredential) => {
         // automatically logged in after signup
         console.log('User has been created/logged in', userDataObj.user);
@@ -69,20 +70,21 @@ const useAuthProvider = (): AuthContextType => {
 
         setUserAuth(() => userDataObj.user);
 
-        console.log('user', userAuth);
         localStorage.setItem('authToken', userDataObj.user.refreshToken);
         callback();
-        return userAuth;
+        // return userAuth;
       })
       .catch((err) => {
         // TODO: add error message under password field UI
         console.log(err.message);
+        if (err.message === 'Firebase: Error (auth/email-already-in-use).')
+          console.log('In use signin');
       });
   };
 
-  const signoutUser = (callback: VoidFunction) =>
+  const logoutUser = (callback: VoidFunction) =>
     // const signoutUser = () =>
-    signOut(auth)
+    signOut(firebaseAuth)
       .then(async () => {
         console.log(userAuth, 'User signed out');
         setUserAuth(() => null);
@@ -108,7 +110,7 @@ const useAuthProvider = (): AuthContextType => {
   // };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (userDataObj) => {
+    const unsubscribe = onAuthStateChanged(firebaseAuth, (userDataObj) => {
       if (userDataObj) {
         console.log('Userstate is logged in via useEffect');
         setUserAuth(userDataObj);
@@ -127,11 +129,11 @@ const useAuthProvider = (): AuthContextType => {
     // setUserAuth,
     updateDisplayName,
     createUser,
-    signinUser,
-    signoutUser
+    loginUser,
+    logoutUser
     // sendPasswordResetEmail,
     // confirmPasswordReset
   };
 };
 
-export default useAuthProvider;
+export default useFirebaseAuth;

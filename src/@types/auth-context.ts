@@ -34,8 +34,8 @@ export type AuthContextType = {
     password: string,
     callback: VoidFunction
   ) => void;
-  signinUser: (email: string | null, password: string | null, callback: VoidFunction) => void;
-  signoutUser: (callback: VoidFunction) => void;
+  loginUser: (email: string | null, password: string | null, callback: VoidFunction) => void;
+  logoutUser: (callback: VoidFunction) => void;
   // sendPasswordResetEmail: () => void;
   // confirmPasswordReset: () => void;
 };
