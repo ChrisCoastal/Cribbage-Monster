@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 import Button from 'src/ui/Button';
 
 import { auth } from 'src/firestore.config';
@@ -14,10 +16,25 @@ const Nav = () => {
     <div className="flex items-center fixed top-0 justify-between w-full h-12 px-4">
       <span>CRIB</span>
       <ul className="flex items-center gap-3">
-        <div className="w-6 h-6 rounded-full bg-white"></div>
-        <div className="w-6 h-6 rounded-full bg-white"></div>
-        <Button handler={signupHandler}>join</Button>
-        <Button handler={loginHandler}>login</Button>
+        <li>
+          <div className="w-6 h-6 rounded-full bg-white"></div>
+        </li>
+        <li>
+          <div className="w-6 h-6 rounded-full bg-white"></div>
+        </li>
+        <li>
+          <Link to={'signup'} className="h-6 rounded-full bg-white">
+            JOIN
+          </Link>
+        </li>
+        <li>
+          <Link to={'login'} className="h-6 rounded-full bg-white">
+            LOGIN
+          </Link>
+        </li>
+
+        {/* <Button handler={signupHandler}>join</Button>
+        <Button handler={loginHandler}>login</Button> */}
       </ul>
     </div>
   );
