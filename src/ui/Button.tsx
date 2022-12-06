@@ -9,7 +9,13 @@ type ButtonProps = {
   children?: ReactNode;
 };
 
-const Button: FC<ButtonProps> = ({ handler, type, color = 'primary', customStyles, children }) => {
+const Button: FC<ButtonProps> = ({
+  handler,
+  type = 'button',
+  color = 'primary',
+  customStyles,
+  children
+}) => {
   const buttonColor =
     color === 'primary' ? 'bg-red-600 dark:bg-red-200' : 'bg-blue-600 dark:bg-blue-200';
 

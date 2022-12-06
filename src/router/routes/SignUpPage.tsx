@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
-import { firebaseAuth } from 'src/firestore.config';
+import { firebaseAuth, db } from 'src/firestore.config';
+import { collection } from 'firebase/firestore';
 
 import useFirebaseAuth from 'src/hooks/useFirebaseAuth';
 import useAuthContext from 'src/hooks/useAuthContext';

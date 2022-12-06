@@ -11,7 +11,8 @@ import {
   updateProfile,
   UserCredential
 } from 'firebase/auth';
-import { firebaseAuth } from 'src/firestore.config';
+import { db, firebaseAuth } from 'src/firestore.config';
+import { doc, setDoc, collection, Timestamp } from 'firebase/firestore';
 
 const useFirebaseAuth = (): AuthContextType => {
   // const auth = getAuth();
@@ -33,10 +34,10 @@ const useFirebaseAuth = (): AuthContextType => {
     if (typeof email !== 'string' || typeof password !== 'string')
       return console.log('Error email or password is invalid!');
     signInWithEmailAndPassword(firebaseAuth, email, password)
-      .then((userDataObj: UserCredential) => {
-        console.log('User has logged in', userDataObj);
+      .then((userData: UserCredential) => {
+        console.log('User has logged in', userData);
 
-        setUserAuth(() => userDataObj.user);
+        setUserAuth(() => userData.user);
 
         callback();
         console.log('user', userAuth);
@@ -63,14 +64,16 @@ const useFirebaseAuth = (): AuthContextType => {
       return console.log('Error name, email, or password is invalid!');
 
     createUserWithEmailAndPassword(firebaseAuth, email, password)
-      .then(async (userDataObj: UserCredential) => {
+      .then(async (userData: UserCredential) => {
         // automatically logged in after signup
-        console.log('User has been created/logged in', userDataObj.user);
+        console.log('User has been created/logged in', userData.user);
         await updateDisplayName(displayName);
+        await updateUserDoc(userData);
+        console.log('here');
 
-        setUserAuth(() => userDataObj.user);
-
-        localStorage.setItem('authToken', userDataObj.user.refreshToken);
+        setUserAuth(() => userData.user);
+        localStorage.setItem('authToken', userData.user.refreshToken);
+        // const usersRef = collection(db, 'users');
         callback();
         // return userAuth;
       })
@@ -81,6 +84,16 @@ const useFirebaseAuth = (): AuthContextType => {
           console.log('In use signin');
       });
   };
+
+  async function updateUserDoc(userData: UserCredential) {
+    setDoc(doc(db, 'users', userData.user.uid), {
+      uid: userData.user.uid,
+      username: userData.user.displayName,
+      email: userData.user.email,
+      online: true,
+      lastVisibleAt: Timestamp
+    }).then((data) => console.log(data, 'updated user doc'));
+  }
 
   const logoutUser = (callback: VoidFunction) =>
     // const signoutUser = () =>
@@ -110,10 +123,10 @@ const useFirebaseAuth = (): AuthContextType => {
   // };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(firebaseAuth, (userDataObj) => {
-      if (userDataObj) {
+    const unsubscribe = onAuthStateChanged(firebaseAuth, (userData) => {
+      if (userData) {
         console.log('Userstate is logged in via useEffect');
-        setUserAuth(userDataObj);
+        setUserAuth(userData);
       } else {
         console.log('Userstate set to null');
 

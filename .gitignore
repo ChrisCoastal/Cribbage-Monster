@@ -13,6 +13,13 @@ dist-ssr
 *.local
 .env
 .env.development
+
+# firebase
+/functions
+firebase.json
+firestore.indexes.json
+firestore.rules
+.firebaserc
 **/firestore.config.ts
 
 # Editor directories and files

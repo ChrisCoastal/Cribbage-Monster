@@ -1,6 +1,7 @@
 import { CardType } from './index';
 
 export type GameState = {
+  gameId: string;
   activePlayer: boolean;
   hands: {
     player: HandType;
