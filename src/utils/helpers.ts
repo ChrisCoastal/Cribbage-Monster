@@ -1,5 +1,5 @@
 import { CardName, CardType, Suit } from 'src/@types';
-import { CARDS_IN_DECK, CARDS_PER_SUIT } from './constants';
+import { CARDS_IN_DECK, CARDS_PER_SUIT, HAND_SIZE } from './constants';
 
 export function createDeck(): CardType[] {
   const newDeck: CardType[] = [];
@@ -45,6 +45,8 @@ export function shuffleDeck(deck: CardType[]) {
   return deck;
 }
 
+// FIXME: the deck should only be created once? and kept in state?
+// useDeck?
 export function getShuffledDeck() {
   const deck = createDeck();
   const shuffledDeck = shuffleDeck(deck);
@@ -53,19 +55,24 @@ export function getShuffledDeck() {
 }
 
 // TODO: does this need to be coordinated with firebase?
-// export function dealCards(shuffledDeck: CardType[]): {
-//   playerHand: CardType[];
-//   opponentHand: CardType[];
-// } {
-//   const hands = {
-//     playerHand: [],
-//     opponenthand: []
-//   };
+// yes, it needs to be kept aligned
+export function dealHands(): {
+  player: CardType[];
+  opponent: CardType[];
+} {
+  const hands = {
+    player: [] as CardType[],
+    opponent: [] as CardType[]
+  };
 
-//   shuff
+  const shuffledDeck = getShuffledDeck();
 
-//   return {};
-// }
+  for (let i = 0; i < HAND_SIZE; i++) {
+    i % 2 ? hands.opponent.push(shuffledDeck[i]) : hands.player.push(shuffledDeck[i]);
+  }
+
+  return hands;
+}
 
 //TODO:
 // isPairs

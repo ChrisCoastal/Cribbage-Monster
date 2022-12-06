@@ -11,6 +11,7 @@
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     // "plugin:prettier/recommended",
+    "plugin:react-hooks/recommended",
     "prettier"
   ],
   "overrides": [],
@@ -19,11 +20,12 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "plugins": ["react", "@typescript-eslint"],
+  "plugins": ["react", "react-hooks", "@typescript-eslint"],
   "rules": {
     "react/react-in-jsx-scope": "off",
+    "react-hooks/exhaustive-deps": "on",
     "@typescript-eslint/quotes": [
-      "error",
+      "warn",
       "single",
       {
         "avoidEscape": true,

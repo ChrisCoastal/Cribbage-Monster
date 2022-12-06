@@ -20,14 +20,16 @@ const CreateGame = () => {
   async function createGame() {
     const gamesRef = collection(db, 'games');
     const gameId = nanoid();
-    const newGame = {...INITIAL_GAME_STATE, gameId}
+    const newGame = { ...INITIAL_GAME_STATE, gameId };
     console.log('creating game');
-    await addDoc(gamesRef, newGame).then((data) => {
-      console.log(data, data.id);
-      // const gameId = data.id;
-      dispatchGame({type: GameReducerTypes.CREATE_GAME, payload: newGame})
-      navigate(`/game/${gameId}`);
-    });
+    await addDoc(gamesRef, newGame)
+      .then((data) => {
+        console.log(data, data.id);
+        // const gameId = data.id;
+        dispatchGame({ type: GameReducerTypes.CREATE_GAME, payload: newGame });
+        navigate(`/game/${gameId}`);
+      })
+      .catch((err) => console.log(err));
   }
 
   return <Button handler={createGame}>Create Game</Button>;
