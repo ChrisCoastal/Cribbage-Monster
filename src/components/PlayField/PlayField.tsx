@@ -16,7 +16,7 @@ import Cards from 'src/components/Cards/Cards';
 import PlayingCard from 'src/components/PlayingCard/PlayingCard';
 import Deck from 'src/components/Deck/Deck';
 import CardBox from '../CardBox/CardBox';
-import Button from 'src/UI/Button';
+import Button from 'src/components/UI/Button';
 import useGameContext from 'src/hooks/useGameContext';
 import { dealHands } from 'src/utils/helpers';
 

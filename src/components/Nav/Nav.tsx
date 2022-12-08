@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import Button from 'src/UI/Button';
+import Button from 'src/components/UI/Button';
 
 import { firebaseAuth } from 'src/firestore.config';
 import useAuthContext from 'src/hooks/useAuthContext';

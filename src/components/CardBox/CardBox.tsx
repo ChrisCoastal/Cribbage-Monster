@@ -43,9 +43,11 @@ const CardBox: FC<CardBoxProps> = ({ maxCards, size, placement, children }) => {
   ];
 
   return (
-    <div className={`${placement} w-full self-center place-self-center`}>
+    <div className={`${placement} self-center place-self-center`}>
       <div
-        className={`${size.height} ${size.width} ${cardCols[maxCards]} grid grid-rows-1 border border-black`}>
+        className={`${size.height} ${size.width} ${
+          cardCols[maxCards - 1]
+        } grid grid-rows-1 border border-black`}>
         {children}
       </div>
     </div>

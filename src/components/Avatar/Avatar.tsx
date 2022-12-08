@@ -14,15 +14,15 @@ const Avatar = () => {
   ));
 
   return (
-    <div className="flex flex-col items-center col-start-3">
+    <div className="flex flex-col items-center col-start-3 w-">
       <p className="text-sm">opponent</p>
       <div className=" w-10 h-10 mb-2 bg-slate-400 rounded-full border border-black overflow-hidden">
         <img src="" alt="" />
       </div>
-
+      {/* 
       <CardBox size={{ height: CardBoxHeight.SM, width: CardBoxWidth.SM_SIX }} maxCards={6}>
         {opponentCards}
-      </CardBox>
+      </CardBox> */}
     </div>
   );
 };

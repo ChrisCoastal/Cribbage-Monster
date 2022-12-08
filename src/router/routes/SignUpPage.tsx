@@ -7,7 +7,7 @@ import { collection } from 'firebase/firestore';
 
 import useFirebaseAuth from 'src/hooks/useFirebaseAuth';
 import useAuthContext from 'src/hooks/useAuthContext';
-import Button from 'src/UI/Button';
+import Button from 'src/components/UI/Button';
 
 export async function signUpAction() {
   await new Promise((res) => {

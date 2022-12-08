@@ -9,7 +9,7 @@ import useAuthContext from 'src/hooks/useAuthContext';
 import useGameContext from 'src/hooks/useGameContext';
 import { INITIAL_GAME_STATE } from 'src/utils/constants';
 
-import Button from 'src/UI/Button';
+import Button from 'src/components/UI/Button';
 import { GameReducerTypes } from 'src/@types';
 
 const CreateGame = () => {

@@ -1,6 +1,6 @@
 const Deck = () => {
   return (
-    <div className="relative self-center justify-self-center col-start-1 row-start-3 h-full w-full">
+    <div className="relative self-center justify-self-center col-start-1 row-start-3 h-16 w-16">
       <span className="absolute top-[14px] w-12 h-16  bg-red-200 border-black border rounded-sm"></span>
       <span className="absolute top-[12px] left-[2px] w-12 h-16 bg-red-200 border-black border rounded-sm"></span>
       <span className="absolute top-[10px] left-[4px] w-12 h-16 bg-red-200 border-black border rounded-sm"></span>

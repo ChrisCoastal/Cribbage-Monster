@@ -11,9 +11,9 @@ export enum CardBoxHeight {
 }
 
 export enum CardBoxWidth {
-  SM_FOUR = 'w-24',
-  SM_SIX = 'w-36',
-  MD_FOUR = 'w-30',
-  LG_SIX = 'w-80'
+  SM_FOUR = 'w-16',
+  SM_SIX = 'w-16',
+  MD_FOUR = 'w-[7.5rem]',
+  LG_SIX = 'w-48'
   // LG = 'h-40'
 }

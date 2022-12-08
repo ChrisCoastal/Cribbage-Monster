@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { collection, doc, onSnapshot } from 'firebase/firestore';
 import { db } from 'src/firestore.config';
 
-import PlayField from 'src/components/PlayField/PlayField';
+import PlayFieldFlex from 'src/components/PlayField/PlayFieldFlex';
 import BottomNav from 'src/components/BottomNav/BottomNav';
 
 import useGameContext from 'src/hooks/useGameContext';
@@ -32,7 +32,7 @@ const GamePage = () => {
   return (
     <div className="relative grid h-screen max-h-screen grid-rows-[3rem_minmax(1fr)_3rem_3rem] bg-teal-100">
       <div>
-        <PlayField />
+        <PlayFieldFlex />
       </div>
       <BottomNav />
     </div>
