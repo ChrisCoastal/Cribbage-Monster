@@ -1,8 +1,8 @@
 import { FC, useRef } from 'react';
-import { CardBoxHeight, CardBoxWidth, CardType } from 'src/@types';
+import { CardBoxHeight, CardBoxWidth, CardType, CardSize } from 'src/@types';
 import { getShuffledDeck } from 'src/utils/helpers';
-import { CARD_FACES } from 'src/utils/constants';
 import CardBox from '../CardBox/CardBox';
+import PlayingCard from '../PlayingCard/PlayingCard';
 
 type CardsProps = {
   cardHeight: string;
@@ -46,50 +46,50 @@ const Cards: FC<CardsProps> = ({ cardHeight, isFaceUp }) => {
 
   const cardRotation = ['-rotate-3', 'rotate-3'];
 
-  const handUI = (
-    <div className={`grid ${cardCols[5]} grid-rows-1 ${cardHeight}`}>
-      {/* <div className="bg-red-200 col-start-1 col-end-4 row-start-1"></div>
-      <div className="bg-blue-200 col-start-2 col-end-5 row-start-1"></div>
-      <div className="bg-green-200 col-start-3 col-end-6 row-start-1"></div>
-      <div className="bg-orange-200 col-start-4 col-end-7 row-start-1"></div>
-      <div className="bg-purple-200 col-start-5 col-end-8 row-start-1"></div>
-      <div className="bg-yellow-200 col-start-6 col-end-9 row-start-1"></div> */}
-      {hand.map((card, i) => {
-        return isFaceUp ? (
-          <div
-            key={i}
-            onClick={() => cardClickHandler(card)}
-            className={`grid grid-rows-3 grid-columns-3 items-center border-solid border-black border rounded-[4%] ${
-              cardPos[i]
-            } ${cardRotation[i % 2]}`}>
-            <div className="flex flex-col col-start-1 row-start-1 justify-self-center text-sm">
-              <span>{card.faceValue}</span>
-              <span>{card.suit.slice(0, 2)}</span>
-            </div>
-            <div className="flex flex-col col-start-3 row-start-3 justify-self-center text-sm">
-              <div className="flex flex-col col-start-1 text-sm">
-                <span>{card.faceValue}</span>
-                <span>{card.suit.slice(0, 2)}</span>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div
-            key={i}
-            onClick={() => cardClickHandler(card)}
-            className={`border-solid border-black border rounded-[4%] ${cardPos[i]}`}></div>
-        );
-      })}
-    </div>
-  );
+  const handUI = hand.map((card, i) => (
+    <PlayingCard
+      key={i}
+      isFaceUp={true}
+      cardSize={CardSize.LG}
+      cardIndex={i}
+      card={card}
+      handler={cardClickHandler}
+    />
+  ));
+
+  //     return isFaceUp ? (
+  //       <div
+  //         key={i}
+  //         onClick={() => cardClickHandler(card)}
+  //         className={`grid-columns-3 grid grid-rows-3 items-center rounded-[4%] border border-solid border-black ${
+  //           cardPos[i]
+  //         } ${cardRotation[i % 2]}`}>
+  //         <div className="col-start-1 row-start-1 flex flex-col justify-self-center text-sm">
+  //           <span>{card.faceValue}</span>
+  //           <span>{card.suit.slice(0, 2)}</span>
+  //         </div>
+  //         <div className="col-start-3 row-start-3 flex flex-col justify-self-center text-sm">
+  //           <div className="col-start-1 flex flex-col text-sm">
+  //             <span>{card.faceValue}</span>
+  //             <span>{card.suit.slice(0, 2)}</span>
+  //           </div>
+  //         </div>
+  //       </div>
+  //     ) : (
+  //       <div
+  //         key={i}
+  //         onClick={() => cardClickHandler(card)}
+  //         className={`rounded-[4%] border border-solid border-black ${cardPos[i]}`}></div>
+  //     );
+
   return (
     // <div className="col-start-1 row-start-5 col-span-4 w-full">
     //   <div className="border border-black h-fit">{handUI}</div>
     // </div>
     <CardBox
       size={{ height: CardBoxHeight.LG, width: CardBoxWidth.LG_SIX }}
-      placement="col-start-1 row-start-5 col-span-4"
-      maxCards={6}>
+      maxCards={6}
+      placement="self-center place-self-center">
       {handUI}
     </CardBox>
   );

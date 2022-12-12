@@ -23,7 +23,7 @@ const Button: FC<ButtonProps> = ({
     <button
       type={type}
       onClick={handler}
-      className={`${customStyles} ${buttonColor} rounded-full hover:bg-red-400 py-1 px-4`}>
+      className={`${customStyles} ${buttonColor} cursor-pointer rounded-full py-1 px-4 hover:bg-red-400`}>
       {children}
     </button>
   );
