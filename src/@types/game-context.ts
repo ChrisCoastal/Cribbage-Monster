@@ -19,7 +19,7 @@ export type CreateGameAction = {
 
 export type PlayCardAction = {
   type: GameReducerTypes.PLAY_CARD;
-  payload: { card: CardType };
+  payload: CardType;
 };
 
 export type DealCardAction = {

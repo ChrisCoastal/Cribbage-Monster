@@ -1,4 +1,4 @@
-import { GameReducerActions, GameReducerTypes, GameState } from 'src/@types';
+import { CardType, GameReducerActions, GameReducerTypes, GameState } from 'src/@types';
 
 const gameReducer = (state: GameState, action: GameReducerActions): GameState => {
   const { type, payload } = action;
@@ -8,18 +8,35 @@ const gameReducer = (state: GameState, action: GameReducerActions): GameState =>
       return payload;
     }
     case GameReducerTypes.DEAL: {
-      //TODO: placeholder only
       return {
         ...state,
         hands: {
           player: { inHand: payload.player, played: [] },
-          opponent: { inHand: payload.player, played: [] }
+          opponent: { inHand: payload.opponent, played: [] }
         }
       };
     }
     case GameReducerTypes.PLAY_CARD: {
       //TODO: placeholder only
-      return { ...state };
+      const cardIndex = state.hands.player.inHand.findIndex((card) => card.id === payload.id);
+      // const hand: CardType[] = [];
+      const handArr = state.hands.player.inHand
+        .slice(0, cardIndex)
+        .concat(state.hands.player.inHand.slice(cardIndex + 1));
+      console.log(handArr);
+
+      const played = state.hands.player.inHand[cardIndex];
+      // state.hands.player.inHand.forEach((card) =>
+      //   card.id === payload.card.id ? (cardPlayed = card) : hand.push(card)
+      // );
+
+      return {
+        ...state,
+        hands: {
+          player: { inHand: handArr, played: [...state.hands.player.played, played as CardType] },
+          opponent: state.hands.opponent
+        }
+      };
     }
 
     default:

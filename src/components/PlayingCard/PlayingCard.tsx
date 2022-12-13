@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { CardType } from 'src/@types';
+import { CardSize, CardType } from 'src/@types';
 
 type PlayingCardProps = {
   cardSize: string;
@@ -12,12 +12,12 @@ type PlayingCardProps = {
 
 const PlayingCard: FC<PlayingCardProps> = ({ cardSize, isFaceUp, card, cardIndex, handler }) => {
   const cardPos = [
-    'bg-red-200 col-start-1 col-end-4 row-start-1',
-    'bg-blue-200 col-start-2 col-end-5 row-start-1',
-    'bg-green-200 col-start-3 col-end-6 row-start-1',
-    'bg-orange-200 col-start-4 col-end-7 row-start-1',
-    'bg-purple-200 col-start-5 col-end-8 row-start-1',
-    'bg-yellow-200 col-start-6 col-end-9 row-start-1'
+    'bg-red-200 col-start-1 col-end-4 row-start-1 z-[20]',
+    'bg-blue-200 col-start-2 col-end-5 row-start-1 z-[22]',
+    'bg-green-200 col-start-3 col-end-6 row-start-1 z-[24]',
+    'bg-orange-200 col-start-4 col-end-7 row-start-1 z-[26]',
+    'bg-purple-200 col-start-5 col-end-8 row-start-1 z-[28]',
+    'bg-yellow-200 col-start-6 col-end-9 row-start-1 z-[30]'
   ];
 
   const cardRotation = ['-rotate-3', 'rotate-3']; // ${cardRotation[cardIndex % 2]}
@@ -33,7 +33,9 @@ const PlayingCard: FC<PlayingCardProps> = ({ cardSize, isFaceUp, card, cardIndex
   return isFaceUp ? (
     <div
       onClick={() => (handler ? handler(card) : null)}
-      className={`${cardSize} ${cardPos[cardIndex]} ${cardRotationHand[cardIndex]} grid-columns-3 grid grid-rows-3 items-center rounded-[4%] border border-solid border-black transition-all duration-300`}>
+      className={`${cardSize} ${cardPos[cardIndex]} ${
+        cardSize === CardSize.LG ? cardRotationHand[cardIndex] : cardRotation[cardIndex % 2]
+      } grid-columns-3 grid grid-rows-3 items-center rounded-[4%] border border-solid border-black transition-all duration-300`}>
       <div className="col-start-1 flex flex-col justify-self-center text-sm">
         <span>{card.faceValue}</span>
         <span>{card.suit.slice(0, 2)}</span>

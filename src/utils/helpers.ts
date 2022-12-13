@@ -67,7 +67,7 @@ export function dealHands(): {
 
   const shuffledDeck = getShuffledDeck();
 
-  for (let i = 0; i < HAND_SIZE; i++) {
+  for (let i = 0; i < HAND_SIZE * 2; i++) {
     i % 2 ? hands.opponent.push(shuffledDeck[i]) : hands.player.push(shuffledDeck[i]);
   }
 
@@ -77,3 +77,12 @@ export function dealHands(): {
 //TODO:
 // isPairs
 //
+
+function isPlayable(cardValue)
+
+function isPairs(cardsPlayed) {
+  //
+  const cardsPlayed = 
+
+  for 
+}

@@ -3,6 +3,7 @@ import {
   CardBoxWidth,
   CardName,
   CardSize,
+  CardType,
   GameReducerTypes,
   Suit
 } from 'src/@types';
@@ -19,19 +20,42 @@ import CardBox from 'src/components/CardBox/CardBox';
 import Button from 'src/components/UI/Button';
 import useGameContext from 'src/hooks/useGameContext';
 import { dealHands } from 'src/utils/helpers';
+import { nanoid } from 'nanoid';
 
 const PlayField = () => {
   const { gameState, dispatchGame } = useGameContext();
 
-  // function dealHandler() {
-  //   const hands = dealHands();
-  //   dispatchGame({ type: GameReducerTypes.DEAL, payload: hands });
-  //   const gameRef = doc(db, 'game', gameState.gameId);
-  //   updateDoc(gameRef, data); //TODO:)
-  // }
+  function dealHandler() {
+    const hands = dealHands();
+    dispatchGame({ type: GameReducerTypes.DEAL, payload: hands });
+    // const gameRef = doc(db, 'game', gameState.gameId);
+    // updateDoc(gameRef, data); //TODO:)
+  }
+
+  function cardClickHandler(card: CardType) {
+    console.log(card);
+    dispatchGame({ type: GameReducerTypes.PLAY_CARD, payload: card });
+  }
+
+  const playerHand = renderCards(gameState.hands.player.inHand, true, CardSize.LG);
+  const opponentHand = renderCards(gameState.hands.opponent.inHand, false, CardSize.SM);
+  const playerPlayed = renderCards(gameState.hands.player.played, true, CardSize.MD);
+  const opponentPlayed = renderCards(gameState.hands.opponent.played, true, CardSize.MD);
+
+  function renderCards(hand: CardType[], faceUp: boolean, cardSize: CardSize) {
+    return hand.map((card, i) => (
+      <PlayingCard
+        key={nanoid()}
+        isFaceUp={faceUp}
+        cardSize={cardSize}
+        cardIndex={i}
+        card={card}
+        handler={cardClickHandler}
+      />
+    ));
+  }
 
   return (
-    // <div className="relative grid h-screen grid-cols-[1fr,_1fr,_2fr,_2fr] grid-rows-[auto,_1fr,_1fr,_1fr,_2fr] items-center justify-items-center gap-2 py-12 px-4">
     <div className="relative grid h-full grid-cols-[4fr,_1fr] items-center justify-items-center gap-2 py-12 px-4">
       <div className="flex flex-col items-center justify-center">
         <div>
@@ -54,18 +78,21 @@ const PlayField = () => {
           size={{ height: CardBoxHeight.MD, width: CardBoxWidth.MD_FOUR }}
           maxCards={4}
           placement="self-center place-self-center">
-          <PlayingCard
-            cardSize={CardSize.MD}
-            cardIndex={0}
-            isFaceUp={true}
-            card={{ id: 0, suit: Suit.Spades, name: CardName.Ace, faceValue: 1 }}></PlayingCard>
+          {playerPlayed}
         </CardBox>
 
-        <Cards cardHeight="h-40" isFaceUp={true} />
+        <CardBox
+          size={{ height: CardBoxHeight.LG, width: CardBoxWidth.LG_SIX }}
+          maxCards={6}
+          placement="self-center place-self-center">
+          {playerHand}
+        </CardBox>
+
+        {/* <Cards cardHeight="h-40" isFaceUp={true} cards={gameState.hands.player.inHand} /> */}
       </div>
       <div>
         <Board />
-        <Button handler={() => console.log('dealHandler')}>Deal</Button>
+        <Button handler={dealHandler}>Deal</Button>
       </div>
     </div>
   );
