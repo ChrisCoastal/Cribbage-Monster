@@ -1,11 +1,11 @@
 const BottomNav = () => {
   return (
-    <div className="flex items-center fixed bottom-0 w-full h-12 px-4 bg-red-200 rounded-t-lg">
-      <ul className="flex items-center justify-around w-full">
-        <li className="w-8 h-8 rounded-full bg-white"></li>
-        <li className="w-8 h-8 rounded-full bg-white"></li>
-        <li className="w-8 h-8 rounded-full bg-white"></li>
-        <li className="w-8 h-8 rounded-full bg-white"></li>
+    <div className="fixed bottom-0 flex h-12 w-full items-center rounded-t-lg bg-red-200 px-4">
+      <ul className="flex w-full items-center justify-around">
+        <li className="h-8 w-8 rounded-full bg-white"></li>
+        <li className="h-8 w-8 rounded-full bg-white"></li>
+        <li className="h-8 w-8 rounded-full bg-white"></li>
+        <li className="h-8 w-8 rounded-full bg-white"></li>
       </ul>
     </div>
   );

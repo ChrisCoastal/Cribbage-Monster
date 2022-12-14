@@ -38,16 +38,19 @@ const PlayField = () => {
       <CardBox
         size={{ height: CardBoxHeight.MD, width: CardBoxWidth.MD_FOUR }}
         maxCards={6}
-        placement="col-start-2 row-start-2 col-span-2"></CardBox>
+        placement="col-start-2 row-start-2 col-span-2"
+      ></CardBox>
       <CardBox
         size={{ height: CardBoxHeight.MD, width: CardBoxWidth.MD_FOUR }}
         maxCards={4}
-        placement="col-start-2 row-start-4 col-span-2 self-end">
+        placement="col-start-2 row-start-4 col-span-2 self-end"
+      >
         <PlayingCard
           cardSize={CardSize.MD}
           cardIndex={0}
           isFaceUp={true}
-          card={{ id: 0, suit: Suit.Spades, name: CardName.Ace, faceValue: 1 }}></PlayingCard>
+          card={{ id: 0, suit: Suit.Spades, name: CardName.Ace, faceValue: 1 }}
+        ></PlayingCard>
       </CardBox>
       <Cards cardHeight="h-40" isFaceUp={true} />
       <Button handler={dealHandler}>Deal</Button>

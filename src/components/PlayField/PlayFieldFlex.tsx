@@ -8,7 +8,7 @@ import {
   Suit
 } from 'src/@types';
 
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc, onSnapshot } from 'firebase/firestore';
 import { db } from 'src/firestore.config';
 
 import Avatar from 'src/components/Avatar/Avatar';
@@ -21,6 +21,7 @@ import Button from 'src/components/UI/Button';
 import useGameContext from 'src/hooks/useGameContext';
 import { dealHands } from 'src/utils/helpers';
 import { nanoid } from 'nanoid';
+import { useEffect } from 'react';
 
 const PlayField = () => {
   const { gameState, dispatchGame } = useGameContext();
@@ -41,6 +42,20 @@ const PlayField = () => {
   const opponentHand = renderCards(gameState.hands.opponent.inHand, false, CardSize.SM);
   const playerPlayed = renderCards(gameState.hands.player.played, true, CardSize.MD);
   const opponentPlayed = renderCards(gameState.hands.opponent.played, true, CardSize.MD);
+
+  useEffect(() => {
+    if (gameState.activePlayer === true) {
+      // const gameRef = doc(db, 'game', gameState.gameId);
+      // const collectionSnapshot = onSnapshot(gameRef, (snapshot) => {
+      //   const cardsPlayed: CardType[] = [];
+      //   snapshot.docs.forEach((doc: any) => {
+      //     cardsPlayed.push({ ...doc.data(), id: doc.id });
+      //   });
+      //   console.log('snapshot', cardsPlayed);
+      // });
+      // return collectionSnapshot;
+    }
+  }, [gameState.activePlayer]);
 
   function renderCards(hand: CardType[], faceUp: boolean, cardSize: CardSize) {
     return hand.map((card, i) => (

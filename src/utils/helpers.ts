@@ -106,18 +106,20 @@ function isPairs(
   const lastCard = cardsPlayed.slice(-1)[0];
   if (lastCard.playValue > maxCardValue) return pairs;
 
-  const secondLastCard = cardsPlayed.slice(-2, -1)[0]; // TODO: will this return undefined if no array value
-  const thridLastCard = cardsPlayed.slice(-3, -2)[0]; // TODO: can this just be cardsPlayed[-3]
+  const secondLastCard = cardsPlayed.slice(-2, -1)[0];
+  // TODO: will this return undefined if no array value
+  const thridLastCard = cardsPlayed.slice(-3, -2)[0];
+  // TODO: can this just be cardsPlayed[-3]
 
   for (let i = -1; i >= -3; i--) {
     const card = i === -1 ? cardsPlayed.slice(i)[0] : cardsPlayed.slice(i, i + 1)[0];
-    if (pairs.cardPlayValue === 0 && card.playValue > maxCardValue) continue; //TODO: check should this break
+    if (pairs.cardPlayValue === 0 && card.playValue > maxCardValue) continue;
+    //TODO: check should this break
     else if (pairs.cardPlayValue === 0) {
       pairs.isPair = true;
       pairs.cardPlayValue = card.playValue;
       pairs.points = 2;
-    }
-    else if (pairs.cardPlayValue === card.playValue){
+    } else if (pairs.cardPlayValue === card.playValue) {
       pairs.points = pairs.points + 2;
     }
   }
@@ -126,34 +128,65 @@ function isPairs(
 }
 
 function isFifteen(cardTotal: number): number | null {
-  if (cardTotal >= 15 || cardTotal < 5) return null
+  if (cardTotal >= 15 || cardTotal < 5) return null;
   return 15 - cardTotal;
 }
 
 // need to kep track of the length of the valid run
 // card to make run
 
+type Run = {
+  difference: number;
+  prevFaceValue: number;
+  validCards: number[];
+  runLength: number;
+};
+
 function isRun(cardsPlayed: CardType[]): number[] {
   const makeRun: number[] = [];
-  if (cardsPlayed.length < 2) return makeRun
+  if (cardsPlayed.length < 2) return makeRun;
 
-  const sortedPlayed = cardsPlayed.slice().sort((a: CardType, b: CardType) => a.playValue - b.playValue)
-  const lowRunFaceValue = sortedPlayed[0].faceValue - 1
-  const highRunFaceValue = sortedPlayed[-1].faceValue + 1
-  const runValid = sortedPlayed.reduceRight((isRun, card, i)  => {
-    if (isRun.difference > 2) return isRun;
-    if (!isRun.prevFaceValue) return {difference: null, prevFaceValue: card.faceValue, validCards: [],
-      runLength: 1}
+  const sortedPlayed = cardsPlayed
+    .slice()
+    .sort((a: CardType, b: CardType) => a.playValue - b.playValue);
+  const lowRunFaceValue = sortedPlayed[0].faceValue - 1;
+  const highRunFaceValue = sortedPlayed[-1].faceValue + 1;
+  const runValid = sortedPlayed.reduceRight<Run>(
+    (isRun, card, i) => {
+      if (isRun.difference > 2) return isRun;
+      if (!isRun.prevFaceValue)
+        return { difference: -1, prevFaceValue: card.faceValue, validCards: [], runLength: 1 };
       // this still doesn't work b/c there could be both a valid inner card and outer
-    else if (card.faceValue - isRun.prevFaceValue === 1) return {difference: Math.max(isRun.difference, 1), prevFaceValue: card.faceValue, validCards: isRun.validCards, runLength: isRun.runLength++ }
-    else if (card.faceValue - isRun.prevFaceValue === 2) return {difference: Math.max(isRun.difference, 2), prevFaceValue: card.faceValue, validCards: [card.faceValue - 1], runLength: isRun.difference === 2 ? isRun.runLength : isRun.runLength++ }
-    else if (card.faceValue - isRun.prevFaceValue > 2) return {difference: 3, prevFaceValue: card.faceValue, validCards: isRun.validCards, runLength: isRun.runLength }
-  }, {
-    difference: -1,
-    prevFaceValue: -1,
-    validCards: [],
-    runLength: 0
-  })
+      else if (card.faceValue - isRun.prevFaceValue === 1)
+        return {
+          difference: Math.max(isRun.difference, 1),
+          prevFaceValue: card.faceValue,
+          validCards: isRun.validCards,
+          runLength: isRun.runLength++
+        };
+      else if (card.faceValue - isRun.prevFaceValue === 2)
+        return {
+          difference: Math.max(isRun.difference, 2),
+          prevFaceValue: card.faceValue,
+          validCards: [card.faceValue - 1],
+          runLength: isRun.difference === 2 ? isRun.runLength : isRun.runLength++
+        };
+      else if (card.faceValue - isRun.prevFaceValue > 2)
+        return {
+          difference: 3,
+          prevFaceValue: card.faceValue,
+          validCards: isRun.validCards,
+          runLength: isRun.runLength
+        };
+      return isRun;
+    },
+    {
+      difference: -1,
+      prevFaceValue: -1,
+      validCards: [],
+      runLength: 0
+    }
+  );
 
   return makeRun;
 }

@@ -58,7 +58,8 @@ const Cards: FC<CardsProps> = ({ cardHeight, isFaceUp, cards }) => {
     <CardBox
       size={{ height: CardBoxHeight.LG, width: CardBoxWidth.LG_SIX }}
       maxCards={6}
-      placement="self-center place-self-center">
+      placement="self-center place-self-center"
+    >
       {handUI}
     </CardBox>
   );

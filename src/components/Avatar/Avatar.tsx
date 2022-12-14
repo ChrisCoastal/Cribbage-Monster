@@ -14,9 +14,9 @@ const Avatar = () => {
   ));
 
   return (
-    <div className="flex flex-col items-center col-start-3 w-">
+    <div className="w- col-start-3 flex flex-col items-center">
       <p className="text-sm">opponent</p>
-      <div className=" w-10 h-10 mb-2 bg-slate-400 rounded-full border border-black overflow-hidden">
+      <div className=" mb-2 h-10 w-10 overflow-hidden rounded-full border border-black bg-slate-400">
         <img src="" alt="" />
       </div>
       {/* 

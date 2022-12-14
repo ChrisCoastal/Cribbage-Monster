@@ -1,6 +1,6 @@
 const Board = () => {
   return (
-    <div className=" justify-self-end w-24 h-full col-start-4 row-start-2 row-span-3 border border-red-200 rounded-sm">
+    <div className=" col-start-4 row-span-3 row-start-2 h-full w-24 justify-self-end rounded-sm border border-red-200">
       Board
     </div>
   );

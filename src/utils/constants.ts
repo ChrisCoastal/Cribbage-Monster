@@ -21,7 +21,7 @@ export const INITIAL_GAME_STATE: GameState = {
       played: []
     }
   },
-  starter: null,
+  starterCard: null,
   crib: [],
   score: {
     player: {

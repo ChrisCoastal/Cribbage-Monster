@@ -21,14 +21,14 @@ const Nav = () => {
   }
 
   return (
-    <div className="flex items-center fixed top-0 justify-between w-full h-12 px-4">
+    <div className="fixed top-0 flex h-12 w-full items-center justify-between px-4">
       <span>CRIB</span>
       <ul className="flex items-center gap-3">
         <li>
-          <div className="w-6 h-6 rounded-full bg-white"></div>
+          <div className="h-6 w-6 rounded-full bg-white"></div>
         </li>
         <li>
-          <div className="w-6 h-6 rounded-full bg-white"></div>
+          <div className="h-6 w-6 rounded-full bg-white"></div>
         </li>
         {userAuth ? (
           <>
@@ -38,7 +38,8 @@ const Nav = () => {
             <li>
               <button
                 onClick={() => logoutUser(() => console.log('OUT!'))}
-                className="h-6 rounded-full bg-white">
+                className="h-6 rounded-full bg-white"
+              >
                 LOGOUT
               </button>
             </li>

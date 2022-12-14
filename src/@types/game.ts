@@ -8,7 +8,7 @@ export type GameState = {
     opponent: HandType;
   };
   crib: CardType[];
-  starter: CardType | null;
+  starterCard: CardType | null;
   score: {
     player: ScoreType;
     opponent: ScoreType;

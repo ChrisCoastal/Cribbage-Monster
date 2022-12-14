@@ -35,7 +35,8 @@ const PlayingCard: FC<PlayingCardProps> = ({ cardSize, isFaceUp, card, cardIndex
       onClick={() => (handler ? handler(card) : null)}
       className={`${cardSize} ${cardPos[cardIndex]} ${
         cardSize === CardSize.LG ? cardRotationHand[cardIndex] : cardRotation[cardIndex % 2]
-      } grid-columns-3 grid grid-rows-3 items-center rounded-[4%] border border-solid border-black transition-all duration-300`}>
+      } grid-columns-3 grid grid-rows-3 items-center rounded-[4%] border border-solid border-black transition-all duration-300`}
+    >
       <div className="col-start-1 flex flex-col justify-self-center text-sm">
         <span>{card.faceValue}</span>
         <span>{card.suit.slice(0, 2)}</span>
@@ -50,7 +51,8 @@ const PlayingCard: FC<PlayingCardProps> = ({ cardSize, isFaceUp, card, cardIndex
   ) : (
     <div
       className={`${cardSize} ${cardPos} absolute top-[12px] left-[2px] rounded-[4%] border border-black bg-red-200`}
-      onClick={() => (handler ? handler(card) : null)}></div>
+      onClick={() => (handler ? handler(card) : null)}
+    ></div>
   );
 };
 
