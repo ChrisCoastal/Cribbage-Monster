@@ -26,7 +26,7 @@ export type CardType = {
   suit: Suit;
   name: CardName;
   faceValue: number;
-  // playValue: number;
+  playValue: number;
 };
 
 export type Deck = CardType[];

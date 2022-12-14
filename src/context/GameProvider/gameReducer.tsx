@@ -29,7 +29,7 @@ const gameReducer = (state: GameState, action: GameReducerActions): GameState =>
       // state.hands.player.inHand.forEach((card) =>
       //   card.id === payload.card.id ? (cardPlayed = card) : hand.push(card)
       // );
-
+      // FIXME: this also needs to update cardsPlayed / total
       return {
         ...state,
         hands: {
