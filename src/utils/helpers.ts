@@ -93,7 +93,7 @@ function cardsPlayable(maxCardValue: number): number[] {
   return playable;
 }
 
-function isPairs(
+function calcPairs(
   maxCardValue: number,
   cardsPlayed: CardType[]
 ): { isPair: boolean; cardPlayValue: number; points: number } {
@@ -127,9 +127,63 @@ function isPairs(
   return pairs;
 }
 
-function isFifteen(cardTotal: number): number | null {
+function isPairs(cardsPlayed: CardType[]): {
+  cardValues: number[];
+  isPair: boolean;
+  points: number;
+} {
+  const cardFaceValues = getCardFaceValues(cardsPlayed);
+  const pairPoints = [0, 2, 6, 12];
+  const pair = cardFaceValues.reduceRight<{
+    cardValues: number[];
+    isPair: boolean;
+    pairBroken: boolean;
+    points: number;
+  }>(
+    (prevCards, curCard, i) => {
+      if (prevCards.pairBroken) return prevCards;
+      if (!prevCards.cardValues.length) {
+        return { ...prevCards, cardValues: [curCard] };
+      }
+
+      if (prevCards.cardValues.at(-1) === curCard) {
+        const cardValues: number[] = [...prevCards.cardValues, curCard];
+        return {
+          cardValues,
+          isPair: true,
+          pairBroken: false,
+          points: pairPoints[cardValues.length - 1]
+        };
+      }
+      if (prevCards.cardValues.at(-1) !== curCard) return { ...prevCards, pairBroken: true };
+      return prevCards;
+    },
+    {
+      cardValues: [],
+      isPair: false,
+      pairBroken: false,
+      points: 0
+    }
+  );
+
+  return pair;
+}
+
+function calcFifteen(cardTotal: number): number | null {
   if (cardTotal >= 15 || cardTotal < 5) return null;
   return 15 - cardTotal;
+}
+
+function isFifteen(cardTotal: number): boolean {
+  return cardTotal === 15;
+}
+
+function getCardFaceValues(cards: CardType[]) {
+  return cards.map((card) => card.faceValue);
+}
+
+function getCardPlayValues(cards: CardType[]) {
+  return cards.map((card) => card.playValue);
 }
 
 // need to kep track of the length of the valid run
