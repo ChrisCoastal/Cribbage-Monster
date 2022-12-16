@@ -29,7 +29,7 @@ const GamePage = () => {
   // if (!game.gameId) throw new Error('no gameId');
   useEffect(() => {
     const gameRef = ref(rtdb, 'games/' + game.gameId);
-    dispatchGame({ type: GameReducerTypes.CREATE_GAME, payload: game });
+    // dispatchGame({ type: GameReducerTypes.CREATE_GAME, payload: game });
 
     const unsubscribe = onValue(gameRef, (snapshot) => {
       console.log(snapshot.val());

@@ -1,13 +1,11 @@
-import React, { FC } from 'react'
+import React, { FC } from 'react';
 
 type GamesListProps = {
-  games:
-}
+  // games:
+};
 
-const GamesList:FC<GamesListProps> = () => {
-  return (
-    <div>GamesList</div>
-  )
-}
+const GamesList: FC<GamesListProps> = () => {
+  return <div>GamesList</div>;
+};
 
-export default GamesList
+export default GamesList;

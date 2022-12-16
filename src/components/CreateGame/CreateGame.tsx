@@ -11,7 +11,7 @@ import useGameContext from 'src/hooks/useGameContext';
 import { INITIAL_GAME_STATE } from 'src/utils/constants';
 
 import Button from 'src/components/UI/Button';
-import { GameReducerTypes, Player, PlayerNum } from 'src/@types';
+import { GameReducerTypes, Player, PlayerNum, PlayerRole } from 'src/@types';
 
 const CreateGame = () => {
   const { userAuth } = useAuthContext();
@@ -28,10 +28,9 @@ const CreateGame = () => {
       ...INITIAL_GAME_STATE,
       gameId,
       // TODO: dealer should be decided by cutting deck
-      dealer: PlayerNum.P_ONE,
       players: {
         ...INITIAL_GAME_STATE.players,
-        player1: { id: user, activePlayer: false }
+        player1: { id: user, activePlayer: false, role: PlayerRole.DEALER }
       }
     };
     try {
@@ -39,7 +38,7 @@ const CreateGame = () => {
       const gameRef = ref(rtdb, 'games/' + gameId);
       await set(gameRef, newGame).then(() => {
         console.log('complete');
-        // dispatchGame({ type: GameReducerTypes.CREATE_GAME, payload: newGame });
+        dispatchGame({ type: GameReducerTypes.CREATE_GAME, payload: newGame });
         navigate(`/game/${gameId}`);
       });
     } catch (err) {
