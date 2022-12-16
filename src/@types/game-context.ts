@@ -8,12 +8,19 @@ export type GameContextType = {
 
 export enum GameReducerTypes {
   CREATE_GAME = 'create',
+  JOIN_PLAYER = 'join',
   DEAL = 'deal',
-  PLAY_CARD = 'play card'
+  PLAY_CARD = 'play card',
+  UPDATE = 'update'
 }
 
 export type CreateGameAction = {
   type: GameReducerTypes.CREATE_GAME;
+  payload: GameState;
+};
+
+export type JoinPlayerAction = {
+  type: GameReducerTypes.JOIN_PLAYER;
   payload: GameState;
 };
 
@@ -27,4 +34,14 @@ export type DealCardAction = {
   payload: { player: CardType[]; opponent: CardType[] };
 };
 
-export type GameReducerActions = CreateGameAction | DealCardAction | PlayCardAction;
+export type UpdateGameAction = {
+  type: GameReducerTypes.UPDATE;
+  payload: GameState;
+};
+
+export type GameReducerActions =
+  | CreateGameAction
+  | JoinPlayerAction
+  | DealCardAction
+  | PlayCardAction
+  | UpdateGameAction;

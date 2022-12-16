@@ -1,5 +1,23 @@
-import { CardName, CardType, Suit } from 'src/@types';
+import { CardName, CardType, Player, PlayerTitle, Suit } from 'src/@types';
 import { CARDS_IN_DECK, CARDS_PER_SUIT, HAND_SIZE } from './constants';
+
+// PLAYERS
+
+export function getPlayers(
+  players: {
+    player1: Player;
+    player2: Player;
+  },
+  userId: string
+) {
+  console.log(userId);
+  const player = players.player1.id === userId ? PlayerTitle.P_ONE : PlayerTitle.P_TWO;
+  const opponent = player === PlayerTitle.P_ONE ? PlayerTitle.P_TWO : PlayerTitle.P_ONE;
+
+  return { player, opponent };
+}
+
+// CARD PLAY
 
 export function createDeck(): CardType[] {
   const newDeck: CardType[] = [];
@@ -59,18 +77,18 @@ export function getShuffledDeck() {
 // TODO: does this need to be coordinated with firebase?
 // yes, it needs to be kept aligned
 export function dealHands(): {
-  player: CardType[];
-  opponent: CardType[];
+  player1: CardType[];
+  player2: CardType[];
 } {
   const hands = {
-    player: [] as CardType[],
-    opponent: [] as CardType[]
+    player1: [] as CardType[],
+    player2: [] as CardType[]
   };
 
   const shuffledDeck = getShuffledDeck();
 
   for (let i = 0; i < HAND_SIZE * 2; i++) {
-    i % 2 ? hands.opponent.push(shuffledDeck[i]) : hands.player.push(shuffledDeck[i]);
+    i % 2 ? hands.player2.push(shuffledDeck[i]) : hands.player1.push(shuffledDeck[i]);
   }
 
   return hands;

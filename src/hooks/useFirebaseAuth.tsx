@@ -11,8 +11,9 @@ import {
   updateProfile,
   UserCredential
 } from 'firebase/auth';
-import { db, firebaseAuth } from 'src/firestore.config';
+import { db, rtdb, firebaseAuth } from 'src/firestore.config';
 import { doc, setDoc, collection, Timestamp } from 'firebase/firestore';
+import { update, ref, set } from 'firebase/database';
 
 const useFirebaseAuth = (): AuthContextType => {
   // const auth = getAuth();
@@ -71,6 +72,7 @@ const useFirebaseAuth = (): AuthContextType => {
         await updateUserDoc(userData);
         console.log('here');
 
+        setUserDoc(userData);
         setUserAuth(() => userData.user);
         localStorage.setItem('authToken', userData.user.refreshToken);
         // const usersRef = collection(db, 'users');
@@ -85,8 +87,18 @@ const useFirebaseAuth = (): AuthContextType => {
       });
   };
 
+  async function setUserDoc(userData: UserCredential) {
+    set(ref(rtdb, 'users/' + userData.user.uid), {
+      uid: userData.user.uid,
+      username: userData.user.displayName,
+      email: userData.user.email,
+      online: true,
+      lastVisibleAt: Timestamp
+    }).then((data) => console.log(data, 'updated user doc'));
+  }
+
   async function updateUserDoc(userData: UserCredential) {
-    setDoc(doc(db, 'users', userData.user.uid), {
+    update(ref(rtdb, 'users/' + userData.user.uid), {
       uid: userData.user.uid,
       username: userData.user.displayName,
       email: userData.user.email,

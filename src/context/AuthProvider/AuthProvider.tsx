@@ -9,7 +9,7 @@ type AuthProviderProps = {
 const AuthContext = createContext({} as AuthContextType);
 
 const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
-  // state is held/managed in the useProvideAuthHook
+  // state is held/managed in the useFirebaseAuth hook
   const authState = useAuthProvider();
 
   return <AuthContext.Provider value={authState}>{children}</AuthContext.Provider>;

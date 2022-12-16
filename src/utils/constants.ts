@@ -10,25 +10,35 @@ export const CARDS_PER_SUIT = 13;
 
 export const INITIAL_GAME_STATE: GameState = {
   gameId: '',
-  activePlayer: false,
-  hands: {
-    player: {
+  dealer: null,
+  players: {
+    player1: {
+      id: '',
+      activePlayer: false
+    },
+    player2: {
+      id: '',
+      activePlayer: false
+    }
+  },
+  playerCards: {
+    player1: {
       inHand: [],
       played: []
     },
-    opponent: {
+    player2: {
       inHand: [],
       played: []
     }
   },
-  starterCard: null,
   crib: [],
+  starterCard: null,
   score: {
-    player: {
+    player1: {
       cur: 0,
       prev: 0
     },
-    opponent: {
+    player2: {
       cur: 0,
       prev: 0
     }

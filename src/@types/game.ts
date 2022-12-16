@@ -1,17 +1,48 @@
 import { CardType } from './index';
 
+// export type UserState = {
+//   id: UserId;
+//   game: GameId | null;
+// };
+
+export type UserId = string;
+export type GameId = string;
+
+export enum PlayerTitle {
+  P_ONE = 'player1',
+  P_TWO = 'player2'
+}
+
+export type Player = { id: UserId; activePlayer: boolean };
+
 export type GameState = {
-  gameId: string;
-  activePlayer: boolean;
-  hands: {
-    player: HandType;
-    opponent: HandType;
+  gameId: GameId;
+  dealer: PlayerTitle | null;
+  players: {
+    player1: Player;
+    player2: Player;
+  };
+  playerCards: {
+    player1: {
+      inHand: CardType[];
+      played: CardType[];
+    };
+    player2: {
+      inHand: CardType[];
+      played: CardType[];
+    };
   };
   crib: CardType[];
   starterCard: CardType | null;
   score: {
-    player: ScoreType;
-    opponent: ScoreType;
+    player1: {
+      cur: number;
+      prev: number;
+    };
+    player2: {
+      cur: number;
+      prev: number;
+    };
   };
   turn: {
     cardsPlayed: CardType[];
@@ -19,12 +50,9 @@ export type GameState = {
   };
 };
 
-export type ScoreType = {
-  cur: number;
-  prev: number;
-};
-
-export type HandType = {
-  inHand: CardType[];
-  played: CardType[];
+export type AppState = {
+  // users: {
+  //   [key: UserId]: UserState;
+  // };
+  games: { [key: GameId]: GameState };
 };

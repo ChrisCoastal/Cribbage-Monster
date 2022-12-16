@@ -35,13 +35,17 @@ const SignUpPage = () => {
   }, [userAuth]);
 
   async function submitHandler(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const username = formData.get('username') as string;
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
+    try {
+      event.preventDefault();
+      const formData = new FormData(event.currentTarget);
+      const username = formData.get('username') as string;
+      const email = formData.get('email') as string;
+      const password = formData.get('password') as string;
 
-    createUser(username, email, password, redirectAuthUser);
+      createUser(username, email, password, redirectAuthUser);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   return (

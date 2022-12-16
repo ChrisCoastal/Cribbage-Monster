@@ -19,12 +19,16 @@ const LoginPage = () => {
   }
 
   async function submitHandler(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
+    try {
+      event.preventDefault();
+      const formData = new FormData(event.currentTarget);
+      const email = formData.get('email') as string;
+      const password = formData.get('password') as string;
 
-    loginUser(email, password, redirectAuthUser);
+      loginUser(email, password, redirectAuthUser);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   return (

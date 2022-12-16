@@ -9,9 +9,9 @@ import useGameContext from 'src/hooks/useGameContext';
 const Avatar = () => {
   const { gameState, dispatchGame } = useGameContext();
 
-  const opponentCards = gameState.hands.opponent.inHand.map((card, i) => (
-    <PlayingCard key={nanoid()} cardSize={CardSize.SM} isFaceUp={false} card={card} cardIndex={i} />
-  ));
+  // const opponentCards = gameState.hands.opponent.inHand.map((card, i) => (
+  //   <PlayingCard key={nanoid()} cardSize={CardSize.SM} isFaceUp={false} card={card} cardIndex={i} />
+  // ));
 
   return (
     <div className="w- col-start-3 flex flex-col items-center">
