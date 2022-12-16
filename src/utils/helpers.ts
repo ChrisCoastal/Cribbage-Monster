@@ -1,18 +1,17 @@
-import { CardName, CardType, Player, PlayerTitle, SortBy, SortOrder, Suit } from 'src/@types';
+import { CardName, CardType, Player, PlayerNum, SortBy, SortOrder, Suit } from 'src/@types';
 import { CARDS_IN_DECK, CARDS_PER_SUIT, HAND_SIZE } from './constants';
 
 // PLAYERS
 
-export function getPlayers(
+export function getPlayerNum(
   players: {
     player1: Player;
     player2: Player;
   },
   userId: string
 ) {
-  console.log(userId);
-  const player = players.player1.id === userId ? PlayerTitle.P_ONE : PlayerTitle.P_TWO;
-  const opponent = player === PlayerTitle.P_ONE ? PlayerTitle.P_TWO : PlayerTitle.P_ONE;
+  const player = players.player1.id === userId ? PlayerNum.P_ONE : PlayerNum.P_TWO;
+  const opponent = player === PlayerNum.P_ONE ? PlayerNum.P_TWO : PlayerNum.P_ONE;
 
   return { player, opponent };
 }
@@ -101,9 +100,9 @@ export function sortHand(
   order: SortOrder = SortOrder.LOW_TO_HIGH,
   sortBy: SortBy = SortBy.FACE_VALUE
 ): CardType[] {
-  const sortedCards: CardType[] = JSON.parse(JSON.stringify(cards));
-
-  sortedCards.sort(sortBy === SortBy.FACE_VALUE ? cardSortByValue : cardSortBySuit);
+  // const sortedCards: CardType[] = JSON.parse(JSON.stringify(cards));
+  // sortedCards.sort(sortBy === SortBy.FACE_VALUE ? cardSortByValue : cardSortBySuit);
+  cards.sort(sortBy === SortBy.FACE_VALUE ? cardSortByValue : cardSortBySuit);
 
   function cardSortByValue(a: CardType, b: CardType) {
     return a.faceValue - b.faceValue;
@@ -129,7 +128,7 @@ export function sortHand(
       : suitOrder || b.playValue - a.playValue;
   }
 
-  return sortedCards;
+  return cards;
 }
 
 // SCORING

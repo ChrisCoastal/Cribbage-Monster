@@ -2,7 +2,7 @@ import { FC, useEffect } from 'react';
 
 import { collection, doc, onSnapshot } from 'firebase/firestore';
 import { rtdb } from 'src/firestore.config';
-import { getDatabase, ref, child, get, onValue } from 'firebase/database';
+import { getDatabase, ref, child, get, onValue, update } from 'firebase/database';
 
 import PlayFieldFlex from 'src/components/PlayField/PlayFieldFlex';
 import BottomNav from 'src/components/BottomNav/BottomNav';
@@ -23,12 +23,10 @@ export async function gameLoader({ params }: LoaderFunctionArgs) {
 }
 
 const GamePage = () => {
-  const { gameState, dispatchGame } = useGameContext();
   const game = useLoaderData() as GameState;
+  const { gameState, dispatchGame } = useGameContext();
   // const { gameId } = useParams();
-  if (!game.gameId) throw new Error('no gameId');
-  console.log('gameId', game.gameId);
-
+  // if (!game.gameId) throw new Error('no gameId');
   useEffect(() => {
     const gameRef = ref(rtdb, 'games/' + game.gameId);
     dispatchGame({ type: GameReducerTypes.CREATE_GAME, payload: game });
@@ -37,18 +35,6 @@ const GamePage = () => {
       console.log(snapshot.val());
       dispatchGame({ type: GameReducerTypes.UPDATE, payload: snapshot.val() });
     });
-
-    // console.log(gameState.gameId);
-
-    // const unsubscribe = onSnapshot(gameRef, (snapshot: any) => {
-    //   console.log(snapshot.docs);
-
-    // snapshot.docs.forEach((doc: any) => {
-    //   console.log(doc);
-    // booksFromOnSnapshot.push({ ...doc.data(), id: doc.id });
-    // });
-    // });
-
     return unsubscribe;
   }, []);
 

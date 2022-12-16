@@ -5,6 +5,7 @@ import Button from 'src/components/UI/Button';
 
 const DashboardPage = () => {
   const { userAuth } = useAuthContext();
+  console.log(userAuth);
 
   return (
     <div className="grid">

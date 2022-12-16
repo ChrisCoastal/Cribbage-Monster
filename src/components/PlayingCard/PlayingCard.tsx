@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { CardSize, CardType, UserId } from 'src/@types';
 import useAuthContext from 'src/hooks/useAuthContext';
 import useGameContext from 'src/hooks/useGameContext';
+import { getPlayerNum } from 'src/utils/helpers';
 
 type PlayingCardProps = {
   cardSize: string;
@@ -15,7 +16,8 @@ type PlayingCardProps = {
 const PlayingCard: FC<PlayingCardProps> = ({ cardSize, isFaceUp, card, cardIndex, handler }) => {
   const { userAuth } = useAuthContext();
   const { gameState } = useGameContext();
-  // const activePlayer = isActivePlayer(userAuth?.uid)
+  const { player } = getPlayerNum(gameState.players, userAuth!.uid!);
+  const activePlayer = gameState.players[player].activePlayer;
 
   const cardPos = [
     'bg-red-200 col-start-1 col-end-4 row-start-1 z-[20]',
@@ -44,12 +46,14 @@ const PlayingCard: FC<PlayingCardProps> = ({ cardSize, isFaceUp, card, cardIndex
     'hover:translate-y-0'
   ];
 
+  const conditionalStyles = `${cardSize} ${cardPos[cardIndex]} ${
+    cardSize === CardSize.LG ? cardRotationHand[cardIndex] : cardRotation[cardIndex % 2]
+  } ${activePlayer && cardHover}`;
+
   return isFaceUp ? (
     <div
       onClick={() => (handler ? handler(card) : null)}
-      className={`${cardSize} ${cardPos[cardIndex]} ${
-        cardSize === CardSize.LG ? cardRotationHand[cardIndex] : cardRotation[cardIndex % 2]
-      } grid-columns-3 grid grid-rows-3 items-center rounded-[4%] border border-solid border-black transition-all duration-300`}>
+      className={`${conditionalStyles} grid-columns-3 grid grid-rows-3 items-center rounded-[4%] border border-solid border-black transition-all duration-300`}>
       <div className="col-start-1 flex flex-col justify-self-center text-sm">
         <span>{card.faceValue}</span>
         <span>{card.suit.slice(0, 2)}</span>

@@ -1,31 +1,18 @@
 import { Dispatch } from 'react';
 import { AppState } from './index';
+import { User } from 'firebase/auth';
 
-// export type AppContextType = {
-//   appState: AppState;
-//   dispatchApp: Dispatch<AppReducerActions>;
-// };
+export type UserId = string;
 
-// // TODO:
-// export enum AppReducerTypes {
-//   ADD_USER = 'add user'
-// }
-
-// export type AppAction = {
-//   type: AppReducerTypes.ADD_USER;
-//   payload: { id: string };
-// };
-
-// export type AppReducerActions = AppAction;
-
-export interface UserState {
-  displayName: string | null;
-  email: string | null;
-  uid: string | null;
-}
+type Metadata = {
+  createdAt: string; // ex: '1670192291830'
+  lastLoginAt: string; // ex: '1670192291830'
+  lastSignInTime: string; // ex: "Tue, 06 Dec 2022 05:46:05 GMT"
+  creationTime: string; // ex: "Tue, 06 Dec 2022 05:46:05 GMT"
+};
 
 export type AuthContextType = {
-  userAuth: UserState | null;
+  userAuth: User | null;
   // setUserAuth: Dispatch<React.SetStateAction<UserState | null>>;
   updateDisplayName: (newDisplayName: string) => void;
   createUser: (

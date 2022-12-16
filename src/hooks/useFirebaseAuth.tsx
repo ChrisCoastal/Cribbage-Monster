@@ -1,4 +1,4 @@
-import { AuthContextType, UserState } from 'src/@types';
+import { AuthContextType } from 'src/@types';
 
 import { useEffect, useState } from 'react';
 import {
@@ -14,10 +14,11 @@ import {
 import { db, rtdb, firebaseAuth } from 'src/firestore.config';
 import { doc, setDoc, collection, Timestamp } from 'firebase/firestore';
 import { update, ref, set } from 'firebase/database';
+import { User } from 'firebase/auth';
 
 const useFirebaseAuth = (): AuthContextType => {
   // const auth = getAuth();
-  const [userAuth, setUserAuth] = useState<UserState | null>(null);
+  const [userAuth, setUserAuth] = useState<User | null>(null);
   // const [loadingAuth, setloadingAuth] = useState<boolean>(false);
 
   const updateDisplayName = async (newDisplayName: string) => {
@@ -137,7 +138,7 @@ const useFirebaseAuth = (): AuthContextType => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(firebaseAuth, (userData) => {
       if (userData) {
-        console.log('Userstate is logged in via useEffect');
+        console.log('Userstate is logged in via useEffect', userData);
         setUserAuth(userData);
       } else {
         console.log('Userstate set to null');

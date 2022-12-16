@@ -11,14 +11,18 @@ import useGameContext from 'src/hooks/useGameContext';
 import { INITIAL_GAME_STATE } from 'src/utils/constants';
 
 import Button from 'src/components/UI/Button';
-import { GameReducerTypes, Player, PlayerNum } from 'src/@types';
+import { GameId, GameReducerTypes, Player, PlayerNum } from 'src/@types';
 
-const CreateGame = () => {
+type JoinGameProps = {
+  gameId: GameId;
+};
+
+const JoinGame = () => {
   const { userAuth } = useAuthContext();
   const { gameState, dispatchGame } = useGameContext();
   const navigate = useNavigate();
 
-  async function createGame() {
+  async function joinGame() {
     // const gamesRef = collection(db, 'games');
     const user = userAuth?.uid;
     if (!user) throw new Error('no user to create game');
@@ -55,7 +59,7 @@ const CreateGame = () => {
     //   .catch((err) => console.log(err));
   }
 
-  return <Button handler={createGame}>Create Game</Button>;
+  return <Button handler={joinGame}>Join Game</Button>;
 };
 
-export default CreateGame;
+export default JoinGame;
