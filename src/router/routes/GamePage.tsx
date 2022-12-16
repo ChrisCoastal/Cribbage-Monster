@@ -30,9 +30,9 @@ const GamePage = () => {
   console.log('gameId', game.gameId);
 
   useEffect(() => {
-    // FIXME: this is undefined
-    // if (!gameState.gameId) return;
     const gameRef = ref(rtdb, 'games/' + game.gameId);
+    dispatchGame({ type: GameReducerTypes.CREATE_GAME, payload: game });
+
     const unsubscribe = onValue(gameRef, (snapshot) => {
       console.log(snapshot.val());
       dispatchGame({ type: GameReducerTypes.UPDATE, payload: snapshot.val() });

@@ -25,7 +25,7 @@ import CardBox from 'src/components/CardBox/CardBox';
 import Button from 'src/components/UI/Button';
 import useAuthContext from 'src/hooks/useAuthContext';
 import useGameContext from 'src/hooks/useGameContext';
-import { dealHands } from 'src/utils/helpers';
+import { dealHands, getPlayers } from 'src/utils/helpers';
 import { nanoid } from 'nanoid';
 import { FC, useEffect } from 'react';
 
@@ -37,11 +37,11 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   const { userAuth } = useAuthContext();
   const { gameState, dispatchGame } = useGameContext();
 
-  const userId = userAuth?.uid;
+  const userId = userAuth!.uid!;
 
-  // const { player, opponent } = getPlayers(gameState.players, userId);
-  // const playerHand = renderCards(gameState.playerCards[player].inHand, true, CardSize.LG);
-  // const opponentHand = renderCards(gameState.playerCards[opponent].inHand, false, CardSize.SM);
+  const { player, opponent } = getPlayers(gameState.players, userId);
+  const playerHand = renderCards(gameState.playerCards[player]?.inHand, true, CardSize.LG);
+  const opponentHand = renderCards(gameState.playerCards[opponent]?.inHand, false, CardSize.SM);
   // const playerPlayed = renderCards(gameState.playerCards[player].played, true, CardSize.MD);
   // const opponentPlayed = renderCards(gameState.playerCards[opponent].played, true, CardSize.MD);
 
@@ -61,20 +61,6 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     dispatchGame({ type: GameReducerTypes.PLAY_CARD, payload: card });
   }
 
-  function getPlayers(
-    players: {
-      player1: Player;
-      player2: Player;
-    },
-    userId: string
-  ) {
-    console.log(userId);
-    const player = players.player1.id === userId ? PlayerTitle.P_ONE : PlayerTitle.P_TWO;
-    const opponent = player === PlayerTitle.P_ONE ? PlayerTitle.P_TWO : PlayerTitle.P_ONE;
-
-    return { player, opponent };
-  }
-
   // useEffect(() => {
   // if (gameState.activePlayer === true) {
   // const gameRef = doc(db, 'game', gameState.gameId);
@@ -89,7 +75,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   // }
   // }, [gameState.activePlayer]);
 
-  function renderCards(hand: CardType[], faceUp: boolean, cardSize: CardSize) {
+  function renderCards(hand: CardType[] = [], faceUp: boolean, cardSize: CardSize) {
     return hand.map((card, i) => (
       <PlayingCard
         key={nanoid()}
@@ -132,7 +118,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
           size={{ height: CardBoxHeight.LG, width: CardBoxWidth.LG_SIX }}
           maxCards={6}
           placement="self-center place-self-center">
-          {/* {playerHand} */}
+          {playerHand}
         </CardBox>
 
         {/* <Cards cardHeight="h-40" isFaceUp={true} cards={gameState.hands.player.inHand} /> */}

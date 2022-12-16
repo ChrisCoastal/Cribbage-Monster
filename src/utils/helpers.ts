@@ -1,4 +1,4 @@
-import { CardName, CardType, Player, PlayerTitle, Suit } from 'src/@types';
+import { CardName, CardType, Player, PlayerTitle, SortBy, SortOrder, Suit } from 'src/@types';
 import { CARDS_IN_DECK, CARDS_PER_SUIT, HAND_SIZE } from './constants';
 
 // PLAYERS
@@ -17,7 +17,7 @@ export function getPlayers(
   return { player, opponent };
 }
 
-// CARD PLAY
+// DEAL CARDS
 
 export function createDeck(): CardType[] {
   const newDeck: CardType[] = [];
@@ -93,6 +93,46 @@ export function dealHands(): {
 
   return hands;
 }
+
+// SORTING
+
+export function sortHand(
+  cards: CardType[],
+  order: SortOrder = SortOrder.LOW_TO_HIGH,
+  sortBy: SortBy = SortBy.FACE_VALUE
+): CardType[] {
+  const sortedCards: CardType[] = JSON.parse(JSON.stringify(cards));
+
+  sortedCards.sort(sortBy === SortBy.FACE_VALUE ? cardSortByValue : cardSortBySuit);
+
+  function cardSortByValue(a: CardType, b: CardType) {
+    return a.faceValue - b.faceValue;
+  }
+
+  function cardSortBySuit(a: CardType, b: CardType) {
+    let suitOrder;
+    if (a.suit === Suit.Hearts && a.suit === b.suit) suitOrder = 0;
+    else if (a.suit === Suit.Hearts) suitOrder = -1;
+    else if (b.suit === Suit.Hearts) suitOrder = 1;
+    else if (a.suit === Suit.Spades && a.suit === b.suit) suitOrder = 0;
+    else if (a.suit === Suit.Spades) suitOrder = -1;
+    else if (b.suit === Suit.Spades) suitOrder = 1;
+    else if (a.suit === Suit.Diamonds && a.suit === b.suit) suitOrder = 0;
+    else if (a.suit === Suit.Diamonds) suitOrder = -1;
+    else if (b.suit === Suit.Diamonds) suitOrder = 1;
+    else if (a.suit === Suit.Clubs && a.suit === b.suit) suitOrder = 0;
+    else if (a.suit === Suit.Clubs) suitOrder = -1;
+    else if (b.suit === Suit.Clubs) suitOrder = 1;
+
+    return order === SortOrder.LOW_TO_HIGH
+      ? suitOrder || a.playValue - b.playValue
+      : suitOrder || b.playValue - a.playValue;
+  }
+
+  return sortedCards;
+}
+
+// SCORING
 
 //TODO:
 // isPairs

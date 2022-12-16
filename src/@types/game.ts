@@ -56,3 +56,13 @@ export type AppState = {
   // };
   games: { [key: GameId]: GameState };
 };
+
+export enum SortOrder {
+  LOW_TO_HIGH = 'low high',
+  HIGH_TO_LOW = 'high low'
+}
+
+export enum SortBy {
+  FACE_VALUE = 'face',
+  SUIT = 'suit'
+}
