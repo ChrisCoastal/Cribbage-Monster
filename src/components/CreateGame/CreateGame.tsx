@@ -11,32 +11,44 @@ import useGameContext from 'src/hooks/useGameContext';
 import { INITIAL_GAME_STATE } from 'src/utils/constants';
 
 import Button from 'src/components/UI/Button';
-import { GameReducerTypes, Player, PlayerNum, PlayerRole } from 'src/@types';
+import { GameBrief, GameReducerTypes, Player, PlayerNum, PlayerRole } from 'src/@types';
 
 const CreateGame = () => {
   const { userAuth } = useAuthContext();
   const { gameState, dispatchGame } = useGameContext();
   const navigate = useNavigate();
 
-  async function createGame() {
-    // const gamesRef = collection(db, 'games');
-    const user = userAuth?.uid;
-    if (!user) throw new Error('no user to create game');
-
-    const gameId = nanoid();
-    const newGame = {
-      ...INITIAL_GAME_STATE,
-      gameId,
-      // TODO: dealer should be decided by cutting deck
-      players: {
-        ...INITIAL_GAME_STATE.players,
-        player1: { id: user, activePlayer: false, role: PlayerRole.DEALER }
-      }
-    };
+  async function createGameHandler() {
     try {
+      if (!userAuth) throw new Error('no user to create game');
+      const { uid, displayName } = userAuth;
+
+      const gameId = nanoid();
+      const newGame = {
+        ...INITIAL_GAME_STATE,
+        gameId,
+        // TODO: dealer should be decided by cutting deck
+        players: {
+          ...INITIAL_GAME_STATE.players,
+          player1: {
+            id: uid,
+            displayName: displayName!,
+            activePlayer: false,
+            role: PlayerRole.DEALER
+          }
+        }
+      };
+      const gameBrief: GameBrief = {
+        gameId,
+        player1: displayName!,
+        player2: '',
+        scoreToWin: 121
+      };
       console.log('creating game');
-      const gameRef = ref(rtdb, 'games/' + gameId);
-      await set(gameRef, newGame).then(() => {
+      const gameslistRef = ref(rtdb, `gameslist/${gameId}`);
+      const gameRef = ref(rtdb, `games/${gameId}`);
+      set(gameslistRef, gameBrief);
+      set(gameRef, newGame).then(() => {
         console.log('complete');
         dispatchGame({ type: GameReducerTypes.CREATE_GAME, payload: newGame });
         navigate(`/game/${gameId}`);
@@ -54,7 +66,7 @@ const CreateGame = () => {
     //   .catch((err) => console.log(err));
   }
 
-  return <Button handler={createGame}>Create Game</Button>;
+  return <Button handler={createGameHandler}>Create Game</Button>;
 };
 
 export default CreateGame;

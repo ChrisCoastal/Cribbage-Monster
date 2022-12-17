@@ -13,30 +13,31 @@ const gameReducer = (state: GameState, action: GameReducerActions): GameState =>
 
     case GameReducerTypes.UPDATE: {
       // structured this way b/c realtime database discards empty arrays/null values
+      const { players, playerCards } = state;
       const updatedState = {
         gameId: payload.gameId || state.gameId,
         players: {
           player1: {
-            id: payload.players.player1.id || state.players.player1.id,
-            activePlayer:
-              payload.players.player1.activePlayer || state.players.player1.activePlayer,
-            role: payload.players.player1.role || state.players.player1.role
+            id: payload.players.player1.id || players.player1.id,
+            displayName: payload.players.player1.displayName || players.player1.displayName,
+            activePlayer: payload.players.player1.activePlayer || players.player1.activePlayer,
+            role: payload.players.player1.role || players.player1.role
           },
           player2: {
-            id: payload.players.player2.id || state.players.player2.id,
-            activePlayer:
-              payload.players.player2.activePlayer || state.players.player2.activePlayer,
-            role: payload.players.player2.role || state.players.player2.role
+            id: payload.players.player2.id || players.player2.id,
+            displayName: payload.players.player2.displayName || players.player2.displayName,
+            activePlayer: payload.players.player2.activePlayer || players.player2.activePlayer,
+            role: payload.players.player2.role || players.player2.role
           }
         },
         playerCards: {
           player1: {
-            inHand: payload?.playerCards?.player1.inHand || state.playerCards.player1.inHand,
-            played: payload?.playerCards?.player1.played || state.playerCards.player1.played
+            inHand: payload?.playerCards?.player1?.inHand || playerCards.player1.inHand,
+            played: payload?.playerCards?.player1?.played || playerCards.player1.played
           },
           player2: {
-            inHand: payload?.playerCards?.player2.inHand || state.playerCards.player2.inHand,
-            played: payload?.playerCards?.player2.played || state.playerCards.player2.played
+            inHand: payload?.playerCards?.player2?.inHand || playerCards.player2.inHand,
+            played: payload?.playerCards?.player2?.played || playerCards.player2.played
           }
         },
         crib: payload.crib || state.crib,

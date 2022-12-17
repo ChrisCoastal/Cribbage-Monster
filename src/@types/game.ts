@@ -12,7 +12,7 @@ export enum PlayerRole {
   PONE = 'player2'
 }
 
-export type Player = { id: UserId; activePlayer: boolean; role: PlayerRole };
+export type Player = { id: UserId; displayName: string; activePlayer: boolean; role: PlayerRole };
 
 export type GameState = {
   gameId: GameId;
@@ -46,6 +46,13 @@ export type GameState = {
     cardsPlayed: CardType[];
     cardTotal: number;
   };
+};
+
+export type GameBrief = {
+  gameId: GameId;
+  player1: string; // display name
+  player2: string; // display name
+  scoreToWin: 121;
 };
 
 export enum SortOrder {

@@ -43,10 +43,10 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   const { player, opponent } = getPlayerNum(gameState.players, userId);
   console.log(player, opponent);
 
-  // const playerHand = gameState.playerCards[player]?.inHand;
-  // const renderPlayerHand = renderCards(gameState.playerCards[player]?.inHand, true, CardSize.LG);
-  // const opponentHand = gameState.playerCards[opponent]?.inHand;
-  // const renderOpponentHand = renderCards(opponentHand, false, CardSize.SM);
+  const playerHand = gameState.playerCards[player]?.inHand;
+  const renderPlayerHand = renderCards(gameState.playerCards[player]?.inHand, true, CardSize.LG);
+  const opponentHand = gameState.playerCards[opponent]?.inHand;
+  const renderOpponentHand = renderCards(opponentHand, false, CardSize.SM);
   // const renderPlayerPlayed = renderCards(gameState.playerCards[player].played, true, CardSize.MD);
   // const renderOpponentPlayed = renderCards(gameState.playerCards[opponent].played, true, CardSize.MD);
 
@@ -67,33 +67,33 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
 
   function cardClickHandler(targetCard: CardType) {
     console.log(targetCard);
-    // if (playerHand.length > 4) {
-    //   const playerHandRef = ref(rtdb, `games/${gameId}/playerCards/${player}/inHand`);
-    //   const cribRef = ref(rtdb, `games/${gameId}/crib`);
-    //   const addCardToCribRef = push(cribRef);
-    //   const cardIndex = gameState.playerCards[player].inHand.findIndex(
-    //     (card) => card.id === targetCard.id
-    //   );
-    //   const playedCardRef = ref(rtdb, `games/${gameId}/playerCards/${player}/inHand/${cardIndex}`);
-    //   //FIXME: does this work? or update?
-    //   // set(addCardToCribRef, targetCard).then(() => remove(playedCardRef));
-    //   set(addCardToCribRef, targetCard).then(() => {
-    //     const updatedHand = gameState.playerCards[player].inHand.filter(
-    //       (card) => card.id !== targetCard.id
-    //     );
-    //     set(playerHandRef, updatedHand);
-    //   });
-    //   // const updatedHand = gameState.playerCards[player].inHand.filter(
-    //   //   (card) => card.id !== targetCard.id
-    //   // );
-    //   // update(playerHandRef, updatedHand);
-    // }
-    // if (playerHand.length <= 4) {
-    // }
-    // if (playerHand.length <= 4) {
-    //   const playerHandRef = ref(rtdb, `games/${gameId}/playerCards/${player}/inHand`);
-    //   const player1PlayedRef = ref(rtdb, `games/${gameId}/playerCards/${player}/played`);
-    // }
+    if (playerHand.length > 4) {
+      const playerHandRef = ref(rtdb, `games/${gameId}/playerCards/${player}/inHand`);
+      const cribRef = ref(rtdb, `games/${gameId}/crib`);
+      const addCardToCribRef = push(cribRef);
+      const cardIndex = gameState.playerCards[player].inHand.findIndex(
+        (card) => card.id === targetCard.id
+      );
+      const playedCardRef = ref(rtdb, `games/${gameId}/playerCards/${player}/inHand/${cardIndex}`);
+      //FIXME: does this work? or update?
+      // set(addCardToCribRef, targetCard).then(() => remove(playedCardRef));
+      set(addCardToCribRef, targetCard).then(() => {
+        const updatedHand = gameState.playerCards[player].inHand.filter(
+          (card) => card.id !== targetCard.id
+        );
+        set(playerHandRef, updatedHand);
+      });
+      // const updatedHand = gameState.playerCards[player].inHand.filter(
+      //   (card) => card.id !== targetCard.id
+      // );
+      // update(playerHandRef, updatedHand);
+    }
+    if (playerHand.length <= 4) {
+    }
+    if (playerHand.length <= 4) {
+      const playerHandRef = ref(rtdb, `games/${gameId}/playerCards/${player}/inHand`);
+      const player1PlayedRef = ref(rtdb, `games/${gameId}/playerCards/${player}/played`);
+    }
 
     // dispatchGame({ type: GameReducerTypes.PLAY_CARD, payload: card });
   }
@@ -165,7 +165,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
           size={{ height: CardBoxHeight.LG, width: CardBoxWidth.LG_SIX }}
           maxCards={6}
           placement="self-center place-self-center">
-          {/* {renderPlayerHand} */}
+          {renderPlayerHand}
         </CardBox>
 
         {/* <Cards cardHeight="h-40" isFaceUp={true} cards={gameState.hands.player.inHand} /> */}

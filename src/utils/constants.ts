@@ -13,11 +13,13 @@ export const INITIAL_GAME_STATE: GameState = {
   players: {
     player1: {
       id: '',
+      displayName: '',
       activePlayer: false,
       role: PlayerRole.DEALER
     },
     player2: {
       id: '',
+      displayName: '',
       activePlayer: false,
       role: PlayerRole.PONE
     }
