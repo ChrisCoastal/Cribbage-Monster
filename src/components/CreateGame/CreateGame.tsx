@@ -11,7 +11,7 @@ import useGameContext from 'src/hooks/useGameContext';
 import { INITIAL_GAME_STATE } from 'src/utils/constants';
 
 import Button from 'src/components/UI/Button';
-import { GameBrief, GameReducerTypes, Player, PlayerNum, PlayerRole } from 'src/@types';
+import { GameBrief, GameReducerTypes, Player, PlayerPos, PlayerRole } from 'src/@types';
 
 const CreateGame = () => {
   const { userAuth } = useAuthContext();

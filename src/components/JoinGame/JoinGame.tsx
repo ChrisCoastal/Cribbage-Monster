@@ -8,7 +8,7 @@ import { getDatabase, update, ref, set, get, runTransaction } from 'firebase/dat
 import useAuthContext from 'src/hooks/useAuthContext';
 import useGameContext from 'src/hooks/useGameContext';
 import { INITIAL_GAME_STATE } from 'src/utils/constants';
-import { findPlayerNum } from 'src/utils/helpers';
+import { findPlayerPos } from 'src/utils/helpers';
 
 import Button from 'src/components/UI/Button';
 import {
@@ -16,7 +16,7 @@ import {
   GameReducerTypes,
   GameState,
   Player,
-  PlayerNum,
+  PlayerPos,
   PlayerRole,
   UserId
 } from 'src/@types';
@@ -47,14 +47,14 @@ const JoinGame: FC<JoinGameProps> = ({ gameId }) => {
         };
 
         // will check for a vacant spot or if the player is already in the game
-        const playerNum = findPlayerNum(players, uid);
+        const PlayerPos = findPlayerPos(players, uid);
 
-        if (!playerNum) throw new Error('Sorry that game already has 2 players');
-        update(gamelistRef, { [playerNum]: displayName! });
+        if (!PlayerPos) throw new Error('Sorry that game already has 2 players');
+        update(gamelistRef, { [PlayerPos]: displayName! });
         update(gamePlayersRef, {
           ...players,
-          [playerNum]: {
-            ...players[playerNum],
+          [PlayerPos]: {
+            ...players[PlayerPos],
             id: uid,
             displayName: displayName!
           }

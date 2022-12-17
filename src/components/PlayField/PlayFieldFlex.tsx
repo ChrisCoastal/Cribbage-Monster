@@ -8,7 +8,7 @@ import {
   GameReducerTypes,
   IsActive,
   Player,
-  PlayerNum,
+  PlayerPos,
   PlayerRole,
   Suit,
   UserId
@@ -40,18 +40,20 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   const userId = userAuth!.uid!;
 
   const { gameState, dispatchGame } = useGameContext();
-  const { crib, playerCards } = gameState;
   const { player, opponent } = getPlayerOpponent(gameState.players, userId);
   console.log(player, opponent);
 
-  const playerHand = gameState.playerCards[player]?.inHand;
-  const renderPlayerHand = renderCards(gameState.playerCards[player]?.inHand, true, CardSize.LG);
-  const opponentHand = gameState.playerCards[opponent]?.inHand;
+  const playerHand = Object.values(gameState.playerCards[player].inHand);
+  const opponentHand = Object.values(gameState.playerCards[opponent].inHand);
+  const playerPlayed = Object.values(gameState.playerCards[player].played);
+  const opponentPlayed = Object.values(gameState.playerCards[opponent].played);
+  const renderPlayerHand = renderCards(playerHand, true, CardSize.LG);
   const renderOpponentHand = renderCards(opponentHand, false, CardSize.SM);
-  // const renderPlayerPlayed = renderCards(gameState.playerCards[player].played, true, CardSize.MD);
-  // const renderOpponentPlayed = renderCards(gameState.playerCards[opponent].played, true, CardSize.MD);
+  const renderPlayerPlayed = renderCards(playerPlayed, true, CardSize.MD);
+  const renderOpponentPlayed = renderCards(opponentPlayed, true, CardSize.MD);
 
   async function dealHandler() {
+    // TODO: need deck here and add deck to state
     const hands = dealHands();
     const player1ActiveRef = ref(rtdb, `games/${gameId}/players/player1/activePlayer`);
     const player2ActiveRef = ref(rtdb, `games/${gameId}/players/player2/activePlayer`);
@@ -68,32 +70,57 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     // updateDoc(gameRef, data); //TODO:)
   }
 
+  function addCardToCrib(card: CardType): void {
+    const playerHandRef = getInHandRef(gameId, player);
+    const cribRef = getCribRef(gameId);
+    const addCardToCribRef = push(cribRef);
+    // const cardIndex = gameState.playerCards[player].inHand.findIndex((card) => card.id === card.id);
+    // const playedCardRef = ref(rtdb, `games/${gameId}/playerCards/${player}/inHand/${cardIndex}`);
+    //FIXME: does this work? or update?
+    // set(addCardToCribRef, card).then(() => remove(playedCardRef));
+    const updatedHand = filterCard(player, card.id);
+    set(playerHandRef, updatedHand).then(() => {
+      set(addCardToCribRef, card);
+    });
+  }
+
+  function filterCard(playerPos: PlayerPos, cardId: number): CardType[] {
+    return playerHand.filter((card) => card.id !== cardId);
+  }
+
+  function getCardsPlayedRef(gameId: GameId, player: PlayerPos) {
+    return ref(rtdb, `games/${gameId}/playerCards/${player}/played`);
+  }
+
+  function getInHandRef(gameId: GameId, player: PlayerPos) {
+    return ref(rtdb, `games/${gameId}/playerCards/${player}/inHand`);
+  }
+
+  function getCribRef(gameId: GameId) {
+    return ref(rtdb, `games/${gameId}/crib`);
+  }
+
+  function playCard(card: CardType) {
+    const playerHandRef = getInHandRef(gameId, player);
+    const cardsPlayedRef = getCardsPlayedRef(gameId, player);
+    const addCardToPlayedRef = push(cardsPlayedRef);
+    const updatedHand = filterCard(player, card.id);
+
+    set(playerHandRef, updatedHand).then(() => {
+      set(addCardToPlayedRef, card);
+    });
+  }
+
   function cardClickHandler(targetCard: CardType) {
-    if (!gameState.players[player].activePlayer) return console.log('player is not active');
+    if (gameState.players[player].activePlayer === IsActive.NOT_ACTIVE)
+      return console.log('player is not active');
 
     console.log(targetCard);
     if (playerHand.length > 4) {
-      const playerHandRef = ref(rtdb, `games/${gameId}/playerCards/${player}/inHand`);
-      const cribRef = ref(rtdb, `games/${gameId}/crib`);
-      const addCardToCribRef = push(cribRef);
-      const cardIndex = gameState.playerCards[player].inHand.findIndex(
-        (card) => card.id === targetCard.id
-      );
-      const playedCardRef = ref(rtdb, `games/${gameId}/playerCards/${player}/inHand/${cardIndex}`);
-      //FIXME: does this work? or update?
-      // set(addCardToCribRef, targetCard).then(() => remove(playedCardRef));
-      set(addCardToCribRef, targetCard).then(() => {
-        const updatedHand = gameState.playerCards[player].inHand.filter(
-          (card) => card.id !== targetCard.id
-        );
-        set(playerHandRef, updatedHand);
-      });
-      // const updatedHand = gameState.playerCards[player].inHand.filter(
-      //   (card) => card.id !== targetCard.id
-      // );
-      // update(playerHandRef, updatedHand);
+      addCardToCrib(targetCard);
     }
     if (playerHand.length <= 4) {
+      playCard(targetCard);
     }
     if (playerHand.length <= 4) {
       const playerHandRef = ref(rtdb, `games/${gameId}/playerCards/${player}/inHand`);
@@ -117,8 +144,8 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   // }
   // }, [gameState.activePlayer]);
 
-  function renderCards(hand: CardType[] = [], faceUp: boolean, cardSize: CardSize) {
-    return hand.map((card, i, arr) => (
+  function renderCards(cards: CardType[] = [], faceUp: boolean, cardSize: CardSize) {
+    return cards.map((card, i, arr) => (
       <PlayingCard
         key={card.id}
         isFaceUp={faceUp}
@@ -131,16 +158,16 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   }
 
   useEffect(() => {
-    if (!crib) return;
-    if (Object.keys(crib).length === 4) {
+    if (!gameState.crib) return;
+    if (Object.keys(gameState.crib).length === 4) {
       const dealer =
-        gameState.players.player1.role === PlayerRole.DEALER ? PlayerNum.P_ONE : PlayerNum.P_TWO;
+        gameState.players.player1.role === PlayerRole.DEALER ? PlayerPos.P_ONE : PlayerPos.P_TWO;
       const dealerRef = ref(rtdb, `games/${gameId}/players/${dealer}`);
       update(dealerRef, { activePlayer: IsActive.NOT_ACTIVE }).then(() => {
         console.log('activeplayer updated');
       });
     }
-  }, [crib]);
+  }, [gameState.crib]);
 
   useEffect(() => {
     console.log('active?', gameState.players[player].activePlayer, player);
@@ -160,17 +187,19 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
           <CardBox
             size={{ height: CardBoxHeight.MD, width: CardBoxWidth.MD_FOUR }}
             maxCards={4}
-            placement="self-center place-self-center"></CardBox>
+            placement="self-center place-self-center">
+            {renderOpponentPlayed}
+          </CardBox>
         </div>
 
         <Deck />
 
+        {[gameState.players[player].activePlayer]}
         <CardBox
           size={{ height: CardBoxHeight.MD, width: CardBoxWidth.MD_FOUR }}
           maxCards={4}
           placement="self-center place-self-center">
-          {/* {playerPlayed} */}
-          {[gameState.players[player].activePlayer]}
+          {renderPlayerPlayed}
         </CardBox>
 
         <CardBox

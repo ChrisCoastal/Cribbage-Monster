@@ -2,7 +2,7 @@ import { CardType, UserId } from './index';
 
 export type GameId = string;
 
-export enum PlayerNum {
+export enum PlayerPos {
   P_ONE = 'player1',
   P_TWO = 'player2'
 }
@@ -19,6 +19,8 @@ export enum IsActive {
 
 export type Player = { id: UserId; displayName: string; activePlayer: IsActive; role: PlayerRole };
 
+export type Cards = { [key: number]: CardType };
+
 export type GameState = {
   gameId: GameId;
   players: {
@@ -27,15 +29,15 @@ export type GameState = {
   };
   playerCards: {
     player1: {
-      inHand: CardType[];
-      played: CardType[];
+      inHand: Cards;
+      played: Cards;
     };
     player2: {
-      inHand: CardType[];
-      played: CardType[];
+      inHand: Cards;
+      played: Cards;
     };
   };
-  crib: CardType[];
+  crib: Cards;
   starterCard: CardType | null;
   score: {
     player1: {
@@ -48,7 +50,7 @@ export type GameState = {
     };
   };
   turn: {
-    cardsPlayed: CardType[];
+    cardsPlayed: Cards;
     cardTotal: number;
   };
 };

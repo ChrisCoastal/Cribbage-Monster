@@ -1,5 +1,31 @@
-import { CardName, CardType, Player, PlayerNum, SortBy, SortOrder, Suit, UserId } from 'src/@types';
+import {
+  CardName,
+  CardType,
+  GameId,
+  Player,
+  PlayerPos,
+  SortBy,
+  SortOrder,
+  Suit,
+  UserId
+} from 'src/@types';
 import { CARDS_IN_DECK, CARDS_PER_SUIT, HAND_SIZE } from './constants';
+import { ref } from 'firebase/database';
+import { rtdb } from 'src/firestore.config';
+
+// REALTIME DATABASE REFS
+
+function getCardsPlayedRef(gameId: GameId, player: PlayerPos) {
+  return ref(rtdb, `games/${gameId}/playerCards/${player}/played`);
+}
+
+function getInHandRef(gameId: GameId, player: PlayerPos) {
+  return ref(rtdb, `games/${gameId}/playerCards/${player}/inHand`);
+}
+
+function getCribRef(gameId: GameId) {
+  return ref(rtdb, `games/${gameId}/crib`);
+}
 
 // PLAYERS
 
@@ -10,18 +36,18 @@ export function getPlayerOpponent(
   },
   userId: UserId
 ) {
-  const player = players.player1.id === userId ? PlayerNum.P_ONE : PlayerNum.P_TWO;
-  const opponent = player === PlayerNum.P_ONE ? PlayerNum.P_TWO : PlayerNum.P_ONE;
+  const player = players.player1.id === userId ? PlayerPos.P_ONE : PlayerPos.P_TWO;
+  const opponent = player === PlayerPos.P_ONE ? PlayerPos.P_TWO : PlayerPos.P_ONE;
 
   return { player, opponent };
 }
 
-export function findPlayerNum(
+export function findPlayerPos(
   players: { player1: Player; player2: Player },
   uid?: UserId
-): PlayerNum | null {
-  if (!players.player1.id.length || players.player1.id === uid) return PlayerNum.P_ONE;
-  if (!players.player2.id.length || players.player2.id === uid) return PlayerNum.P_TWO;
+): PlayerPos | null {
+  if (!players.player1.id.length || players.player1.id === uid) return PlayerPos.P_ONE;
+  if (!players.player2.id.length || players.player2.id === uid) return PlayerPos.P_TWO;
   return null;
 }
 
