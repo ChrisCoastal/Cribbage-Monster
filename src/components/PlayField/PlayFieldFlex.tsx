@@ -6,6 +6,7 @@ import {
   CardType,
   GameId,
   GameReducerTypes,
+  IsActive,
   Player,
   PlayerNum,
   PlayerRole,
@@ -54,18 +55,22 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     const hands = dealHands();
     const player1ActiveRef = ref(rtdb, `games/${gameId}/players/player1/activePlayer`);
     const player2ActiveRef = ref(rtdb, `games/${gameId}/players/player2/activePlayer`);
-    const player1HandRef = ref(rtdb, `games/${gameId}/playerCards/player1/inHand`);
-    const player2HandRef = ref(rtdb, `games/${gameId}/playerCards/player2/inHand`);
-    set(player1ActiveRef, true);
-    set(player2ActiveRef, true);
-    set(player1HandRef, hands.player1);
-    set(player2HandRef, hands.player2);
+    const player1HandRef = ref(rtdb, `games/${gameId}/playerCards/player1`);
+    const player2HandRef = ref(rtdb, `games/${gameId}/playerCards/player2`);
+    const cribRef = ref(rtdb, `games/${gameId}/crib`);
+    set(player1ActiveRef, IsActive.ACTIVE);
+    set(player2ActiveRef, IsActive.ACTIVE);
+    set(player1HandRef, { inHand: hands.player1, played: [] });
+    set(player2HandRef, { inHand: hands.player2, played: [] });
+    set(cribRef, null);
     // dispatchGame({ type: GameReducerTypes.DEAL, payload: hands });
     // const gameRef = doc(db, 'game', gameState.gameId);
     // updateDoc(gameRef, data); //TODO:)
   }
 
   function cardClickHandler(targetCard: CardType) {
+    if (!gameState.players[player].activePlayer) return console.log('player is not active');
+
     console.log(targetCard);
     if (playerHand.length > 4) {
       const playerHandRef = ref(rtdb, `games/${gameId}/playerCards/${player}/inHand`);
@@ -127,13 +132,19 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
 
   useEffect(() => {
     if (!crib) return;
-    if (crib.length === 4) {
-      const pone =
-        gameState.players.player1.role === PlayerRole.PONE ? PlayerNum.P_ONE : PlayerNum.P_TWO;
-      const poneActiveRef = ref(rtdb, `games/${gameId}/players/${pone}/activePlayer`);
-      update(poneActiveRef, { activePlayer: false });
+    if (Object.keys(crib).length === 4) {
+      const dealer =
+        gameState.players.player1.role === PlayerRole.DEALER ? PlayerNum.P_ONE : PlayerNum.P_TWO;
+      const dealerRef = ref(rtdb, `games/${gameId}/players/${dealer}`);
+      update(dealerRef, { activePlayer: IsActive.NOT_ACTIVE }).then(() => {
+        console.log('activeplayer updated');
+      });
     }
   }, [crib]);
+
+  useEffect(() => {
+    console.log('active?', gameState.players[player].activePlayer, player);
+  }, [gameState.players[player].activePlayer]);
 
   return (
     <div className="relative grid h-full grid-cols-[4fr,_1fr] items-center justify-items-center gap-2 py-12 px-4">
@@ -159,6 +170,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
           maxCards={4}
           placement="self-center place-self-center">
           {/* {playerPlayed} */}
+          {[gameState.players[player].activePlayer]}
         </CardBox>
 
         <CardBox

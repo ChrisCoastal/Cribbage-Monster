@@ -31,10 +31,14 @@ const GamePage = () => {
     const gameRef = ref(rtdb, `games/${game.gameId}`);
     // dispatchGame({ type: GameReducerTypes.CREATE_GAME, payload: game });
 
-    const unsubscribe = onValue(gameRef, (snapshot) => {
-      console.log(snapshot.val());
-      dispatchGame({ type: GameReducerTypes.UPDATE, payload: snapshot.val() });
-    });
+    const unsubscribe = onValue(
+      gameRef,
+      (snapshot) => {
+        console.log(snapshot.val());
+        dispatchGame({ type: GameReducerTypes.UPDATE, payload: snapshot.val() });
+      },
+      (error) => console.log(error)
+    );
     return unsubscribe;
   }, []);
 

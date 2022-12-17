@@ -1,4 +1,4 @@
-import { GameState, PlayerRole } from 'src/@types';
+import { GameState, IsActive, PlayerRole } from 'src/@types';
 
 export const HAND_SIZE = 6;
 
@@ -14,13 +14,13 @@ export const INITIAL_GAME_STATE: GameState = {
     player1: {
       id: '',
       displayName: '',
-      activePlayer: false,
+      activePlayer: IsActive.NOT_ACTIVE,
       role: PlayerRole.DEALER
     },
     player2: {
       id: '',
       displayName: '',
-      activePlayer: false,
+      activePlayer: IsActive.NOT_ACTIVE,
       role: PlayerRole.PONE
     }
   },

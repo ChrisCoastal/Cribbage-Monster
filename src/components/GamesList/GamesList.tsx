@@ -10,23 +10,27 @@ type GamesListProps = {
 const GamesList: FC<GamesListProps> = () => {
   const [games, setGames] = useState<GameBrief[]>([]);
 
-  function renderGameListItem(game: GameBrief) {
+  const gamesListItems = games.map((game) => {
+    console.log('rendering gamelist', game);
+
     return (
-      <>
+      <div key={game.gameId}>
         <li className="flex gap-4 py-1">
           <p>{game.gameId}</p>
           <JoinGame gameId={game.gameId} />
         </li>
-      </>
+      </div>
     );
-  }
+  });
 
+  // FIXME: not rendering new games, but games are in state
+  // check this might be a dev server issue
   useEffect(() => {
     const games: GameBrief[] = [];
     const gamesListRef = ref(rtdb, `gameslist`);
     const unsubscribe = onValue(gamesListRef, (snapshot) => {
       console.log(snapshot.val());
-      const gameBriefs = snapshot.val() as { [key: string]: GameBrief };
+      const gameBriefs = (snapshot.val() as { [key: string]: GameBrief }) || {};
       const keys = Object.keys(gameBriefs);
       keys.forEach((key) => {
         games.push(gameBriefs[key]);
@@ -40,9 +44,7 @@ const GamesList: FC<GamesListProps> = () => {
 
   return (
     <div>
-      <ul className="border border-solid border-black p-2">
-        {games.map((game) => renderGameListItem(game))}
-      </ul>
+      <ul className="border border-solid border-black p-2">{gamesListItems}</ul>
     </div>
   );
 };

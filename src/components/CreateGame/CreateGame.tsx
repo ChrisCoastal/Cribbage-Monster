@@ -33,8 +33,7 @@ const CreateGame = () => {
           player1: {
             ...INITIAL_GAME_STATE.players.player1,
             id: uid,
-            displayName: displayName!,
-            activePlayer: false
+            displayName: displayName!
           }
         }
       };

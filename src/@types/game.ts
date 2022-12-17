@@ -12,7 +12,12 @@ export enum PlayerRole {
   PONE = 'player2'
 }
 
-export type Player = { id: UserId; displayName: string; activePlayer: boolean; role: PlayerRole };
+export enum IsActive {
+  ACTIVE = 'active',
+  NOT_ACTIVE = 'not active'
+}
+
+export type Player = { id: UserId; displayName: string; activePlayer: IsActive; role: PlayerRole };
 
 export type GameState = {
   gameId: GameId;
