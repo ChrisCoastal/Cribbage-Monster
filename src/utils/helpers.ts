@@ -1,19 +1,28 @@
-import { CardName, CardType, Player, PlayerNum, SortBy, SortOrder, Suit } from 'src/@types';
+import { CardName, CardType, Player, PlayerNum, SortBy, SortOrder, Suit, UserId } from 'src/@types';
 import { CARDS_IN_DECK, CARDS_PER_SUIT, HAND_SIZE } from './constants';
 
 // PLAYERS
 
-export function getPlayerNum(
+export function getPlayerOpponent(
   players: {
     player1: Player;
     player2: Player;
   },
-  userId: string
+  userId: UserId
 ) {
   const player = players.player1.id === userId ? PlayerNum.P_ONE : PlayerNum.P_TWO;
   const opponent = player === PlayerNum.P_ONE ? PlayerNum.P_TWO : PlayerNum.P_ONE;
 
   return { player, opponent };
+}
+
+export function findPlayerNum(
+  players: { player1: Player; player2: Player },
+  uid?: UserId
+): PlayerNum | null {
+  if (!players.player1.id.length || players.player1.id === uid) return PlayerNum.P_ONE;
+  if (!players.player2.id.length || players.player2.id === uid) return PlayerNum.P_TWO;
+  return null;
 }
 
 // DEAL CARDS

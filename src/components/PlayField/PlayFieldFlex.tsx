@@ -26,7 +26,7 @@ import CardBox from 'src/components/CardBox/CardBox';
 import Button from 'src/components/UI/Button';
 import useAuthContext from 'src/hooks/useAuthContext';
 import useGameContext from 'src/hooks/useGameContext';
-import { dealHands, getPlayerNum } from 'src/utils/helpers';
+import { dealHands, getPlayerOpponent } from 'src/utils/helpers';
 import { nanoid } from 'nanoid';
 import { FC, useEffect } from 'react';
 
@@ -40,7 +40,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
 
   const { gameState, dispatchGame } = useGameContext();
   const { crib, playerCards } = gameState;
-  const { player, opponent } = getPlayerNum(gameState.players, userId);
+  const { player, opponent } = getPlayerOpponent(gameState.players, userId);
   console.log(player, opponent);
 
   const playerHand = gameState.playerCards[player]?.inHand;

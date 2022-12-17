@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { CardSize, CardType, UserId } from 'src/@types';
 import useAuthContext from 'src/hooks/useAuthContext';
 import useGameContext from 'src/hooks/useGameContext';
-import { getPlayerNum } from 'src/utils/helpers';
+import { getPlayerOpponent } from 'src/utils/helpers';
 
 type PlayingCardProps = {
   cardSize: string;
@@ -16,7 +16,7 @@ type PlayingCardProps = {
 const PlayingCard: FC<PlayingCardProps> = ({ cardSize, isFaceUp, card, cardIndex, handler }) => {
   const { userAuth } = useAuthContext();
   const { gameState } = useGameContext();
-  const { player } = getPlayerNum(gameState.players, userAuth!.uid!);
+  const { player } = getPlayerOpponent(gameState.players, userAuth!.uid!);
   const activePlayer = gameState.players[player].activePlayer;
 
   const cardPos = [

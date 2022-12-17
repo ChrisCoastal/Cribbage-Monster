@@ -16,7 +16,6 @@ const DashboardPage = () => {
         <Button handler={() => console.log(userAuth)}>USER?</Button>
         <GamesList />
         <CreateGame />
-        <JoinGame gameId="JJWHiQQn7dHzDKiEuDhQZ" />
       </div>
     </div>
   );

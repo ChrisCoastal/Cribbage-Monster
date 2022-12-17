@@ -8,6 +8,7 @@ import { getDatabase, update, ref, set, get, runTransaction } from 'firebase/dat
 import useAuthContext from 'src/hooks/useAuthContext';
 import useGameContext from 'src/hooks/useGameContext';
 import { INITIAL_GAME_STATE } from 'src/utils/constants';
+import { findPlayerNum } from 'src/utils/helpers';
 
 import Button from 'src/components/UI/Button';
 import {
@@ -28,15 +29,6 @@ const JoinGame: FC<JoinGameProps> = ({ gameId }) => {
   const { userAuth } = useAuthContext();
   const { gameState, dispatchGame } = useGameContext();
   const navigate = useNavigate();
-
-  function findPlayerNum(
-    players: { player1: Player; player2: Player },
-    uid: UserId
-  ): PlayerNum | null {
-    if (!players.player1.id.length || players.player1.id === uid) return PlayerNum.P_ONE;
-    if (!players.player2.id.length || players.player2.id === uid) return PlayerNum.P_TWO;
-    return null;
-  }
 
   async function joinGameHandler() {
     if (!userAuth) throw new Error('no user to join game; please login again');
@@ -64,8 +56,7 @@ const JoinGame: FC<JoinGameProps> = ({ gameId }) => {
           [playerNum]: {
             ...players[playerNum],
             id: uid,
-            displayName: displayName!,
-            role: PlayerRole.PONE
+            displayName: displayName!
           }
         }).then(() => {
           navigate(`/game/${gameId}`);
