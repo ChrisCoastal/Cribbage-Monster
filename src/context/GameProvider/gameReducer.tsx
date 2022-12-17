@@ -24,10 +24,10 @@ const gameReducer = (state: GameState, action: GameReducerActions): GameState =>
             played: payload?.playerCards?.player2?.played || {}
           }
         },
-        crib: payload.crib || {},
+        crib: payload?.crib || {},
         starterCard: payload.starterCard || null,
         turn: {
-          cardsPlayed: payload.turn.cardsPlayed || {},
+          cardsPlayed: payload?.turn?.cardsPlayed || {},
           cardTotal: payload.turn.cardTotal
         }
       };

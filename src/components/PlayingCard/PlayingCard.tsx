@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { CardSize, CardType, UserId } from 'src/@types';
+import { CardSize, CardType, IsActive, UserId } from 'src/@types';
 import useAuthContext from 'src/hooks/useAuthContext';
 import useGameContext from 'src/hooks/useGameContext';
 import { getPlayerOpponent } from 'src/utils/helpers';
@@ -9,15 +9,22 @@ type PlayingCardProps = {
   isFaceUp: boolean;
   card: CardType;
   cardIndex: number;
-  // cardPos?: string;
+  valid?: boolean;
   handler?: (card: CardType) => void;
 };
 
-const PlayingCard: FC<PlayingCardProps> = ({ cardSize, isFaceUp, card, cardIndex, handler }) => {
+const PlayingCard: FC<PlayingCardProps> = ({
+  cardSize,
+  isFaceUp,
+  card,
+  cardIndex,
+  valid,
+  handler
+}) => {
   const { userAuth } = useAuthContext();
   const { gameState } = useGameContext();
   const { player } = getPlayerOpponent(gameState.players, userAuth!.uid!);
-  const activePlayer = gameState.players[player].activePlayer;
+  const activePlayer = gameState.players[player].activePlayer === IsActive.ACTIVE;
 
   const cardPos = [
     'bg-red-200 col-start-1 col-end-4 row-start-1 z-[20]',
@@ -48,7 +55,7 @@ const PlayingCard: FC<PlayingCardProps> = ({ cardSize, isFaceUp, card, cardIndex
 
   const conditionalStyles = `${cardSize} ${cardPos[cardIndex]} ${
     cardSize === CardSize.LG ? cardRotationHand[cardIndex] : cardRotation[cardIndex % 2]
-  } ${activePlayer && cardHover}`;
+  } ${activePlayer && valid && cardHover[cardIndex]}`;
 
   return isFaceUp ? (
     <div
@@ -67,7 +74,7 @@ const PlayingCard: FC<PlayingCardProps> = ({ cardSize, isFaceUp, card, cardIndex
     </div>
   ) : (
     <div
-      className={`${cardSize} ${cardPos} absolute top-[12px] left-[2px] rounded-[4%] border border-black bg-red-200`}
+      className={`${cardSize} ${cardPos[cardIndex]} grid-columns-3 grid grid-rows-3 items-center rounded-[4%] border border-solid border-black transition-all duration-300`}
       onClick={() => (handler ? handler(card) : null)}></div>
   );
 };
