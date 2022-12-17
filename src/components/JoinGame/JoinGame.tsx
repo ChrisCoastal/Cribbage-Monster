@@ -11,15 +11,7 @@ import { INITIAL_GAME_STATE } from 'src/utils/constants';
 import { findPlayerPos } from 'src/utils/helpers';
 
 import Button from 'src/components/UI/Button';
-import {
-  GameId,
-  GameReducerTypes,
-  GameState,
-  Player,
-  PlayerPos,
-  PlayerRole,
-  UserId
-} from 'src/@types';
+import { GameId, GameReducerTypes, GameState, Player, PlayerPos, UserId } from 'src/@types';
 
 type JoinGameProps = {
   gameId: GameId;

@@ -7,22 +7,23 @@ export enum PlayerPos {
   P_TWO = 'player2'
 }
 
-export enum PlayerRole {
-  DEALER = 'player1',
-  PONE = 'player2'
-}
+// export enum PlayerRole {
+//   DEALER = 'dealer',
+//   PONE = 'pone'
+// }
 
 export enum IsActive {
   ACTIVE = 'active',
   NOT_ACTIVE = 'not active'
 }
 
-export type Player = { id: UserId; displayName: string; activePlayer: IsActive; role: PlayerRole };
+export type Player = { id: UserId; displayName: string; activePlayer: IsActive };
 
 export type Cards = { [key: number]: CardType };
 
 export type GameState = {
   gameId: GameId;
+  dealer: PlayerPos | null;
   players: {
     player1: Player;
     player2: Player;

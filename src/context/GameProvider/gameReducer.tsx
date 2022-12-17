@@ -13,21 +13,22 @@ const gameReducer = (state: GameState, action: GameReducerActions): GameState =>
 
     case GameReducerTypes.UPDATE: {
       // structured this way b/c realtime database discards empty arrays/null values
+      // FIXME: can't empty array (once all cards are played, local state is kept)
+      // also overwrites any new game joined
       const { players, playerCards } = state;
       const updatedState = {
         gameId: payload.gameId || state.gameId,
+        dealer: payload.dealer || state.dealer,
         players: {
           player1: {
             id: payload.players.player1.id || players.player1.id,
             displayName: payload.players.player1.displayName || players.player1.displayName,
-            activePlayer: payload.players.player1.activePlayer || players.player1.activePlayer,
-            role: payload.players.player1.role || players.player1.role
+            activePlayer: payload.players.player1.activePlayer || players.player1.activePlayer
           },
           player2: {
             id: payload.players.player2.id || players.player2.id,
             displayName: payload.players.player2.displayName || players.player2.displayName,
-            activePlayer: payload.players.player2.activePlayer || players.player2.activePlayer,
-            role: payload.players.player2.role || players.player2.role
+            activePlayer: payload.players.player2.activePlayer || players.player2.activePlayer
           }
         },
         playerCards: {

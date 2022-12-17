@@ -1,5 +1,6 @@
 import {
   CardName,
+  Cards,
   CardType,
   GameId,
   Player,
@@ -15,17 +16,18 @@ import { rtdb } from 'src/firestore.config';
 
 // REALTIME DATABASE REFS
 
-function getCardsPlayedRef(gameId: GameId, player: PlayerPos) {
-  return ref(rtdb, `games/${gameId}/playerCards/${player}/played`);
-}
+export const getCardsPlayedRef = (gameId: GameId, player: PlayerPos) =>
+  ref(rtdb, `games/${gameId}/playerCards/${player}/played`);
 
-function getInHandRef(gameId: GameId, player: PlayerPos) {
-  return ref(rtdb, `games/${gameId}/playerCards/${player}/inHand`);
-}
+export const getInHandRef = (gameId: GameId, player: PlayerPos) =>
+  ref(rtdb, `games/${gameId}/playerCards/${player}/inHand`);
 
-function getCribRef(gameId: GameId) {
-  return ref(rtdb, `games/${gameId}/crib`);
-}
+export const getDealerRef = (gameId: GameId, dealer: PlayerPos) =>
+  ref(rtdb, `games/${gameId}/players/${dealer}`);
+
+export const getCribRef = (gameId: GameId) => ref(rtdb, `games/${gameId}/crib`);
+
+export const getActivePlayerRef = (gameId: GameId) => ref(rtdb, `games/${gameId}/activePlayer`);
 
 // PLAYERS
 
@@ -111,18 +113,20 @@ export function getShuffledDeck() {
 // TODO: does this need to be coordinated with firebase?
 // yes, it needs to be kept aligned
 export function dealHands(): {
-  player1: CardType[];
-  player2: CardType[];
+  player1: Cards;
+  player2: Cards;
 } {
   const hands = {
-    player1: [] as CardType[],
-    player2: [] as CardType[]
+    player1: {} as Cards,
+    player2: {} as Cards
   };
 
   const shuffledDeck = getShuffledDeck();
 
   for (let i = 0; i < HAND_SIZE * 2; i++) {
-    i % 2 ? hands.player2.push(shuffledDeck[i]) : hands.player1.push(shuffledDeck[i]);
+    i % 2
+      ? (hands.player2[shuffledDeck[i].id] = shuffledDeck[i])
+      : (hands.player1[shuffledDeck[i].id] = shuffledDeck[i]);
   }
 
   return hands;

@@ -9,7 +9,6 @@ import {
   IsActive,
   Player,
   PlayerPos,
-  PlayerRole,
   Suit,
   UserId
 } from 'src/@types';
@@ -27,7 +26,15 @@ import CardBox from 'src/components/CardBox/CardBox';
 import Button from 'src/components/UI/Button';
 import useAuthContext from 'src/hooks/useAuthContext';
 import useGameContext from 'src/hooks/useGameContext';
-import { dealHands, getPlayerOpponent } from 'src/utils/helpers';
+import {
+  dealHands,
+  getActivePlayerRef,
+  getPlayerOpponent,
+  getInHandRef,
+  getCardsPlayedRef,
+  getCribRef,
+  getDealerRef
+} from 'src/utils/helpers';
 import { nanoid } from 'nanoid';
 import { FC, useEffect } from 'react';
 
@@ -55,13 +62,13 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   async function dealHandler() {
     // TODO: need deck here and add deck to state
     const hands = dealHands();
-    const player1ActiveRef = ref(rtdb, `games/${gameId}/players/player1/activePlayer`);
-    const player2ActiveRef = ref(rtdb, `games/${gameId}/players/player2/activePlayer`);
+    const activePlayer1Ref = ref(rtdb, `games/${gameId}/players/player1/activePlayer`);
+    const activePlayer2Ref = ref(rtdb, `games/${gameId}/players/player2/activePlayer`);
     const player1HandRef = ref(rtdb, `games/${gameId}/playerCards/player1`);
     const player2HandRef = ref(rtdb, `games/${gameId}/playerCards/player2`);
     const cribRef = ref(rtdb, `games/${gameId}/crib`);
-    set(player1ActiveRef, IsActive.ACTIVE);
-    set(player2ActiveRef, IsActive.ACTIVE);
+    set(activePlayer1Ref, IsActive.ACTIVE);
+    set(activePlayer2Ref, IsActive.ACTIVE);
     set(player1HandRef, { inHand: hands.player1, played: [] });
     set(player2HandRef, { inHand: hands.player2, played: [] });
     set(cribRef, null);
@@ -70,7 +77,11 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     // updateDoc(gameRef, data); //TODO:)
   }
 
-  function addCardToCrib(card: CardType): void {
+  function filterCard(playerPos: PlayerPos, cardId: number): CardType[] {
+    return playerHand.filter((card) => card.id !== cardId);
+  }
+
+  function addCardToCrib(card: CardType, callback?: () => void): void {
     const playerHandRef = getInHandRef(gameId, player);
     const cribRef = getCribRef(gameId);
     const addCardToCribRef = push(cribRef);
@@ -79,36 +90,61 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     //FIXME: does this work? or update?
     // set(addCardToCribRef, card).then(() => remove(playedCardRef));
     const updatedHand = filterCard(player, card.id);
-    set(playerHandRef, updatedHand).then(() => {
-      set(addCardToCribRef, card);
-    });
+    set(playerHandRef, updatedHand)
+      .then(() => {
+        set(addCardToCribRef, card);
+      })
+      .then(callback);
   }
 
-  function filterCard(playerPos: PlayerPos, cardId: number): CardType[] {
-    return playerHand.filter((card) => card.id !== cardId);
-  }
+  // function getCardsPlayedRef(gameId: GameId, player: PlayerPos) {
+  //   return ref(rtdb, `games/${gameId}/playerCards/${player}/played`);
+  // }
 
-  function getCardsPlayedRef(gameId: GameId, player: PlayerPos) {
-    return ref(rtdb, `games/${gameId}/playerCards/${player}/played`);
-  }
+  // function getInHandRef(gameId: GameId, player: PlayerPos) {
+  //   return ref(rtdb, `games/${gameId}/playerCards/${player}/inHand`);
+  // }
 
-  function getInHandRef(gameId: GameId, player: PlayerPos) {
-    return ref(rtdb, `games/${gameId}/playerCards/${player}/inHand`);
-  }
+  // function getCribRef(gameId: GameId) {
+  //   return ref(rtdb, `games/${gameId}/crib`);
+  // }
 
-  function getCribRef(gameId: GameId) {
-    return ref(rtdb, `games/${gameId}/crib`);
-  }
-
-  function playCard(card: CardType) {
+  function playCard(card: CardType, callback?: () => void) {
     const playerHandRef = getInHandRef(gameId, player);
     const cardsPlayedRef = getCardsPlayedRef(gameId, player);
     const addCardToPlayedRef = push(cardsPlayedRef);
     const updatedHand = filterCard(player, card.id);
 
-    set(playerHandRef, updatedHand).then(() => {
-      set(addCardToPlayedRef, card);
+    set(playerHandRef, updatedHand)
+      .then(() => {
+        set(addCardToPlayedRef, card);
+      })
+      .then(callback);
+  }
+
+  function updateActivePlayer(toggle?: 'toggle') {
+    toggle
+      ? update(ref(rtdb, `games/${gameId}/players`), {
+          [player]: { activePlayer: IsActive.NOT_ACTIVE },
+          [opponent]: { activePlayer: IsActive.ACTIVE }
+        })
+      : update(ref(rtdb, `games/${gameId}/players/${player}`), {
+          activePlayer: IsActive.NOT_ACTIVE
+        });
+  }
+
+  function startCardPlay() {
+    const pone = gameState.dealer === PlayerPos.P_ONE ? PlayerPos.P_TWO : PlayerPos.P_ONE;
+    // if (
+    //   Object.keys(gameState.crib).length === 4 &&
+    //   !Object.keys(gameState.playerCards[pone].played).length
+    // ) {
+    //   // const dealerRef = ref(rtdb, `games/${gameId}/dealer`);
+    const activeRef = ref(rtdb, `games/${gameId}/players/${pone}`);
+    update(activeRef, { activePlayer: IsActive.ACTIVE }).then(() => {
+      console.log('activeplayer updated');
     });
+    // }
   }
 
   function cardClickHandler(targetCard: CardType) {
@@ -118,14 +154,24 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     console.log(targetCard);
     if (playerHand.length > 4) {
       addCardToCrib(targetCard);
+      playerHand.length === 5 &&
+        update(ref(rtdb, `games/${gameId}/players/${player}`), {
+          activePlayer: IsActive.NOT_ACTIVE
+        }).then(() => {
+          Object.keys(gameState.crib).length === 3 && startCardPlay();
+        });
     }
     if (playerHand.length <= 4) {
       playCard(targetCard);
+      update(ref(rtdb, `games/${gameId}/players`), {
+        [player]: { activePlayer: IsActive.NOT_ACTIVE },
+        [opponent]: { activePlayer: IsActive.ACTIVE }
+      });
     }
-    if (playerHand.length <= 4) {
-      const playerHandRef = ref(rtdb, `games/${gameId}/playerCards/${player}/inHand`);
-      const player1PlayedRef = ref(rtdb, `games/${gameId}/playerCards/${player}/played`);
-    }
+    // if (playerHand.length <= 4) {
+    //   const playerHandRef = ref(rtdb, `games/${gameId}/playerCards/${player}/inHand`);
+    //   const player1PlayedRef = ref(rtdb, `games/${gameId}/playerCards/${player}/played`);
+    // }
 
     // dispatchGame({ type: GameReducerTypes.PLAY_CARD, payload: card });
   }
@@ -157,30 +203,28 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     ));
   }
 
-  useEffect(() => {
-    if (!gameState.crib) return;
-    if (Object.keys(gameState.crib).length === 4) {
-      const dealer =
-        gameState.players.player1.role === PlayerRole.DEALER ? PlayerPos.P_ONE : PlayerPos.P_TWO;
-      const dealerRef = ref(rtdb, `games/${gameId}/players/${dealer}`);
-      update(dealerRef, { activePlayer: IsActive.NOT_ACTIVE }).then(() => {
-        console.log('activeplayer updated');
-      });
-    }
-  }, [gameState.crib]);
-
-  useEffect(() => {
-    console.log('active?', gameState.players[player].activePlayer, player);
-  }, [gameState.players[player].activePlayer]);
+  // useEffect(() => {
+  //   const pone = gameState.dealer === PlayerPos.P_ONE ? PlayerPos.P_TWO : PlayerPos.P_ONE;
+  //   if (
+  //     Object.keys(gameState.crib).length === 4 &&
+  //     !Object.keys(gameState.playerCards[pone].played).length
+  //   ) {
+  //     // const dealerRef = ref(rtdb, `games/${gameId}/dealer`);
+  //     const activeRef = ref(rtdb, `games/${gameId}/players/${pone}`);
+  //     update(activeRef, { activePlayer: IsActive.ACTIVE }).then(() => {
+  //       console.log('activeplayer updated');
+  //     });
+  //   }
+  // }, [gameState.crib]);
 
   return (
     <div className="relative grid h-full grid-cols-[4fr,_1fr] items-center justify-items-center gap-2 py-12 px-4">
       <div className="flex flex-col items-center justify-center">
         <div>
           <Avatar />
-          <CardBox
-            size={{ height: CardBoxHeight.SM, width: CardBoxWidth.SM_SIX }}
-            maxCards={6}></CardBox>
+          <CardBox size={{ height: CardBoxHeight.SM, width: CardBoxWidth.SM_SIX }} maxCards={6}>
+            {/* {renderOpponentHand} */}
+          </CardBox>
         </div>
 
         <div>
