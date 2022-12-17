@@ -122,16 +122,17 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
       .then(callback);
   }
 
-  function updateActivePlayer(toggle?: 'toggle') {
-    toggle
-      ? update(ref(rtdb, `games/${gameId}/players`), {
-          [player]: { activePlayer: IsActive.NOT_ACTIVE },
-          [opponent]: { activePlayer: IsActive.ACTIVE }
-        })
-      : update(ref(rtdb, `games/${gameId}/players/${player}`), {
-          activePlayer: IsActive.NOT_ACTIVE
-        });
-  }
+  // function updateActivePlayer(toggle?: 'toggle') {
+  //   toggle
+  //     ? update(ref(rtdb, `games/${gameId}/players`), {
+  //         [player]: { ...gameState.players[player], activePlayer: IsActive.NOT_ACTIVE },
+  //         [opponent]: { ...gameState.players[opponent], activePlayer: IsActive.ACTIVE }
+  //       })
+  //     : update(ref(rtdb, `games/${gameId}/players/${player}`), {
+  //         ...gameState.players[player],
+  //         activePlayer: IsActive.NOT_ACTIVE
+  //       });
+  // }
 
   function startCardPlay() {
     const pone = gameState.dealer === PlayerPos.P_ONE ? PlayerPos.P_TWO : PlayerPos.P_ONE;
@@ -156,6 +157,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
       addCardToCrib(targetCard);
       playerHand.length === 5 &&
         update(ref(rtdb, `games/${gameId}/players/${player}`), {
+          ...gameState.players[player],
           activePlayer: IsActive.NOT_ACTIVE
         }).then(() => {
           Object.keys(gameState.crib).length === 3 && startCardPlay();
@@ -164,8 +166,8 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     if (playerHand.length <= 4) {
       playCard(targetCard);
       update(ref(rtdb, `games/${gameId}/players`), {
-        [player]: { activePlayer: IsActive.NOT_ACTIVE },
-        [opponent]: { activePlayer: IsActive.ACTIVE }
+        [player]: { ...gameState.players[player], activePlayer: IsActive.NOT_ACTIVE },
+        [opponent]: { ...gameState.players[opponent], activePlayer: IsActive.ACTIVE }
       });
     }
     // if (playerHand.length <= 4) {
