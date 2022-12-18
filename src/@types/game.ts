@@ -19,7 +19,18 @@ export enum IsActive {
 
 export type Player = { id: UserId; displayName: string; activePlayer: IsActive };
 
-export type Cards = { [key: number]: CardType };
+export type CardsIndex = { [key: number]: CardType };
+
+export type Cut = {
+  status: Status;
+  card: CardType | null;
+};
+
+export enum Status {
+  INVALID = 'invalid',
+  VALID = 'valid',
+  COMPLETED = 'completed'
+}
 
 export type GameState = {
   gameId: GameId;
@@ -30,16 +41,16 @@ export type GameState = {
   };
   playerCards: {
     player1: {
-      inHand: Cards;
-      played: Cards;
+      inHand: CardsIndex;
+      played: CardsIndex;
     };
     player2: {
-      inHand: Cards;
-      played: Cards;
+      inHand: CardsIndex;
+      played: CardsIndex;
     };
   };
-  crib: Cards;
-  starterCard: CardType | null;
+  crib: CardsIndex;
+  deckCut: Cut;
   score: {
     player1: {
       cur: number;
@@ -51,7 +62,7 @@ export type GameState = {
     };
   };
   turn: {
-    cardsPlayed: Cards;
+    cardsPlayed: CardsIndex;
     cardTotal: number;
   };
 };

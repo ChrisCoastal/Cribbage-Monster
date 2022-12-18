@@ -1,4 +1,4 @@
-import { GameState, IsActive, PlayerPos } from 'src/@types';
+import { GameState, IsActive, PlayerPos, Status } from 'src/@types';
 
 export const HAND_SIZE = 6;
 
@@ -34,7 +34,7 @@ export const INITIAL_GAME_STATE: GameState = {
     }
   },
   crib: {},
-  starterCard: null,
+  deckCut: { status: Status.INVALID, card: null },
   score: {
     player1: {
       cur: 0,

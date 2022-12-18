@@ -2,6 +2,7 @@ import {
   CardBoxHeight,
   CardBoxWidth,
   CardName,
+  CardsIndex,
   CardSize,
   CardType,
   GameId,
@@ -9,6 +10,7 @@ import {
   IsActive,
   Player,
   PlayerPos,
+  Status,
   Suit,
   UserId
 } from 'src/@types';
@@ -31,25 +33,26 @@ import {
   getActivePlayerRef,
   getPlayerOpponent,
   getInHandRef,
-  getCardsPlayedRef,
+  getPlayerCardsPlayedRef,
   getCribRef,
-  getDealerRef
+  getDealerRef,
+  getCardTotalRef,
+  getTurnRef
 } from 'src/utils/helpers';
 import { nanoid } from 'nanoid';
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 type PlayFieldProps = {
   gameId: GameId;
 };
 
 const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
+  const [go, setGo] = useState<boolean>(false); // FIXME: sketchy
   const { userAuth } = useAuthContext();
   const userId = userAuth!.uid!;
 
   const { gameState, dispatchGame } = useGameContext();
   const { player, opponent } = getPlayerOpponent(gameState.players, userId);
-  console.log(player, opponent);
-
   const playerHand = Object.values(gameState.playerCards[player].inHand);
   const opponentHand = Object.values(gameState.playerCards[opponent].inHand);
   const playerPlayed = Object.values(gameState.playerCards[player].played);
@@ -60,18 +63,21 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   const renderOpponentPlayed = renderCards(opponentPlayed, true, CardSize.MD);
 
   async function dealHandler() {
-    // TODO: need deck here and add deck to state
-    const hands = dealHands();
+    // TODO: need deck here and add deck to state?
+    // TODO: move all ref locations to helperes
+    const deal = dealHands();
     const activePlayer1Ref = ref(rtdb, `games/${gameId}/players/player1/activePlayer`);
     const activePlayer2Ref = ref(rtdb, `games/${gameId}/players/player2/activePlayer`);
     const player1HandRef = ref(rtdb, `games/${gameId}/playerCards/player1`);
     const player2HandRef = ref(rtdb, `games/${gameId}/playerCards/player2`);
+    const deckCutRef = ref(rtdb, `games/${gameId}/deckCut`);
     const turnRef = ref(rtdb, `games/${gameId}/turn`);
     const cribRef = ref(rtdb, `games/${gameId}/crib`);
     set(activePlayer1Ref, IsActive.ACTIVE);
     set(activePlayer2Ref, IsActive.ACTIVE);
-    set(player1HandRef, { inHand: hands.player1, played: [] });
-    set(player2HandRef, { inHand: hands.player2, played: [] });
+    set(player1HandRef, { inHand: deal.hands.player1, played: {} });
+    set(player2HandRef, { inHand: deal.hands.player2, played: {} });
+    set(deckCutRef, { status: Status.INVALID, card: deal.cut });
     set(cribRef, null);
     set(turnRef, { cardsPlayed: null, cardTotal: 0 });
     // dispatchGame({ type: GameReducerTypes.DEAL, payload: hands });
@@ -110,14 +116,11 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   // function getCribRef(gameId: GameId) {
   //   return ref(rtdb, `games/${gameId}/crib`);
   // }
-  function checkPlayPhase() {
-    //
-  }
 
   function playCard(card: CardType, callback?: () => void) {
     const playerHandRef = getInHandRef(gameId, player);
-    const cardsPlayedRef = getCardsPlayedRef(gameId, player);
-    const addCardToPlayedRef = push(cardsPlayedRef);
+    const playerCardsPlayedRef = getPlayerCardsPlayedRef(gameId, player);
+    const addCardToPlayedRef = push(playerCardsPlayedRef);
     const updatedHand = filterCard(player, card.id);
 
     set(playerHandRef, updatedHand)
@@ -127,24 +130,43 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
       .then(callback);
   }
 
-  // function updateActivePlayer(toggle?: 'toggle') {
-  //   toggle
-  //     ? update(ref(rtdb, `games/${gameId}/players`), {
-  //         [player]: { ...gameState.players[player], activePlayer: IsActive.NOT_ACTIVE },
-  //         [opponent]: { ...gameState.players[opponent], activePlayer: IsActive.ACTIVE }
-  //       })
-  //     : update(ref(rtdb, `games/${gameId}/players/${player}`), {
-  //         ...gameState.players[player],
-  //         activePlayer: IsActive.NOT_ACTIVE
-  //       });
-  // }
+  function updateActivePlayer(active: 'pone' | 'toggle' | 'inactive', callback?: () => void) {
+    switch (active) {
+      case 'toggle': {
+        update(ref(rtdb, `games/${gameId}/players`), {
+          [player]: { ...gameState.players[player], activePlayer: IsActive.NOT_ACTIVE },
+          [opponent]: { ...gameState.players[opponent], activePlayer: IsActive.ACTIVE }
+        }).then(() => callback);
+        break;
+      }
+      case 'pone': {
+        const pone = getPone(gameState.dealer!);
+        const activeRef = ref(rtdb, `games/${gameId}/players/${pone}`);
+        update(activeRef, { ...gameState.players[opponent], activePlayer: IsActive.ACTIVE }).then(
+          () => callback
+        );
+        break;
+      }
+      default:
+        update(ref(rtdb, `games/${gameId}/players/${player}`), {
+          ...gameState.players[player],
+          activePlayer: IsActive.NOT_ACTIVE
+        }).then(() => callback);
+    }
+  }
 
-  function startCardPlay() {
-    const pone = gameState.dealer === PlayerPos.P_ONE ? PlayerPos.P_TWO : PlayerPos.P_ONE;
+  function startPlay() {
+    const pone = getPone(gameState.dealer!);
     const activeRef = ref(rtdb, `games/${gameId}/players/${pone}`);
     update(activeRef, { activePlayer: IsActive.ACTIVE }).then(() => {
       console.log('activeplayer updated');
     });
+  }
+
+  function getPone(dealer: PlayerPos): PlayerPos {
+    console.log(dealer);
+
+    return dealer === PlayerPos.P_ONE ? PlayerPos.P_TWO : PlayerPos.P_ONE;
   }
 
   const isPlayerActive = (player: PlayerPos): boolean =>
@@ -155,47 +177,98 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
 
     //
     // set timer, players can okay to skip
+    // set cut to invalid
     // deal hand
+  }
+
+  function cutDeckHandler(cutStatus: Status) {
+    // const pone = getPone(gameState.dealer!);
+    const deckCutRef = ref(rtdb, `games/${gameId}/deckCut`);
+    switch (cutStatus) {
+      case Status.INVALID: {
+        set(deckCutRef, { status: Status.INVALID, card: gameState.deckCut.card });
+        break;
+      }
+      case Status.VALID: {
+        set(deckCutRef, { status: Status.VALID, card: gameState.deckCut.card });
+        break;
+      }
+      case Status.COMPLETED: {
+        if (
+          gameState.deckCut.status !== Status.VALID ||
+          gameState.players[player].activePlayer === IsActive.NOT_ACTIVE
+        )
+          return console.log('cannot cut deck');
+        set(deckCutRef, { status: Status.COMPLETED, card: gameState.deckCut.card });
+        break;
+      }
+      default:
+        return;
+    }
   }
 
   function cardClickHandler(targetCard: CardType) {
     if (!isPlayerActive(player)) return console.log('player is not active');
     if (!isCardValid(targetCard.playValue, gameState.turn.cardTotal))
       return console.log('thats over 31!!');
+    if (gameState.deckCut.status === Status.VALID) return console.log('must cut deck');
 
     console.log(targetCard);
     if (playerHand.length > 4) {
       addCardToCrib(targetCard);
       // if 2nd card has just been moved to crib (=== 5), make player inactive
-      playerHand.length === 5 &&
-        update(ref(rtdb, `games/${gameId}/players/${player}`), {
-          ...gameState.players[player],
-          activePlayer: IsActive.NOT_ACTIVE
-        }).then(() => {
-          Object.keys(gameState.crib).length === 3 && startCardPlay();
-        });
+      playerHand.length === 5 && updateActivePlayer('inactive');
+      if (Object.keys(gameState.crib).length === 3) {
+        console.log('waiting for cut!');
+        cutDeckHandler(Status.VALID);
+        updateActivePlayer('pone');
+      }
     }
     if (playerHand.length <= 4) {
       playCard(targetCard);
-      update(ref(rtdb, `games/${gameId}/players`), {
-        [player]: { ...gameState.players[player], activePlayer: IsActive.NOT_ACTIVE },
-        [opponent]: { ...gameState.players[opponent], activePlayer: IsActive.ACTIVE }
-      });
-      const cardTotalRef = ref(rtdb, `games/${gameId}/turn/cardTotal`);
-      set(cardTotalRef, updateCardTotal(targetCard.playValue, gameState.turn.cardTotal));
+      const cardTotalRef = getCardTotalRef(gameState.gameId);
+      const updatedCardTotal = updateCardTotal(targetCard.playValue, gameState.turn.cardTotal);
+      set(cardTotalRef, updatedCardTotal);
+      if (isGo(opponentHand, updatedCardTotal) && !isGo(playerHand, updatedCardTotal)) {
+        renderGo();
+      } else if (isGo(opponentHand, updatedCardTotal) && isGo(playerHand, updatedCardTotal)) {
+        renderGo(resetCardTotal);
+
+        updateActivePlayer('toggle');
+      } else {
+        updateActivePlayer('toggle');
+      }
     }
-    if (!playerHand.length && !opponentHand.length) {
+    if (playerHand.length === 1 && !opponentHand.length) {
       scoreHand();
     }
+  }
+
+  function renderGo(callback?: () => void) {
+    setGo((go) => !go);
+    const timer = setTimeout(() => {
+      setGo((go) => !go);
+      if (callback) callback();
+    }, 1000);
+  }
+
+  function isGo(hand: CardsIndex, cardTotal: number): boolean {
+    const valid = Object.values(hand).filter((card) => isCardValid(card.playValue, cardTotal));
+    return !valid.length;
+  }
+
+  function resetCardTotal() {
+    // const cardTotalRef = getCardTotalRef(gameState.gameId);
+    const turnRef = getTurnRef(gameState.gameId);
+    set(turnRef, { cardsPlayed: {}, cardTotal: 0 });
   }
 
   function updateCardTotal(cardPlayValue: number, cardTotal: number): number {
     return cardPlayValue + cardTotal;
   }
 
-  function isCardValid(cardPlayValue: number, turnCardTotal: number): boolean {
-    const valid = cardPlayValue + turnCardTotal <= 31;
-    return valid;
+  function isCardValid(cardPlayValue: number, cardTotal: number): boolean {
+    return cardPlayValue + cardTotal <= 31;
   }
 
   function renderCards(
@@ -204,7 +277,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     cardSize: CardSize,
     playerHand: boolean = false
   ) {
-    return cards.map((card, i, arr) => (
+    return cards.map((card, i) => (
       <PlayingCard
         key={card.id}
         isFaceUp={faceUp}
@@ -217,19 +290,19 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     ));
   }
 
-  // useEffect(() => {
-  //   const pone = gameState.dealer === PlayerPos.P_ONE ? PlayerPos.P_TWO : PlayerPos.P_ONE;
-  //   if (
-  //     Object.keys(gameState.crib).length === 4 &&
-  //     !Object.keys(gameState.playerCards[pone].played).length
-  //   ) {
-  //     // const dealerRef = ref(rtdb, `games/${gameId}/dealer`);
-  //     const activeRef = ref(rtdb, `games/${gameId}/players/${pone}`);
-  //     update(activeRef, { activePlayer: IsActive.ACTIVE }).then(() => {
-  //       console.log('activeplayer updated');
-  //     });
-  //   }
-  // }, [gameState.crib]);
+  useEffect(() => {
+    const pone = gameState.dealer === PlayerPos.P_ONE ? PlayerPos.P_TWO : PlayerPos.P_ONE;
+    if (
+      Object.keys(gameState.crib).length === 4 &&
+      !Object.keys(gameState.playerCards[pone].played).length
+    ) {
+      // const dealerRef = ref(rtdb, `games/${gameId}/dealer`);
+      const activeRef = ref(rtdb, `games/${gameId}/players/${pone}`);
+      update(activeRef, { activePlayer: IsActive.ACTIVE }).then(() => {
+        console.log('activeplayer updated');
+      });
+    }
+  }, [gameState.turn.cardTotal]);
 
   return (
     <div className="relative grid h-full grid-cols-[4fr,_1fr] items-center justify-items-center gap-2 py-12 px-4">
@@ -249,10 +322,11 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
             {renderOpponentPlayed}
           </CardBox>
         </div>
-
-        <Deck />
-
-        {[gameState.players[player].activePlayer]}
+        <Deck cutDeck={gameState.deckCut} callback={cutDeckHandler} />
+        <div>
+          count: {gameState.turn.cardTotal} {go && 'GO!!'}
+        </div>
+        <div>{gameState.players[player].activePlayer}</div>
         <CardBox
           size={{ height: CardBoxHeight.MD, width: CardBoxWidth.MD_FOUR }}
           maxCards={4}
@@ -266,8 +340,6 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
           placement="self-center place-self-center">
           {renderPlayerHand}
         </CardBox>
-
-        {/* <Cards cardHeight="h-40" isFaceUp={true} cards={gameState.hands.player.inHand} /> */}
       </div>
       <div>
         <Board />
