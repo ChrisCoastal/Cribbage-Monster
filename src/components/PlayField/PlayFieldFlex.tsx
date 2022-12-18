@@ -41,6 +41,7 @@ import {
 } from 'src/utils/helpers';
 import { nanoid } from 'nanoid';
 import { FC, useEffect, useState } from 'react';
+import GamesList from '../GamesList/GamesList';
 
 type PlayFieldProps = {
   gameId: GameId;
@@ -181,6 +182,11 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     // deal hand
   }
 
+  function endHand() {
+    // or interval with setState?
+    const endHandTimer = setTimeout(() => {}, 20000);
+  }
+
   function cutDeckHandler(cutStatus: Status) {
     // const pone = getPone(gameState.dealer!);
     const deckCutRef = ref(rtdb, `games/${gameId}/deckCut`);
@@ -229,11 +235,13 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
       const cardTotalRef = getCardTotalRef(gameState.gameId);
       const updatedCardTotal = updateCardTotal(targetCard.playValue, gameState.turn.cardTotal);
       set(cardTotalRef, updatedCardTotal);
-      if (isGo(opponentHand, updatedCardTotal) && !isGo(playerHand, updatedCardTotal)) {
+      if (isGo(opponentHand, updatedCardTotal) && !isGo(playerHand, updatedCardTotal, targetCard)) {
         renderGo();
-      } else if (isGo(opponentHand, updatedCardTotal) && isGo(playerHand, updatedCardTotal)) {
+      } else if (
+        isGo(opponentHand, updatedCardTotal) &&
+        isGo(playerHand, updatedCardTotal, targetCard)
+      ) {
         renderGo(resetCardTotal);
-
         updateActivePlayer('toggle');
       } else {
         updateActivePlayer('toggle');
@@ -245,20 +253,24 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   }
 
   function renderGo(callback?: () => void) {
-    setGo((go) => !go);
+    setGo(true);
     const timer = setTimeout(() => {
-      setGo((go) => !go);
+      setGo(false);
       if (callback) callback();
     }, 1000);
   }
 
-  function isGo(hand: CardsIndex, cardTotal: number): boolean {
-    const valid = Object.values(hand).filter((card) => isCardValid(card.playValue, cardTotal));
-    return !valid.length;
+  function isGo(hand: CardsIndex, cardTotal: number, cardPlayed?: CardType): boolean {
+    // played card still in state, must be filtered from array
+    const validCards = Object.values(hand).filter(
+      (card) => card.id !== cardPlayed?.id && isCardValid(card.playValue, cardTotal)
+    );
+    console.log(validCards, !validCards.length);
+
+    return !validCards.length;
   }
 
   function resetCardTotal() {
-    // const cardTotalRef = getCardTotalRef(gameState.gameId);
     const turnRef = getTurnRef(gameState.gameId);
     set(turnRef, { cardsPlayed: {}, cardTotal: 0 });
   }
@@ -290,19 +302,12 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     ));
   }
 
-  useEffect(() => {
-    const pone = gameState.dealer === PlayerPos.P_ONE ? PlayerPos.P_TWO : PlayerPos.P_ONE;
-    if (
-      Object.keys(gameState.crib).length === 4 &&
-      !Object.keys(gameState.playerCards[pone].played).length
-    ) {
-      // const dealerRef = ref(rtdb, `games/${gameId}/dealer`);
-      const activeRef = ref(rtdb, `games/${gameId}/players/${pone}`);
-      update(activeRef, { activePlayer: IsActive.ACTIVE }).then(() => {
-        console.log('activeplayer updated');
-      });
-    }
-  }, [gameState.turn.cardTotal]);
+  // TODO: Go UI for non-cardplaying player
+  // FIXME: should go to a cloud trigger
+  // useEffect(() => {
+  //   if (gameState.players[player].activePlayer === IsActive.ACTIVE) return;
+  //   if (isGo(gameState.playerCards[player].inHand, gameState.turn.cardTotal)) renderGo();
+  // }, [gameState.turn.cardTotal]);
 
   return (
     <div className="relative grid h-full grid-cols-[4fr,_1fr] items-center justify-items-center gap-2 py-12 px-4">
