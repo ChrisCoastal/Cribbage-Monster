@@ -35,13 +35,17 @@ import {
   getInHandRef,
   getPlayerCardsPlayedRef,
   getCribRef,
-  getDealerRef,
+  getPlayerRef,
   getCardTotalRef,
-  getTurnRef
+  getTurnRef,
+  getPlayerCards,
+  getDeckRef,
+  getScoreRef
 } from 'src/utils/helpers';
 import { nanoid } from 'nanoid';
 import { FC, useEffect, useState } from 'react';
 import GamesList from '../GamesList/GamesList';
+import Score from '../Score/Score';
 
 type PlayFieldProps = {
   gameId: GameId;
@@ -67,17 +71,17 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     // TODO: need deck here and add deck to state?
     // TODO: move all ref locations to helperes
     const deal = dealHands();
-    const activePlayer1Ref = ref(rtdb, `games/${gameId}/players/player1/activePlayer`);
-    const activePlayer2Ref = ref(rtdb, `games/${gameId}/players/player2/activePlayer`);
-    const player1HandRef = ref(rtdb, `games/${gameId}/playerCards/player1`);
-    const player2HandRef = ref(rtdb, `games/${gameId}/playerCards/player2`);
-    const deckCutRef = ref(rtdb, `games/${gameId}/deckCut`);
-    const turnRef = ref(rtdb, `games/${gameId}/turn`);
-    const cribRef = ref(rtdb, `games/${gameId}/crib`);
+    const activePlayer1Ref = getActivePlayerRef(gameId, PlayerPos.P_ONE);
+    const activePlayer2Ref = getActivePlayerRef(gameId, PlayerPos.P_TWO);
+    const player1CardsRef = getPlayerCards(gameId, PlayerPos.P_ONE);
+    const player2CardsRef = getPlayerCards(gameId, PlayerPos.P_TWO);
+    const deckCutRef = getDeckRef(gameId);
+    const cribRef = getCribRef(gameId);
+    const turnRef = getTurnRef(gameId);
     set(activePlayer1Ref, IsActive.ACTIVE);
     set(activePlayer2Ref, IsActive.ACTIVE);
-    set(player1HandRef, { inHand: deal.hands.player1, played: {} });
-    set(player2HandRef, { inHand: deal.hands.player2, played: {} });
+    set(player1CardsRef, { inHand: deal.hands.player1, played: {} });
+    set(player2CardsRef, { inHand: deal.hands.player2, played: {} });
     set(deckCutRef, { status: Status.INVALID, card: deal.cut });
     set(cribRef, null);
     set(turnRef, { cardsPlayed: null, cardTotal: 0 });
@@ -118,19 +122,6 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   //   return ref(rtdb, `games/${gameId}/crib`);
   // }
 
-  function playCard(card: CardType, callback?: () => void) {
-    const playerHandRef = getInHandRef(gameId, player);
-    const playerCardsPlayedRef = getPlayerCardsPlayedRef(gameId, player);
-    const addCardToPlayedRef = push(playerCardsPlayedRef);
-    const updatedHand = filterCard(player, card.id);
-
-    set(playerHandRef, updatedHand)
-      .then(() => {
-        set(addCardToPlayedRef, card);
-      })
-      .then(callback);
-  }
-
   function updateActivePlayer(active: 'pone' | 'toggle' | 'inactive', callback?: () => void) {
     switch (active) {
       case 'toggle': {
@@ -142,23 +133,27 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
       }
       case 'pone': {
         const pone = getPone(gameState.dealer!);
-        const activeRef = ref(rtdb, `games/${gameId}/players/${pone}`);
-        update(activeRef, { ...gameState.players[opponent], activePlayer: IsActive.ACTIVE }).then(
+        const playerRef = getPlayerRef(gameId, pone);
+        update(playerRef, { ...gameState.players[opponent], activePlayer: IsActive.ACTIVE }).then(
           () => callback
         );
         break;
       }
-      default:
-        update(ref(rtdb, `games/${gameId}/players/${player}`), {
+      case 'inactive': {
+        const playerRef = getPlayerRef(gameId, player);
+        update(playerRef, {
           ...gameState.players[player],
           activePlayer: IsActive.NOT_ACTIVE
         }).then(() => callback);
+      }
+      default:
+        return;
     }
   }
 
   function startPlay() {
     const pone = getPone(gameState.dealer!);
-    const activeRef = ref(rtdb, `games/${gameId}/players/${pone}`);
+    const activeRef = getPlayerRef(gameId, pone);
     update(activeRef, { activePlayer: IsActive.ACTIVE }).then(() => {
       console.log('activeplayer updated');
     });
@@ -189,7 +184,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
 
   function cutDeckHandler(cutStatus: Status) {
     // const pone = getPone(gameState.dealer!);
-    const deckCutRef = ref(rtdb, `games/${gameId}/deckCut`);
+    const deckCutRef = getDeckRef(gameId);
     switch (cutStatus) {
       case Status.INVALID: {
         set(deckCutRef, { status: Status.INVALID, card: gameState.deckCut.card });
@@ -206,6 +201,15 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
         )
           return console.log('cannot cut deck');
         set(deckCutRef, { status: Status.COMPLETED, card: gameState.deckCut.card });
+        if (gameState.deckCut.card?.name === CardName.Jack) {
+          const scoreRef = getScoreRef(gameId);
+          update(scoreRef, {
+            [opponent]: {
+              cur: gameState.score[opponent].cur + 2,
+              prev: gameState.score[opponent].cur
+            }
+          });
+        }
         break;
       }
       default:
@@ -252,6 +256,19 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     }
   }
 
+  function playCard(card: CardType, callback?: () => void) {
+    const playerHandRef = getInHandRef(gameId, player);
+    const playerCardsPlayedRef = getPlayerCardsPlayedRef(gameId, player);
+    const addCardToPlayedRef = push(playerCardsPlayedRef);
+    const updatedHand = filterCard(player, card.id);
+
+    set(playerHandRef, updatedHand)
+      .then(() => {
+        set(addCardToPlayedRef, card);
+      })
+      .then(callback);
+  }
+
   function renderGo(callback?: () => void) {
     setGo(true);
     const timer = setTimeout(() => {
@@ -262,6 +279,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
 
   function isGo(hand: CardsIndex, cardTotal: number, cardPlayed?: CardType): boolean {
     // played card still in state, must be filtered from array
+    // TODO: use filter card
     const validCards = Object.values(hand).filter(
       (card) => card.id !== cardPlayed?.id && isCardValid(card.playValue, cardTotal)
     );
@@ -346,9 +364,19 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
           {renderPlayerHand}
         </CardBox>
       </div>
-      <div>
+      <div className="flex flex-col gap-4">
+        <Score
+          displayName={gameState.players[opponent].displayName}
+          curScore={gameState.score[opponent].cur}
+          prevScore={gameState.score[opponent].prev}
+        />
         <Board />
         <Button handler={dealHandler}>Deal</Button>
+        <Score
+          displayName={gameState.players[player].displayName}
+          curScore={gameState.score[player].cur}
+          prevScore={gameState.score[player].prev}
+        />
       </div>
     </div>
   );

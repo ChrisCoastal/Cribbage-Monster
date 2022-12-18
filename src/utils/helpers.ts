@@ -15,6 +15,16 @@ import { ref } from 'firebase/database';
 import { rtdb } from 'src/firestore.config';
 
 // REALTIME DATABASE REFS
+export const getActivePlayerRef = (gameId: GameId, player: PlayerPos) =>
+  ref(rtdb, `games/${gameId}/players/${player}/activePlayer`);
+
+export const getPlayerRef = (gameId: GameId, player: PlayerPos) =>
+  ref(rtdb, `games/${gameId}/players/${player}`);
+
+export const getPlayersRef = (gameId: GameId) => ref(rtdb, `games/${gameId}/players/`);
+
+export const getPlayerCards = (gameId: GameId, player: PlayerPos) =>
+  ref(rtdb, `games/${gameId}/playerCards/${player}`);
 
 export const getPlayerCardsPlayedRef = (gameId: GameId, player: PlayerPos) =>
   ref(rtdb, `games/${gameId}/playerCards/${player}/played`);
@@ -22,16 +32,17 @@ export const getPlayerCardsPlayedRef = (gameId: GameId, player: PlayerPos) =>
 export const getInHandRef = (gameId: GameId, player: PlayerPos) =>
   ref(rtdb, `games/${gameId}/playerCards/${player}/inHand`);
 
-export const getDealerRef = (gameId: GameId, dealer: PlayerPos) =>
-  ref(rtdb, `games/${gameId}/players/${dealer}`);
+export const getDeckRef = (gameId: GameId) => ref(rtdb, `games/${gameId}/deckCut`);
 
 export const getCribRef = (gameId: GameId) => ref(rtdb, `games/${gameId}/crib`);
 
-export const getActivePlayerRef = (gameId: GameId) => ref(rtdb, `games/${gameId}/activePlayer`);
+export const getTurnRef = (gameId: GameId) => ref(rtdb, `games/${gameId}/turn/`);
+
+export const getCardsPlayedRef = (gameId: GameId) => ref(rtdb, `games/${gameId}/turn/cardsPlayed`);
 
 export const getCardTotalRef = (gameId: GameId) => ref(rtdb, `games/${gameId}/turn/cardTotal`);
 
-export const getTurnRef = (gameId: GameId) => ref(rtdb, `games/${gameId}/turn/`);
+export const getScoreRef = (gameId: GameId) => ref(rtdb, `games/${gameId}/score`);
 
 // PLAYERS
 
