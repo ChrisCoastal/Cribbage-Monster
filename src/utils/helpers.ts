@@ -131,8 +131,6 @@ export function getShuffledDeck() {
   return shuffledDeck;
 }
 
-// TODO: does this need to be coordinated with firebase?
-// yes, it needs to be kept aligned
 export function dealHands(): {
   hands: { player1: CardsIndex; player2: CardsIndex };
   cut: CardType;
@@ -162,8 +160,6 @@ export function sortHand(
   order: SortOrder = SortOrder.LOW_TO_HIGH,
   sortBy: SortBy = SortBy.FACE_VALUE
 ): CardType[] {
-  // const sortedCards: CardType[] = JSON.parse(JSON.stringify(cards));
-  // sortedCards.sort(sortBy === SortBy.FACE_VALUE ? cardSortByValue : cardSortBySuit);
   cards.sort(sortBy === SortBy.FACE_VALUE ? cardSortByValue : cardSortBySuit);
 
   function cardSortByValue(a: CardType, b: CardType) {
@@ -296,16 +292,6 @@ export function getCardValues(cards: CardsIndex, key?: CardKey) {
   return key ? Object.values(cards).map((card) => card[key]) : Object.values(cards);
 }
 
-// need to kep track of the length of the valid run
-// card to make run
-
-type Run = {
-  difference: number;
-  prevFaceValue: number;
-  validCards: number[];
-  runLength: number;
-};
-
 export function isPegRun(cardFaceValue: number, cardsPlayed: CardsIndex = {}) {
   const cardsPlayedFaceValues = getCardValues(cardsPlayed, CardKey.FACE) as number[];
   if (cardsPlayedFaceValues.length < 2) return 0;
@@ -340,14 +326,19 @@ export function isPegRun(cardFaceValue: number, cardsPlayed: CardsIndex = {}) {
   return validateRun.points;
 }
 
+function isRunIncrement(cardsFaceValues: number[]): boolean {
+  const sortedCards = [...cardsFaceValues].sort((a: number, b: number) => a - b);
+  const isRunIncrement = sortedCards.filter((value, i, arr) =>
+    arr[i + 1] ? value === arr[i + 1] - 1 : true
+  );
+  return isRunIncrement.length === sortedCards.length;
+}
+
 // SCORING
-export function scorePairs(cardFaceValues: number[], cutFaceValue: number) {
+export function scorePairs(cardFaceValues: number[], cutFaceValue: number): number {
   const sortedCards = [...cardFaceValues, cutFaceValue].sort((a, b) => a - b);
 }
-export function scoreFifteens(cardPlayValues: number[], cutPlayValue: number) {
-  // const cardValues = [...cardPlayValues, cutPlayValue];
-  // for (let i = 0; i < cardValues.length; i++) {
-  // }
+export function scoreFifteens(cardPlayValues: number[], cutPlayValue: number): number {
   const fifteens = cardPlayValues
     .reduce(
       (sums, cardValue) => {
@@ -359,9 +350,45 @@ export function scoreFifteens(cardPlayValues: number[], cutPlayValue: number) {
   return fifteens * 2;
 }
 
-export function scoreRuns(cardFaceValues: number[], cutFaceValue: number) {
-  //
+export function scoreRuns(cardFaceValues: number[], cutFaceValue: number): number {
+  const values = [...cardFaceValues, cutFaceValue];
+  const uniqueSorted = [...new Set(values)].sort((a, b) => a - b);
+
+  const run = uniqueSorted.reduce(
+    (
+      runAcc: { isRun: boolean; values: number[] },
+      cardFv: number
+    ): { isRun: boolean; values: number[] } => {
+      const prevValue = runAcc.values.at(-1);
+      const isIncrement = prevValue && cardFv === prevValue + 1;
+      if (!prevValue) return { isRun: false, values: [cardFv] };
+
+      if (isIncrement) {
+        const updatedValues = [...runAcc.values, cardFv];
+        const isRun = updatedValues.length >= 3;
+        return { isRun, values: updatedValues };
+      }
+
+      if (!isIncrement && !runAcc.isRun) {
+        const updatedValues = [cardFv];
+        return { isRun: false, values: updatedValues };
+      } else return runAcc;
+    },
+    { isRun: false, values: [] }
+  );
+
+  if (!run.isRun) return 0;
+  let points = run.values.length;
+  const pairedCards = run.values
+    .map((runCardValue) => values.filter((value) => value === runCardValue))
+    .forEach((numArr) => (numArr.length ? (points = points * numArr.length) : null));
+
+  return points;
 }
-export function scoreFlush(cardSuits: Suit[], cutSuit: Suit) {
-  //
+
+export function scoreFlush(cardSuits: Suit[], cutSuit: Suit): number {
+  let points = 0;
+  if ([...new Set(cardSuits)].length === 1) points = 4;
+  if (cardSuits[0] === cutSuit) points++;
+  return points;
 }
