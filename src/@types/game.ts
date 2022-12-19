@@ -50,6 +50,11 @@ export type TurnType = {
   cardTotal: number;
 };
 
+export type ScoreType = {
+  cur: number;
+  prev: number;
+};
+
 export type GameState = {
   gameId: GameId;
   dealer: PlayerPos | null;
@@ -72,14 +77,8 @@ export type GameState = {
   crib: CardsIndex;
   deckCut: Cut;
   score: {
-    player1: {
-      cur: number;
-      prev: number;
-    };
-    player2: {
-      cur: number;
-      prev: number;
-    };
+    player1: ScoreType;
+    player2: ScoreType;
   };
   turnTotals: TurnType;
 };

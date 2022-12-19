@@ -14,7 +14,8 @@ import {
   Status,
   Suit,
   TurnType,
-  UserId
+  UserId,
+  ScoreType
 } from 'src/@types';
 
 import { doc, updateDoc, onSnapshot } from 'firebase/firestore';
@@ -80,6 +81,8 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   const renderOpponentHand = renderCards(opponentHand, false, CardSize.SM);
   const renderPlayerPlayed = renderCards(playerPlayed, true, CardSize.MD);
   const renderOpponentPlayed = renderCards(opponentPlayed, true, CardSize.MD);
+
+  //TODO: should all refs be moved into an object?
 
   async function dealHandler() {
     // TODO: need deck here and add deck to state?
@@ -172,11 +175,34 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
 
   function scoreHand() {
     console.log('scoring hands');
-    const playerScore = scorePoints(gameState.playerCards[player].played, gameState.deckCut.card!);
-    const opponentScore = scorePoints(
+    const playerHandScore = scorePoints(
+      gameState.playerCards[player].played,
+      gameState.deckCut.card!
+    );
+    const opponentHandScore = scorePoints(
       gameState.playerCards[opponent].played,
       gameState.deckCut.card!
     );
+    const cribScore = scorePoints(gameState.crib, gameState.deckCut.card!);
+    const playerScore = player === gameState.dealer ? playerHandScore + cribScore : playerHandScore;
+    const opponentScore =
+      opponent === gameState.dealer ? opponentHandScore + cribScore : opponentHandScore;
+
+    const playerScoreRef = getPlayerScoreRef(gameId, player);
+    const opponentScoreRef = getPlayerScoreRef(gameId, opponent);
+    const scoreRef = getScoreRef(gameId);
+    const updatedScore = {
+      [player]: {
+        cur: gameState.score[player].cur + playerScore,
+        prev: gameState.score[player].cur
+      },
+      [opponent]: {
+        cur: gameState.score[opponent].cur + opponentScore,
+        prev: gameState.score[opponent].cur
+      }
+    };
+
+    set(scoreRef, updatedScore);
 
     // set timer, players can okay to skip
     // set cut to invalid
@@ -185,9 +211,15 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
 
   function scorePoints(hand: CardsIndex, cutCard: CardType) {
     const pairs = scorePairs(getCardValues(hand, CardKey.FACE) as number[], cutCard.faceValue);
-    const fifteen = scoreFifteens(getCardValues(hand, CardKey.PLAY) as number[], cutCard.playValue);
-    const run = scoreRuns(getCardValues(hand, CardKey.FACE) as number[], cutCard.faceValue);
+    const fifteens = scoreFifteens(
+      getCardValues(hand, CardKey.PLAY) as number[],
+      cutCard.playValue
+    );
+    const runs = scoreRuns(getCardValues(hand, CardKey.FACE) as number[], cutCard.faceValue);
     const flush = scoreFlush(getCardValues(hand, CardKey.SUIT) as Suit[], cutCard.suit);
+
+    const points = pairs + fifteens + runs + flush;
+    return points;
   }
 
   function endHand() {
