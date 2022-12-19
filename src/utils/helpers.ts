@@ -283,7 +283,7 @@ export function isFifteen(cardPlayValue: number, cardTotal: number): number {
 }
 
 export function isGo(cardPlayValue: number, cardTotal: number) {
-  return isThirtyOne(cardPlayValue, cardTotal) | 1;
+  return isThirtyOne(cardPlayValue, cardTotal) || 1;
 }
 
 export function isThirtyOne(cardPlayValue: number, cardTotal: number): number {

@@ -298,8 +298,11 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     const fifteen = isFifteen(card.playValue, turnTotals.cardTotal);
     const run = isRun(card.faceValue, turnTotals.cardsPlayed);
     const go = opponentGo && playerGo ? isGo(card.playValue, turnTotals.cardTotal) : 0;
+    const points = pairs + fifteen + run + go;
 
-    return pairs + fifteen + run + go;
+    console.log(go, points);
+
+    return points;
   }
 
   function renderGo(callback?: () => void) {
