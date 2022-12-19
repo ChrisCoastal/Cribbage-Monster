@@ -61,6 +61,7 @@ import { FC, useEffect, useState } from 'react';
 import GamesList from '../GamesList/GamesList';
 import Score from '../Score/Score';
 import { INITIAL_GAME_STATE } from 'src/utils/constants';
+import { object } from 'firebase-functions/v1/storage';
 
 type PlayFieldProps = {
   gameId: GameId;
@@ -68,6 +69,7 @@ type PlayFieldProps = {
 
 const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   const [go, setGo] = useState<boolean>(false); // FIXME: MOVE TO STATE
+  const [scored, setScored] = useState<boolean>(false);
   const { userAuth } = useAuthContext();
   const userId = userAuth!.uid!;
 
@@ -102,6 +104,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     set(deckCutRef, { status: Status.INVALID, card: deal.cut });
     set(cribRef, null);
     set(turnRef, { cardsPlayed: null, cardTotal: 0 });
+    setScored(false);
     // dispatchGame({ type: GameReducerTypes.DEAL, payload: hands });
     // const gameRef = doc(db, 'game', gameState.gameId);
     // updateDoc(gameRef, data); //TODO:)
@@ -202,7 +205,19 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
       }
     };
 
-    set(scoreRef, updatedScore);
+    console.log(
+      'opponent',
+      updatedScore[opponent],
+      '\n',
+      'player',
+      updatedScore[player],
+      '\n',
+      `${gameState.dealer} crib`,
+      gameState.crib,
+      cribScore
+    );
+
+    player === PlayerPos.P_ONE && set(scoreRef, updatedScore);
 
     // set timer, players can okay to skip
     // set cut to invalid
@@ -306,9 +321,9 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
         updateActivePlayer('toggle');
       }
     }
-    if (playerHand.length === 1 && !opponentHand.length) {
-      scoreHand();
-    }
+    // if (playerHand.length === 1 && !opponentHand.length) {
+    //   scoreHand();
+    // }
   }
 
   function playCard(card: CardType, callback?: () => void) {
@@ -333,7 +348,6 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     const validCards = Object.values(hand).filter(
       (card) => card.id !== cardPlayed?.id && isCardValid(card.playValue, cardTotal)
     );
-    console.log(validCards, !validCards.length);
 
     return !validCards.length;
   }
@@ -392,12 +406,22 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     ));
   }
 
-  // TODO: Go UI for non-cardplaying player
-  // FIXME: should go to a cloud trigger
   // useEffect(() => {
   //   if (gameState.players[player].activePlayer === IsActive.ACTIVE) return;
   //   if (expectGo(gameState.playerCards[player].inHand, gameState.turn.cardTotal)) renderGo();
   // }, [gameState.turn.cardTotal]);
+
+  const numCardsPlayed =
+    Object.keys(gameState.playerCards.player1.played).length +
+    Object.keys(gameState.playerCards.player2.played).length;
+
+  useEffect(() => {
+    console.log('useEffect');
+    if (!numCardsPlayed) return;
+    if (numCardsPlayed !== 8) return;
+    // setScored(true);
+    scoreHand();
+  }, [numCardsPlayed]);
 
   return (
     <div className="relative grid h-full grid-cols-[4fr,_1fr] items-center justify-items-center gap-2 py-12 px-4">
