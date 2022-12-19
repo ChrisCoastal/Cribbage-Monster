@@ -26,11 +26,13 @@ export const INITIAL_GAME_STATE: GameState = {
   playerCards: {
     player1: {
       inHand: {},
-      played: {}
+      played: {},
+      isGo: false
     },
     player2: {
       inHand: {},
-      played: {}
+      played: {},
+      isGo: false
     }
   },
   crib: {},
@@ -45,7 +47,7 @@ export const INITIAL_GAME_STATE: GameState = {
       prev: 0
     }
   },
-  turn: {
+  turnTotals: {
     cardsPlayed: {},
     cardTotal: 0
   }

@@ -32,6 +32,11 @@ export enum Status {
   COMPLETED = 'completed'
 }
 
+export type TurnType = {
+  cardsPlayed: CardsIndex;
+  cardTotal: number;
+};
+
 export type GameState = {
   gameId: GameId;
   dealer: PlayerPos | null;
@@ -43,10 +48,12 @@ export type GameState = {
     player1: {
       inHand: CardsIndex;
       played: CardsIndex;
+      isGo: boolean;
     };
     player2: {
       inHand: CardsIndex;
       played: CardsIndex;
+      isGo: boolean;
     };
   };
   crib: CardsIndex;
@@ -61,10 +68,7 @@ export type GameState = {
       prev: number;
     };
   };
-  turn: {
-    cardsPlayed: CardsIndex;
-    cardTotal: number;
-  };
+  turnTotals: TurnType;
 };
 
 export type GameBrief = {

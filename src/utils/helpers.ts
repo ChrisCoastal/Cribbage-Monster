@@ -36,11 +36,13 @@ export const getDeckRef = (gameId: GameId) => ref(rtdb, `games/${gameId}/deckCut
 
 export const getCribRef = (gameId: GameId) => ref(rtdb, `games/${gameId}/crib`);
 
-export const getTurnRef = (gameId: GameId) => ref(rtdb, `games/${gameId}/turn/`);
+export const getTurnRef = (gameId: GameId) => ref(rtdb, `games/${gameId}/turnTotals/`);
 
-export const getCardsPlayedRef = (gameId: GameId) => ref(rtdb, `games/${gameId}/turn/cardsPlayed`);
+export const getCardsPlayedRef = (gameId: GameId) =>
+  ref(rtdb, `games/${gameId}/turnTotals/cardsPlayed`);
 
-export const getCardTotalRef = (gameId: GameId) => ref(rtdb, `games/${gameId}/turn/cardTotal`);
+export const getCardTotalRef = (gameId: GameId) =>
+  ref(rtdb, `games/${gameId}/turnTotals/cardTotal`);
 
 export const getScoreRef = (gameId: GameId) => ref(rtdb, `games/${gameId}/score`);
 
@@ -240,46 +242,32 @@ function calcPairs(
   return pairs;
 }
 
-function isPairs(cardsPlayed: CardType[]): {
-  cardValues: number[];
-  isPair: boolean;
-  points: number;
-} {
-  const cardFaceValues = getCardFaceValues(cardsPlayed);
+export function isPairs(cardFaceValue: number, cardsPlayed: CardsIndex): number {
+  const cardsPlayedFaceValues = getCardFaceValues(cardsPlayed);
+  if (cardFaceValue !== cardsPlayedFaceValues.at(-1)) return 0;
   const pairPoints = [0, 2, 6, 12];
-  const pair = cardFaceValues.reduceRight<{
-    cardValues: number[];
-    isPair: boolean;
-    pairBroken: boolean;
-    points: number;
-  }>(
-    (prevCards, curCard, i) => {
-      if (prevCards.pairBroken) return prevCards;
-      if (!prevCards.cardValues.length) {
-        return { ...prevCards, cardValues: [curCard] };
-      }
 
-      if (prevCards.cardValues.at(-1) === curCard) {
-        const cardValues: number[] = [...prevCards.cardValues, curCard];
-        return {
-          cardValues,
-          isPair: true,
-          pairBroken: false,
-          points: pairPoints[cardValues.length - 1]
-        };
-      }
-      if (prevCards.cardValues.at(-1) !== curCard) return { ...prevCards, pairBroken: true };
-      return prevCards;
+  const { pointsIndex } = cardsPlayedFaceValues.reduceRight<{
+    pairValue: number;
+    isPair: boolean;
+    pointsIndex: number;
+  }>(
+    (pairAcc, cardFv) => {
+      console.log(pairAcc, 'isEqual', cardFv === pairAcc.pairValue);
+
+      if (!pairAcc.isPair) return pairAcc;
+      return cardFv === pairAcc.pairValue
+        ? { ...pairAcc, pointsIndex: ++pairAcc.pointsIndex }
+        : { ...pairAcc, isPair: false };
     },
     {
-      cardValues: [],
-      isPair: false,
-      pairBroken: false,
-      points: 0
+      pairValue: cardFaceValue,
+      isPair: true,
+      pointsIndex: 0
     }
   );
 
-  return pair;
+  return pairPoints[pointsIndex];
 }
 
 function calcFifteen(cardTotal: number): number | null {
@@ -287,16 +275,24 @@ function calcFifteen(cardTotal: number): number | null {
   return 15 - cardTotal;
 }
 
-function isFifteen(cardTotal: number): boolean {
-  return cardTotal === 15;
+export function isFifteen(cardPlayValue: number, cardTotal: number): number {
+  return cardPlayValue + cardTotal === 15 ? 2 : 0;
 }
 
-function getCardFaceValues(cards: CardType[]) {
-  return cards.map((card) => card.faceValue);
+export function isGo(cardPlayValue: number, cardTotal: number) {
+  return isThirtyOne(cardPlayValue, cardTotal) | 1;
 }
 
-function getCardPlayValues(cards: CardType[]) {
-  return cards.map((card) => card.playValue);
+export function isThirtyOne(cardPlayValue: number, cardTotal: number): number {
+  return cardPlayValue + cardTotal === 31 ? 2 : 0;
+}
+
+export function getCardFaceValues(cards: CardsIndex) {
+  return Object.values(cards).map((card) => card.faceValue);
+}
+
+export function getCardPlayValues(cards: CardsIndex) {
+  return Object.values(cards).map((card) => card.playValue);
 }
 
 // need to kep track of the length of the valid run
@@ -309,51 +305,36 @@ type Run = {
   runLength: number;
 };
 
-function isRun(cardsPlayed: CardType[]): number[] {
-  const makeRun: number[] = [];
-  if (cardsPlayed.length < 2) return makeRun;
+export function isRun(cardFaceValue: number, cardsPlayed: CardsIndex) {
+  const cardsPlayedFaceValues = getCardFaceValues(cardsPlayed);
+  if (cardsPlayedFaceValues.length < 2) return 0;
 
-  const sortedPlayed = cardsPlayed
-    .slice()
-    .sort((a: CardType, b: CardType) => a.playValue - b.playValue);
-  const lowRunFaceValue = sortedPlayed[0].faceValue - 1;
-  const highRunFaceValue = sortedPlayed[-1].faceValue + 1;
-  const runValid = sortedPlayed.reduceRight<Run>(
-    (isRun, card, i) => {
-      if (isRun.difference > 2) return isRun;
-      if (!isRun.prevFaceValue)
-        return { difference: -1, prevFaceValue: card.faceValue, validCards: [], runLength: 1 };
-      // this still doesn't work b/c there could be both a valid inner card and outer
-      else if (card.faceValue - isRun.prevFaceValue === 1)
-        return {
-          difference: Math.max(isRun.difference, 1),
-          prevFaceValue: card.faceValue,
-          validCards: isRun.validCards,
-          runLength: isRun.runLength++
-        };
-      else if (card.faceValue - isRun.prevFaceValue === 2)
-        return {
-          difference: Math.max(isRun.difference, 2),
-          prevFaceValue: card.faceValue,
-          validCards: [card.faceValue - 1],
-          runLength: isRun.difference === 2 ? isRun.runLength : isRun.runLength++
-        };
-      else if (card.faceValue - isRun.prevFaceValue > 2)
-        return {
-          difference: 3,
-          prevFaceValue: card.faceValue,
-          validCards: isRun.validCards,
-          runLength: isRun.runLength
-        };
-      return isRun;
+  // if a cardValue === faceValue has already been played it breaks the run
+  const runStart = cardsPlayedFaceValues.lastIndexOf(cardFaceValue);
+  const validPlayed =
+    runStart !== -1
+      ? cardsPlayedFaceValues.slice(runStart + 1).concat(cardFaceValue)
+      : cardsPlayedFaceValues.concat(cardFaceValue);
+  console.log('validPlayed', validPlayed);
+
+  const validateRun = validPlayed.reduceRight(
+    (runAcc: { points: number; prevCardValues: number[] }, cardFv: number) => {
+      const runCards = [...runAcc.prevCardValues, cardFv];
+      const updatedAcc = { ...runAcc, prevCardValues: runCards };
+
+      if (runAcc.prevCardValues.length < 2) return updatedAcc;
+
+      const sortedCards = [...runCards].sort((a: number, b: number) => a - b);
+      const isRunIncrement = sortedCards.filter((value, i, arr) =>
+        arr[i + 1] ? value === arr[i + 1] - 1 : true
+      );
+
+      return isRunIncrement.length === sortedCards.length && isRunIncrement.includes(cardFaceValue)
+        ? { points: runCards.length, prevCardValues: sortedCards }
+        : updatedAcc;
     },
-    {
-      difference: -1,
-      prevFaceValue: -1,
-      validCards: [],
-      runLength: 0
-    }
+    { points: 0, prevCardValues: [] }
   );
 
-  return makeRun;
+  return validateRun.points;
 }

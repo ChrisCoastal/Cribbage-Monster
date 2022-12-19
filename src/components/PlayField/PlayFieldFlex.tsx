@@ -12,6 +12,7 @@ import {
   PlayerPos,
   Status,
   Suit,
+  TurnType,
   UserId
 } from 'src/@types';
 
@@ -40,7 +41,11 @@ import {
   getTurnRef,
   getPlayerCards,
   getDeckRef,
-  getScoreRef
+  getScoreRef,
+  isFifteen,
+  isGo,
+  isPairs,
+  isRun
 } from 'src/utils/helpers';
 import { nanoid } from 'nanoid';
 import { FC, useEffect, useState } from 'react';
@@ -80,8 +85,8 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     const turnRef = getTurnRef(gameId);
     set(activePlayer1Ref, IsActive.ACTIVE);
     set(activePlayer2Ref, IsActive.ACTIVE);
-    set(player1CardsRef, { inHand: deal.hands.player1, played: {} });
-    set(player2CardsRef, { inHand: deal.hands.player2, played: {} });
+    update(player1CardsRef, { inHand: deal.hands.player1 });
+    update(player2CardsRef, { inHand: deal.hands.player2 });
     set(deckCutRef, { status: Status.INVALID, card: deal.cut });
     set(cribRef, null);
     set(turnRef, { cardsPlayed: null, cardTotal: 0 });
@@ -109,18 +114,6 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
       })
       .then(callback);
   }
-
-  // function getCardsPlayedRef(gameId: GameId, player: PlayerPos) {
-  //   return ref(rtdb, `games/${gameId}/playerCards/${player}/played`);
-  // }
-
-  // function getInHandRef(gameId: GameId, player: PlayerPos) {
-  //   return ref(rtdb, `games/${gameId}/playerCards/${player}/inHand`);
-  // }
-
-  // function getCribRef(gameId: GameId) {
-  //   return ref(rtdb, `games/${gameId}/crib`);
-  // }
 
   function updateActivePlayer(active: 'pone' | 'toggle' | 'inactive', callback?: () => void) {
     switch (active) {
@@ -219,7 +212,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
 
   function cardClickHandler(targetCard: CardType) {
     if (!isPlayerActive(player)) return console.log('player is not active');
-    if (!isCardValid(targetCard.playValue, gameState.turn.cardTotal))
+    if (!isCardValid(targetCard.playValue, gameState.turnTotals.cardTotal))
       return console.log('thats over 31!!');
     if (gameState.deckCut.status === Status.VALID) return console.log('must cut deck');
 
@@ -237,13 +230,20 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     if (playerHand.length <= 4) {
       playCard(targetCard);
       const cardTotalRef = getCardTotalRef(gameState.gameId);
-      const updatedCardTotal = updateCardTotal(targetCard.playValue, gameState.turn.cardTotal);
+      const updatedCardTotal = updateCardTotal(
+        targetCard.playValue,
+        gameState.turnTotals.cardTotal
+      );
       set(cardTotalRef, updatedCardTotal);
-      if (isGo(opponentHand, updatedCardTotal) && !isGo(playerHand, updatedCardTotal, targetCard)) {
+      const points = isPoints(targetCard, gameState.turnTotals);
+      if (
+        expectGo(opponentHand, updatedCardTotal) &&
+        !expectGo(playerHand, updatedCardTotal, targetCard)
+      ) {
         renderGo();
       } else if (
-        isGo(opponentHand, updatedCardTotal) &&
-        isGo(playerHand, updatedCardTotal, targetCard)
+        expectGo(opponentHand, updatedCardTotal) &&
+        expectGo(playerHand, updatedCardTotal, targetCard)
       ) {
         renderGo(resetCardTotal);
         updateActivePlayer('toggle');
@@ -269,23 +269,34 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
       .then(callback);
   }
 
-  function renderGo(callback?: () => void) {
-    setGo(true);
-    const timer = setTimeout(() => {
-      setGo(false);
-      if (callback) callback();
-    }, 1000);
-  }
-
-  function isGo(hand: CardsIndex, cardTotal: number, cardPlayed?: CardType): boolean {
+  function expectGo(hand: CardsIndex, cardTotal: number, cardPlayed?: CardType): boolean {
     // played card still in state, must be filtered from array
-    // TODO: use filter card
+    // TODO: refactor with filterCard()
     const validCards = Object.values(hand).filter(
       (card) => card.id !== cardPlayed?.id && isCardValid(card.playValue, cardTotal)
     );
     console.log(validCards, !validCards.length);
 
     return !validCards.length;
+  }
+
+  function isPoints(card: CardType, turnTotals: TurnType) {
+    const updatedCardTotal = updateCardTotal(card.playValue, gameState.turnTotals.cardTotal);
+    const opponentGo = expectGo(opponentHand, updatedCardTotal);
+    const playerGo = expectGo(playerHand, updatedCardTotal, card);
+
+    const pairs = isPairs(card.faceValue, turnTotals.cardsPlayed);
+    const fifteen = isFifteen(card.playValue, turnTotals.cardTotal);
+    const run = isRun(card.faceValue, turnTotals.cardsPlayed);
+    const go = opponentGo && playerGo ? isGo(card.playValue, turnTotals.cardTotal) : 0;
+  }
+
+  function renderGo(callback?: () => void) {
+    setGo(true);
+    const timer = setTimeout(() => {
+      setGo(false);
+      if (callback) callback();
+    }, 1000);
   }
 
   function resetCardTotal() {
@@ -314,7 +325,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
         cardSize={cardSize}
         cardIndex={i}
         card={card}
-        valid={playerHand ? isCardValid(card.playValue, gameState.turn.cardTotal) : undefined}
+        valid={playerHand ? isCardValid(card.playValue, gameState.turnTotals.cardTotal) : undefined}
         handler={playerHand ? cardClickHandler : undefined}
       />
     ));
@@ -324,7 +335,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   // FIXME: should go to a cloud trigger
   // useEffect(() => {
   //   if (gameState.players[player].activePlayer === IsActive.ACTIVE) return;
-  //   if (isGo(gameState.playerCards[player].inHand, gameState.turn.cardTotal)) renderGo();
+  //   if (expectGo(gameState.playerCards[player].inHand, gameState.turn.cardTotal)) renderGo();
   // }, [gameState.turn.cardTotal]);
 
   return (
@@ -347,7 +358,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
         </div>
         <Deck cutDeck={gameState.deckCut} callback={cutDeckHandler} />
         <div>
-          count: {gameState.turn.cardTotal} {go && 'GO!!'}
+          count: {gameState.turnTotals.cardTotal} {go && 'GO!!'}
         </div>
         <div>{gameState.players[player].activePlayer}</div>
         <CardBox
