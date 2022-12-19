@@ -46,6 +46,9 @@ export const getCardTotalRef = (gameId: GameId) =>
 
 export const getScoreRef = (gameId: GameId) => ref(rtdb, `games/${gameId}/score`);
 
+export const getPlayerScoreRef = (gameId: GameId, player: PlayerPos) =>
+  ref(rtdb, `games/${gameId}/score/${player}`);
+
 // PLAYERS
 
 export function getPlayerOpponent(
@@ -242,7 +245,7 @@ function calcPairs(
   return pairs;
 }
 
-export function isPairs(cardFaceValue: number, cardsPlayed: CardsIndex): number {
+export function isPairs(cardFaceValue: number, cardsPlayed: CardsIndex = {}): number {
   const cardsPlayedFaceValues = getCardFaceValues(cardsPlayed);
   if (cardFaceValue !== cardsPlayedFaceValues.at(-1)) return 0;
   const pairPoints = [0, 2, 6, 12];
@@ -305,7 +308,7 @@ type Run = {
   runLength: number;
 };
 
-export function isRun(cardFaceValue: number, cardsPlayed: CardsIndex) {
+export function isRun(cardFaceValue: number, cardsPlayed: CardsIndex = {}) {
   const cardsPlayedFaceValues = getCardFaceValues(cardsPlayed);
   if (cardsPlayedFaceValues.length < 2) return 0;
 

@@ -1,4 +1,4 @@
-import { GameState, IsActive, PlayerPos, Status } from 'src/@types';
+import { GameState, Go, IsActive, PlayerPos, Status } from 'src/@types';
 
 export const HAND_SIZE = 6;
 
@@ -27,12 +27,12 @@ export const INITIAL_GAME_STATE: GameState = {
     player1: {
       inHand: {},
       played: {},
-      isGo: false
+      isGo: Go.NO_GO
     },
     player2: {
       inHand: {},
       played: {},
-      isGo: false
+      isGo: Go.NO_GO
     }
   },
   crib: {},

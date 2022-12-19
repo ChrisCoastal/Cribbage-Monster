@@ -38,6 +38,7 @@ import {
   getCribRef,
   getPlayerRef,
   getCardTotalRef,
+  getCardsPlayedRef,
   getTurnRef,
   getPlayerCards,
   getDeckRef,
@@ -45,19 +46,21 @@ import {
   isFifteen,
   isGo,
   isPairs,
-  isRun
+  isRun,
+  getPlayerScoreRef
 } from 'src/utils/helpers';
 import { nanoid } from 'nanoid';
 import { FC, useEffect, useState } from 'react';
 import GamesList from '../GamesList/GamesList';
 import Score from '../Score/Score';
+import { INITIAL_GAME_STATE } from 'src/utils/constants';
 
 type PlayFieldProps = {
   gameId: GameId;
 };
 
 const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
-  const [go, setGo] = useState<boolean>(false); // FIXME: sketchy
+  const [go, setGo] = useState<boolean>(false); // FIXME: MOVE TO STATE
   const { userAuth } = useAuthContext();
   const userId = userAuth!.uid!;
 
@@ -85,8 +88,8 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     const turnRef = getTurnRef(gameId);
     set(activePlayer1Ref, IsActive.ACTIVE);
     set(activePlayer2Ref, IsActive.ACTIVE);
-    update(player1CardsRef, { inHand: deal.hands.player1 });
-    update(player2CardsRef, { inHand: deal.hands.player2 });
+    set(player1CardsRef, { ...INITIAL_GAME_STATE.playerCards.player1, inHand: deal.hands.player1 });
+    set(player2CardsRef, { ...INITIAL_GAME_STATE.playerCards.player2, inHand: deal.hands.player2 });
     set(deckCutRef, { status: Status.INVALID, card: deal.cut });
     set(cribRef, null);
     set(turnRef, { cardsPlayed: null, cardTotal: 0 });
@@ -236,6 +239,9 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
       );
       set(cardTotalRef, updatedCardTotal);
       const points = isPoints(targetCard, gameState.turnTotals);
+      const playerScore = gameState.score[player].cur;
+      const playerScoreRef = getPlayerScoreRef(gameId, player);
+      points && set(playerScoreRef, { cur: playerScore + points, prev: playerScore });
       if (
         expectGo(opponentHand, updatedCardTotal) &&
         !expectGo(playerHand, updatedCardTotal, targetCard)
@@ -259,12 +265,15 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   function playCard(card: CardType, callback?: () => void) {
     const playerHandRef = getInHandRef(gameId, player);
     const playerCardsPlayedRef = getPlayerCardsPlayedRef(gameId, player);
-    const addCardToPlayedRef = push(playerCardsPlayedRef);
+    const cardsPlayedRef = getCardsPlayedRef(gameId);
+    const addPlayerPlayedRef = push(playerCardsPlayedRef);
+    const addPlayedRef = push(cardsPlayedRef);
     const updatedHand = filterCard(player, card.id);
 
     set(playerHandRef, updatedHand)
       .then(() => {
-        set(addCardToPlayedRef, card);
+        set(addPlayerPlayedRef, card);
+        set(addPlayedRef, card);
       })
       .then(callback);
   }
@@ -289,6 +298,8 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     const fifteen = isFifteen(card.playValue, turnTotals.cardTotal);
     const run = isRun(card.faceValue, turnTotals.cardsPlayed);
     const go = opponentGo && playerGo ? isGo(card.playValue, turnTotals.cardTotal) : 0;
+
+    return pairs + fifteen + run + go;
   }
 
   function renderGo(callback?: () => void) {

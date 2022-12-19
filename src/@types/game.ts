@@ -32,6 +32,11 @@ export enum Status {
   COMPLETED = 'completed'
 }
 
+export enum Go {
+  IS_GO = 'is go',
+  NO_GO = 'no go'
+}
+
 export type TurnType = {
   cardsPlayed: CardsIndex;
   cardTotal: number;
@@ -48,12 +53,12 @@ export type GameState = {
     player1: {
       inHand: CardsIndex;
       played: CardsIndex;
-      isGo: boolean;
+      isGo: Go;
     };
     player2: {
       inHand: CardsIndex;
       played: CardsIndex;
-      isGo: boolean;
+      isGo: Go;
     };
   };
   crib: CardsIndex;

@@ -17,18 +17,20 @@ const gameReducer = (state: GameState, action: GameReducerActions): GameState =>
         playerCards: {
           player1: {
             inHand: payload?.playerCards?.player1?.inHand || {},
-            played: payload?.playerCards?.player1?.played || {}
+            played: payload?.playerCards?.player1?.played || {},
+            isGo: payload.playerCards.player1.isGo
           },
           player2: {
             inHand: payload?.playerCards?.player2?.inHand || {},
-            played: payload?.playerCards?.player2?.played || {}
+            played: payload?.playerCards?.player2?.played || {},
+            isGo: payload.playerCards.player2.isGo
           }
         },
         crib: payload?.crib || {},
-        starterCard: payload.starterCard || null,
+        deckCut: payload.deckCut || null,
         turn: {
-          cardsPlayed: payload?.turn?.cardsPlayed || {},
-          cardTotal: payload.turn.cardTotal
+          cardsPlayed: payload?.turnTotals?.cardsPlayed || {},
+          cardTotal: payload.turnTotals.cardTotal
         }
       };
 
