@@ -1,4 +1,5 @@
 import {
+  CardKey,
   CardName,
   CardsIndex,
   CardType,
@@ -192,11 +193,7 @@ export function sortHand(
   return cards;
 }
 
-// SCORING
-
-//TODO:
-// isPairs
-//
+// PEGGING
 
 function maxValuePlayable(cardTotal: number): number {
   return 31 - cardTotal;
@@ -245,10 +242,9 @@ function calcPairs(
   return pairs;
 }
 
-export function isPairs(cardFaceValue: number, cardsPlayed: CardsIndex = {}): number {
+export function isPegPairs(cardFaceValue: number, cardsPlayed: CardsIndex = {}): number {
   const cardsPlayedFaceValues = getCardFaceValues(cardsPlayed);
   if (cardFaceValue !== cardsPlayedFaceValues.at(-1)) return 0;
-  const pairPoints = [0, 2, 6, 12];
 
   const { pointsIndex } = cardsPlayedFaceValues.reduceRight<{
     pairValue: number;
@@ -256,8 +252,6 @@ export function isPairs(cardFaceValue: number, cardsPlayed: CardsIndex = {}): nu
     pointsIndex: number;
   }>(
     (pairAcc, cardFv) => {
-      console.log(pairAcc, 'isEqual', cardFv === pairAcc.pairValue);
-
       if (!pairAcc.isPair) return pairAcc;
       return cardFv === pairAcc.pairValue
         ? { ...pairAcc, pointsIndex: ++pairAcc.pointsIndex }
@@ -266,11 +260,11 @@ export function isPairs(cardFaceValue: number, cardsPlayed: CardsIndex = {}): nu
     {
       pairValue: cardFaceValue,
       isPair: true,
-      pointsIndex: 0
+      pointsIndex: 1
     }
   );
 
-  return pairPoints[pointsIndex];
+  return pointsIndex * (pointsIndex - 1);
 }
 
 function calcFifteen(cardTotal: number): number | null {
@@ -278,15 +272,15 @@ function calcFifteen(cardTotal: number): number | null {
   return 15 - cardTotal;
 }
 
-export function isFifteen(cardPlayValue: number, cardTotal: number): number {
+export function isPegFifteen(cardPlayValue: number, cardTotal: number): number {
   return cardPlayValue + cardTotal === 15 ? 2 : 0;
 }
 
-export function isGo(cardPlayValue: number, cardTotal: number) {
-  return isThirtyOne(cardPlayValue, cardTotal) || 1;
+export function isPegGo(cardPlayValue: number, cardTotal: number) {
+  return isPegThirtyOne(cardPlayValue, cardTotal) || 1;
 }
 
-export function isThirtyOne(cardPlayValue: number, cardTotal: number): number {
+export function isPegThirtyOne(cardPlayValue: number, cardTotal: number): number {
   return cardPlayValue + cardTotal === 31 ? 2 : 0;
 }
 
@@ -296,6 +290,10 @@ export function getCardFaceValues(cards: CardsIndex) {
 
 export function getCardPlayValues(cards: CardsIndex) {
   return Object.values(cards).map((card) => card.playValue);
+}
+
+export function getCardValues(cards: CardsIndex, key?: CardKey) {
+  return key ? Object.values(cards).map((card) => card[key]) : Object.values(cards);
 }
 
 // need to kep track of the length of the valid run
@@ -308,8 +306,8 @@ type Run = {
   runLength: number;
 };
 
-export function isRun(cardFaceValue: number, cardsPlayed: CardsIndex = {}) {
-  const cardsPlayedFaceValues = getCardFaceValues(cardsPlayed);
+export function isPegRun(cardFaceValue: number, cardsPlayed: CardsIndex = {}) {
+  const cardsPlayedFaceValues = getCardValues(cardsPlayed, CardKey.FACE) as number[];
   if (cardsPlayedFaceValues.length < 2) return 0;
 
   // if a cardValue === faceValue has already been played it breaks the run
@@ -340,4 +338,30 @@ export function isRun(cardFaceValue: number, cardsPlayed: CardsIndex = {}) {
   );
 
   return validateRun.points;
+}
+
+// SCORING
+export function scorePairs(cardFaceValues: number[], cutFaceValue: number) {
+  const sortedCards = [...cardFaceValues, cutFaceValue].sort((a, b) => a - b);
+}
+export function scoreFifteens(cardPlayValues: number[], cutPlayValue: number) {
+  // const cardValues = [...cardPlayValues, cutPlayValue];
+  // for (let i = 0; i < cardValues.length; i++) {
+  // }
+  const fifteens = cardPlayValues
+    .reduce(
+      (sums, cardValue) => {
+        return [...sums, ...sums.map((sum) => sum + cardValue), cardValue];
+      },
+      [cutPlayValue]
+    )
+    .filter((sum) => sum === 15).length;
+  return fifteens * 2;
+}
+
+export function scoreRuns(cardFaceValues: number[], cutFaceValue: number) {
+  //
+}
+export function scoreFlush(cardSuits: Suit[], cutSuit: Suit) {
+  //
 }

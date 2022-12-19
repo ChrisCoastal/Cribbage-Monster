@@ -37,6 +37,14 @@ export enum Go {
   NO_GO = 'no go'
 }
 
+export enum CardKey {
+  ID = 'id',
+  SUIT = 'suit',
+  NAME = 'name',
+  FACE = 'faceValue',
+  PLAY = 'playValue'
+}
+
 export type TurnType = {
   cardsPlayed: CardsIndex;
   cardTotal: number;

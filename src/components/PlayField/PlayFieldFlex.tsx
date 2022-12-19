@@ -5,6 +5,7 @@ import {
   CardsIndex,
   CardSize,
   CardType,
+  CardKey,
   GameId,
   GameReducerTypes,
   IsActive,
@@ -43,11 +44,16 @@ import {
   getPlayerCards,
   getDeckRef,
   getScoreRef,
-  isFifteen,
-  isGo,
-  isPairs,
-  isRun,
-  getPlayerScoreRef
+  isPegFifteen,
+  isPegGo,
+  isPegPairs,
+  isPegRun,
+  scorePairs,
+  scoreFifteens,
+  scoreRuns,
+  scoreFlush,
+  getPlayerScoreRef,
+  getCardValues
 } from 'src/utils/helpers';
 import { nanoid } from 'nanoid';
 import { FC, useEffect, useState } from 'react';
@@ -165,12 +171,23 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     gameState.players[player].activePlayer === IsActive.ACTIVE;
 
   function scoreHand() {
-    console.log('scoring hand');
+    console.log('scoring hands');
+    const playerScore = scorePoints(gameState.playerCards[player].played, gameState.deckCut.card!);
+    const opponentScore = scorePoints(
+      gameState.playerCards[opponent].played,
+      gameState.deckCut.card!
+    );
 
-    //
     // set timer, players can okay to skip
     // set cut to invalid
     // deal hand
+  }
+
+  function scorePoints(hand: CardsIndex, cutCard: CardType) {
+    const pairs = scorePairs(getCardValues(hand, CardKey.FACE) as number[], cutCard.faceValue);
+    const fifteen = scoreFifteens(getCardValues(hand, CardKey.PLAY) as number[], cutCard.playValue);
+    const run = scoreRuns(getCardValues(hand, CardKey.FACE) as number[], cutCard.faceValue);
+    const flush = scoreFlush(getCardValues(hand, CardKey.SUIT) as Suit[], cutCard.suit);
   }
 
   function endHand() {
@@ -238,7 +255,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
         gameState.turnTotals.cardTotal
       );
       set(cardTotalRef, updatedCardTotal);
-      const points = isPoints(targetCard, gameState.turnTotals);
+      const points = isPegPoints(targetCard, gameState.turnTotals);
       const playerScore = gameState.score[player].cur;
       const playerScoreRef = getPlayerScoreRef(gameId, player);
       points && set(playerScoreRef, { cur: playerScore + points, prev: playerScore });
@@ -289,20 +306,18 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     return !validCards.length;
   }
 
-  function isPoints(card: CardType, turnTotals: TurnType) {
+  function isPegPoints(card: CardType, turnTotals: TurnType) {
     const updatedCardTotal = updateCardTotal(card.playValue, gameState.turnTotals.cardTotal);
     const opponentGo = expectGo(opponentHand, updatedCardTotal);
     const playerGo = expectGo(playerHand, updatedCardTotal, card);
 
-    const pairs = isPairs(card.faceValue, turnTotals.cardsPlayed);
-    const fifteen = isFifteen(card.playValue, turnTotals.cardTotal);
-    const run = isRun(card.faceValue, turnTotals.cardsPlayed);
-    const go = opponentGo && playerGo ? isGo(card.playValue, turnTotals.cardTotal) : 0;
-    const points = pairs + fifteen + run + go;
+    const pairs = isPegPairs(card.faceValue, turnTotals.cardsPlayed);
+    const fifteen = isPegFifteen(card.playValue, turnTotals.cardTotal);
+    const run = isPegRun(card.faceValue, turnTotals.cardsPlayed);
+    const go = opponentGo && playerGo ? isPegGo(card.playValue, turnTotals.cardTotal) : 0;
+    const pegPoints = pairs + fifteen + run + go;
 
-    console.log(go, points);
-
-    return points;
+    return pegPoints;
   }
 
   function renderGo(callback?: () => void) {
