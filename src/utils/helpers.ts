@@ -336,8 +336,22 @@ function isRunIncrement(cardsFaceValues: number[]): boolean {
 
 // SCORING
 export function scorePairs(cardFaceValues: number[], cutFaceValue: number): number {
-  const sortedCards = [...cardFaceValues, cutFaceValue].sort((a, b) => a - b);
+  // FIXME: refactor to separate function; all used in scoreRuns
+  const values = [...cardFaceValues, cutFaceValue];
+  const uniqueSorted = [...new Set(values)].sort((a, b) => a - b);
+
+  if (values.length === uniqueSorted.length) return 0;
+
+  const points = uniqueSorted.reduce((pointsTotal, cardFv) => {
+    const paired = values.filter((value) => value === cardFv);
+    const points = paired.length * (paired.length - 1);
+    return pointsTotal + points;
+  }, 0);
+  // .forEach((numArr) => (numArr.length ? (points = points * numArr.length) : null));
+
+  return points;
 }
+
 export function scoreFifteens(cardPlayValues: number[], cutPlayValue: number): number {
   const fifteens = cardPlayValues
     .reduce(
