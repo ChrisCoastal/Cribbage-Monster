@@ -206,10 +206,10 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     };
 
     console.log(
-      'opponent',
+      `${opponent} opponent`,
       updatedScore[opponent],
       '\n',
-      'player',
+      `${player} player`,
       updatedScore[player],
       '\n',
       `${gameState.dealer} crib`,
@@ -233,6 +233,10 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     const runs = scoreRuns(getCardValues(hand, CardKey.FACE) as number[], cutCard.faceValue);
     const flush = scoreFlush(getCardValues(hand, CardKey.SUIT) as Suit[], cutCard.suit);
 
+    console.log('15:', fifteens);
+    console.log('runs:', runs);
+    console.log('pairs:', pairs);
+    console.log('total:', pairs + runs + fifteens + flush);
     const points = pairs + fifteens + runs + flush;
     return points;
   }

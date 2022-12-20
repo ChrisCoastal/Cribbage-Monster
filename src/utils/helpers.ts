@@ -402,7 +402,8 @@ export function scoreRuns(cardFaceValues: number[], cutFaceValue: number): numbe
 
 export function scoreFlush(cardSuits: Suit[], cutSuit: Suit): number {
   let points = 0;
-  if ([...new Set(cardSuits)].length === 1) points = 4;
-  if (cardSuits[0] === cutSuit) points++;
+  const isFlush = [...new Set(cardSuits)].length === 1;
+  if (isFlush) points = 4;
+  if (isFlush && cardSuits[0] === cutSuit) points++;
   return points;
 }
