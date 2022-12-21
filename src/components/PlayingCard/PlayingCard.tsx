@@ -24,6 +24,7 @@ const PlayingCard: FC<PlayingCardProps> = ({
   valid,
   handler
 }) => {
+  // const style = { 'var(--color)': yourColor } as React.CSSProperties;
   const { userAuth } = useAuthContext();
   const { gameState } = useGameContext();
   const { player } = getPlayerOpponent(gameState.players, userAuth!.uid!);
@@ -74,12 +75,19 @@ const PlayingCard: FC<PlayingCardProps> = ({
     'hover:translate-y-0'
   ];
 
+  const corners =
+    cardSize === CardSize.LG
+      ? 'rounded-[4%]'
+      : cardSize === CardSize.MD
+      ? 'rounded-[8%]'
+      : 'rounded-[10%]';
+
   const sizeVars =
     cardSize === CardSize.LG
-      ? `${cardRotationHand[cardIndex]} rounded-[4%]`
+      ? `${cardRotationHand[cardIndex]}`
       : cardSize === CardSize.MD
-      ? `${overlap === CardOverlap.HALF && cardRotation[cardIndex % 2]} rounded-[8%]`
-      : `${cardRotationOpponentHand[cardIndex]} rounded-[10%]`;
+      ? `${overlap === CardOverlap.HALF && cardRotation[cardIndex % 2]}`
+      : `${cardRotationOpponentHand[cardIndex]}`;
 
   const conditionalStyles = `${cardSize} ${cardPos[cardIndex]} ${
     activePlayer && valid && cardHover[cardIndex]
@@ -95,23 +103,31 @@ const PlayingCard: FC<PlayingCardProps> = ({
     </>
   );
 
+  const cardBack = cardSize === CardSize.MD ? 'bg-cardback-md' : 'bg-cardback-sm';
+  const cardBackBorder = cardSize === CardSize.MD ? 'p-[3px]' : 'p-[2px]';
+
   return isFaceUp ? (
     <div
       onClick={() => (handler ? handler(card) : null)}
-      className={`${conditionalStyles} ${sizeVars} grid-columns-3 tra grid grid-rows-3 items-center border border-solid border-neutral-100 bg-white shadow-[-4px_4px_8px_rgba(0,0,0,0.05)] transition-all duration-300`}>
-      <div className="col-start-1 mt-4 flex-col gap-1 justify-self-center text-sm">
-        {cardMarking}
-      </div>
-      <div className="col-start-3 row-start-3 flex flex-col justify-self-center text-sm">
-        <div className="col-start-1 mb-4 rotate-180 flex-col gap-1 justify-self-center text-sm">
+      className={`${conditionalStyles} ${sizeVars} ${corners} border border-solid border-neutral-100 bg-white p-2 transition-all duration-300`}>
+      <div
+        className={`${corners} grid-columns-3 shadow-[-4px_4px_8px_rgba(0,0,0,0.05) grid max-h-full max-w-full grid-rows-3 items-center border border-solid border-neutral-500 bg-white`}>
+        <div className="col-start-1 mt-4 flex-col gap-1 justify-self-center text-sm">
           {cardMarking}
+        </div>
+        <div className="col-start-3 row-start-3 flex flex-col justify-self-center text-sm">
+          <div className="col-start-1 mb-4 rotate-180 flex-col gap-1 justify-self-center text-sm">
+            {cardMarking}
+          </div>
         </div>
       </div>
     </div>
   ) : (
     <div
-      className={`${cardSize} ${cardPos[cardIndex]} ${sizeVars} grid-columns-3 grid grid-rows-3 items-center border border-solid border-neutral-300 bg-white transition-all duration-300`}
-      onClick={() => (handler ? handler(card) : null)}></div>
+      className={`${cardSize} ${cardPos[cardIndex]} ${sizeVars} ${cardBackBorder} ${corners} border border-solid border-neutral-100 bg-white transition-all duration-300`}
+      onClick={() => (handler ? handler(card) : null)}>
+      <div className={`${cardBack} h-full w-full bg-repeat`}></div>
+    </div>
   );
 };
 
