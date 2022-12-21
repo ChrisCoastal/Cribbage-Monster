@@ -49,7 +49,7 @@ const SignUpPage = () => {
   }
 
   return (
-    <div>
+    <div className="flex flex-col items-center justify-center">
       <h1>SIGNUP</h1>
       {userAuth ? (
         <div>
@@ -87,7 +87,7 @@ const SignUpPage = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </li>
-            <button type="submit">Join</button>
+            <Button type="submit">Join</Button>
           </ul>
         </form>
       )}

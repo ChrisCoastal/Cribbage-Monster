@@ -231,7 +231,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
         )
           return console.log('cannot cut deck');
         set(deckCutRef, { status: Status.COMPLETED, card: gameState.deckCut.card });
-        if (gameState.deckCut.card?.name === CardName.Jack) {
+        if (gameState.deckCut.card?.name === 'J') {
           const scoreRef = getScoreRef(gameId);
           update(scoreRef, {
             [opponent]: {
@@ -379,7 +379,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   }, [numCardsPlayed]);
 
   return (
-    <div className="relative grid h-full grid-cols-[4fr,_1fr] items-center justify-items-center gap-2 py-12 px-4">
+    <div className="relative grid h-full grid-cols-[1fr] items-center justify-items-center gap-2 py-12 px-4">
       <div className="flex flex-col items-center justify-center gap-4">
         <div className="flex w-full justify-between">
           <div className="flex flex-col items-center justify-center gap-4">

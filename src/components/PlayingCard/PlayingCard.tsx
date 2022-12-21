@@ -66,15 +66,16 @@ const PlayingCard: FC<PlayingCardProps> = ({
   ];
 
   const conditionalStyles = `${cardSize} ${cardPos[cardIndex]} ${
-    cardSize === CardSize.LG ? cardRotationHand[cardIndex] : cardRotation[cardIndex % 2]
+    cardSize === CardSize.LG && cardRotationHand[cardIndex]
+  } ${overlap === CardOverlap.HALF && cardRotation[cardIndex % 2]}
   } ${activePlayer && valid && cardHover[cardIndex]}`;
 
   return isFaceUp ? (
     <div
       onClick={() => (handler ? handler(card) : null)}
-      className={`${conditionalStyles} grid-columns-3 grid grid-rows-3 items-center rounded-[4%] border border-solid border-black bg-white transition-all duration-300`}>
-      <div className="col-start-1 flex flex-col justify-self-center text-sm">
-        <span className="pointer-events-none">{card.faceValue}</span>
+      className={`${conditionalStyles} grid-columns-3 grid grid-rows-3 items-center rounded-[4%] border border-solid border-neutral-300 bg-white shadow-[-4px_4px_8px_rgba(0,0,0,0.05)] transition-all duration-300`}>
+      <div className="col-start-1 flex gap-1 justify-self-center text-sm">
+        <span className="pointer-events-none">{card.name}</span>
         <span className="pointer-events-none">{card.suit.slice(0, 2)}</span>
       </div>
       <div className="col-start-3 row-start-3 flex flex-col justify-self-center text-sm">
@@ -86,7 +87,7 @@ const PlayingCard: FC<PlayingCardProps> = ({
     </div>
   ) : (
     <div
-      className={`${cardSize} ${cardPos[cardIndex]} grid-columns-3 grid grid-rows-3 items-center rounded-[4%] border border-solid border-black bg-white transition-all duration-300`}
+      className={`${cardSize} ${cardPos[cardIndex]} grid-columns-3 grid grid-rows-3 items-center rounded-[4%] border border-solid border-neutral-300 bg-white transition-all duration-300`}
       onClick={() => (handler ? handler(card) : null)}></div>
   );
 };

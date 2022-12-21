@@ -5,10 +5,12 @@ import Button from 'src/components/UI/Button';
 import { firebaseAuth } from 'src/firestore.config';
 import useAuthContext from 'src/hooks/useAuthContext';
 import useFirebaseAuth from 'src/hooks/useFirebaseAuth';
+import { useNavigate } from 'react-router-dom';
 
 const Nav = () => {
   const { userAuth } = useAuthContext();
   const { logoutUser } = useFirebaseAuth();
+  const navigate = useNavigate();
 
   function loginHandler() {
     console.log('login');
@@ -21,7 +23,7 @@ const Nav = () => {
   }
 
   return (
-    <div className="fixed top-0 flex h-12 w-full items-center justify-between px-4">
+    <div className="relative sticky top-0 z-50 flex h-12 w-full items-center justify-between px-4">
       <span>CRIB</span>
       <ul className="flex items-center gap-3">
         <li>
@@ -37,9 +39,8 @@ const Nav = () => {
             </li>
             <li>
               <button
-                onClick={() => logoutUser(() => console.log('OUT!'))}
-                className="h-6 rounded-full bg-white"
-              >
+                onClick={() => logoutUser(() => navigate('/login'))}
+                className="h-6 rounded-full bg-white">
                 LOGOUT
               </button>
             </li>

@@ -88,6 +88,7 @@ export function findPlayerPos(
 export function createDeck(): CardType[] {
   const newDeck: CardType[] = [];
 
+  const cardNames: CardName[] = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
   const suits: Suit[] = [Suit.Spades, Suit.Hearts, Suit.Clubs, Suit.Diamonds];
   let faceValue = 1;
 
@@ -97,7 +98,7 @@ export function createDeck(): CardType[] {
       faceValue = 1;
     }
 
-    const name: CardName = Object.values(CardName)[faceValue - 1];
+    const name: CardName = cardNames[faceValue - 1];
     const playValue: number = faceValue <= 10 ? faceValue : 10;
     const card = {
       id: i,

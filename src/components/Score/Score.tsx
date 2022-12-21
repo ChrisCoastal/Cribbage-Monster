@@ -13,9 +13,9 @@ const Score: FC<ScoreProps> = ({ curScore, prevScore, displayName }) => {
   const { gameState } = useGameContext();
 
   return (
-    <div className="border border-solid border-black p-2">
+    <div className="flex w-full flex-col items-center rounded-md border border-solid border-black p-2">
       <h3>{displayName}</h3>
-      <p>Score: {curScore}/121</p>
+      <p>{curScore}/121</p>
     </div>
   );
 };

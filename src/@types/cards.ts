@@ -5,21 +5,23 @@ export enum Suit {
   Diamonds = 'DIAMONDS'
 }
 
-export enum CardName {
-  Ace = 'ACE',
-  Two = 'TWO',
-  Three = 'THREE',
-  Four = 'FOUR',
-  Five = 'FIVE',
-  Six = 'SIX',
-  Seven = 'SEVEN',
-  Eight = 'EIGHT',
-  Nine = 'NINE',
-  Ten = 'TEN',
-  Jack = 'JACK',
-  Queen = 'QUEEN',
-  King = 'KING'
-}
+// export enum CardName {
+//   Ace = 'ACE',
+//   Two = 'TWO',
+//   Three = 'THREE',
+//   Four = 'FOUR',
+//   Five = 'FIVE',
+//   Six = 'SIX',
+//   Seven = 'SEVEN',
+//   Eight = 'EIGHT',
+//   Nine = 'NINE',
+//   Ten = 'TEN',
+//   Jack = 'JACK',
+//   Queen = 'QUEEN',
+//   King = 'KING'
+// }
+
+export type CardName = 'A' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | 'J' | 'Q' | 'K';
 
 export type CardType = {
   id: number;
