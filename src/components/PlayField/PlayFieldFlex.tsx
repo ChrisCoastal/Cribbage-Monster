@@ -383,7 +383,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
       <div className="flex flex-col items-center justify-center gap-4">
         <div className="flex w-full justify-between">
           <div className="flex flex-col items-center justify-center gap-4">
-            <div>
+            <div className="flex flex-col items-center justify-center">
               <Avatar displayName={gameState.players[opponent].displayName} />
               <CardBox
                 size={{ height: CardBoxHeight.SM, width: CardBoxWidth.SM_SIX }}
@@ -403,7 +403,9 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
 
               <div>
                 <div className="flex flex-col items-center gap-1 py-4">
-                  <Deck cutDeck={gameState.deckCut} callback={cutDeckHandler} />
+                  <div className="grid grid-cols-2 gap-2">
+                    <Deck cutDeck={gameState.deckCut} callback={cutDeckHandler} />
+                  </div>
                   <div>
                     count: {gameState.turnTotals.cardTotal} {go && 'GO!!'}
                   </div>

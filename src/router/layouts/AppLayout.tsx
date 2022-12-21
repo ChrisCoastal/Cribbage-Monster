@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 
 const AppLayout = () => {
   return (
-    <div className="relative h-screen bg-teal-100">
+    <div className="relative h-screen bg-neutral-800">
       <Nav />
       <main className="px-4">
         <Outlet />

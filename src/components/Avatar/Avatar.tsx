@@ -19,9 +19,9 @@ const Avatar: FC<AvatarProps> = ({ displayName }) => {
   // ));
 
   return (
-    <div className="w- col-start-3 flex flex-col items-center">
-      <p className="text-sm">{displayName}</p>
-      <div className=" mb-2 h-10 w-10 overflow-hidden rounded-full border border-black bg-slate-400">
+    <div className="col-start-3 flex flex-col items-center justify-center">
+      <p className="text-sm text-white">{displayName}</p>
+      <div className=" mb-2 h-10 w-10 overflow-hidden rounded-full border border-white bg-slate-400">
         <img src="" alt="" />
       </div>
       {/* 

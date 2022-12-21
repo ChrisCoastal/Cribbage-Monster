@@ -37,7 +37,7 @@ const GamePage = () => {
   }, []);
 
   return (
-    <div className="relative h-screen bg-teal-100">
+    <div className="relative h-screen bg-neutral-800">
       <div>
         <PlayFieldFlex gameId={game.gameId} />
       </div>
