@@ -15,6 +15,12 @@ export enum CardBoxWidth {
   SM_SIX = 'w-16',
   MD_ONE = 'w-[3.75rem]',
   MD_FOUR = 'w-[7.5rem]',
+  MD_FOUR_HALF = 'w-[9.375rem]',
   LG_SIX = 'w-80'
-  // LG = 'h-40'
+}
+
+export enum CardOverlap {
+  NONE,
+  TWO_THIRDS,
+  HALF
 }

@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { useDroppable } from '@dnd-kit/core';
 import { nanoid } from 'nanoid';
-import { CardType } from 'src/@types';
+import { CardOverlap, CardType } from 'src/@types';
 import useGameContext from 'src/hooks/useGameContext';
 
 type CardBoxProps = {
@@ -11,11 +11,12 @@ type CardBoxProps = {
     height: string;
     width: string;
   };
+  overlap: CardOverlap;
   placement?: string;
   children?: React.ReactNode;
 };
 
-const CardBox: FC<CardBoxProps> = ({ maxCards, size, placement, children }) => {
+const CardBox: FC<CardBoxProps> = ({ maxCards, size, overlap, placement, children }) => {
   const { gameState, dispatchGame } = useGameContext();
   // const { isOver, setNodeRef } = useDroppable({
   //   id: nanoid(),
@@ -43,12 +44,9 @@ const CardBox: FC<CardBoxProps> = ({ maxCards, size, placement, children }) => {
   ];
 
   return (
-    <div className={`${placement} p-2`}>
+    <div className={`${placement}`}>
       <div
-        className={`${size.height} ${size.width} ${
-          cardCols[maxCards - 1]
-        } grid grid-rows-1 border border-black`}
-      >
+        className={`${size.height} ${size.width} ${cardCols[maxCards - overlap]} grid grid-rows-1`}>
         {children}
       </div>
     </div>

@@ -41,7 +41,7 @@ const GamePage = () => {
       <div>
         <PlayFieldFlex gameId={game.gameId} />
       </div>
-      <BottomNav />
+      {/* <BottomNav /> */}
     </div>
   );
 };

@@ -57,7 +57,7 @@ export type ScoreType = {
 
 export type GameState = {
   gameId: GameId;
-  dealer: PlayerPos | null;
+  dealer: PlayerPos;
   players: {
     player1: Player;
     player2: Player;

@@ -12,7 +12,7 @@ export const PAIR_POINTS = [0, 2, 6, 12];
 
 export const INITIAL_GAME_STATE: GameState = {
   gameId: '',
-  dealer: PlayerPos.P_ONE, // TODO:
+  dealer: PlayerPos.P_ONE,
   players: {
     player1: {
       id: '',

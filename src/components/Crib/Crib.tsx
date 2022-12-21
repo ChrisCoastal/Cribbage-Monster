@@ -5,19 +5,19 @@ import { CardSize, CardType, CardBoxHeight, CardBoxWidth, CardOverlap, Status } 
 import PlayingCard from 'src/components/PlayingCard/PlayingCard';
 import CardBox from '../CardBox/CardBox';
 
-type DeckProps = {
+type CribProps = {
   cutDeck: { status: Status; card: CardType | null };
   callback: (cutDeck: Status) => void;
 };
 
-const Deck: FC<DeckProps> = ({ cutDeck, callback }) => {
+const Crib: FC<CribProps> = ({ cutDeck, callback }) => {
   const isCut = cutDeck.status === Status.COMPLETED;
 
   function clickDeckHandler() {
     callback(Status.COMPLETED);
   }
 
-  const renderDeck = (
+  const renderCrib = (
     <PlayingCard
       // key={nanoid()}
       isFaceUp={isCut}
@@ -30,17 +30,14 @@ const Deck: FC<DeckProps> = ({ cutDeck, callback }) => {
   );
 
   return (
-    <div className="relative">
-      {cutDeck.status === Status.VALID && (
-        <p className="pointer-events-none absolute top-1/3 left-1/2 z-30 -translate-x-1/2">CUT</p>
-      )}
+    <>
       <CardBox
         size={{ height: CardBoxHeight.MD, width: CardBoxWidth.MD_ONE }}
         maxCards={0}
         overlap={CardOverlap.NONE}>
-        {renderDeck}
+        {renderCrib}
       </CardBox>
-    </div>
+    </>
   );
   // <div className="relative h-32 w-32">
   //   <span className="absolute top-[14px] h-16 w-12  rounded-sm border border-black bg-red-200"></span>
@@ -59,4 +56,4 @@ const Deck: FC<DeckProps> = ({ cutDeck, callback }) => {
   // </div>
 };
 
-export default Deck;
+export default Crib;
