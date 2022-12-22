@@ -55,6 +55,14 @@ export type ScoreType = {
   prev: number;
 };
 
+export type TallyPoints = {
+  fifteens: number;
+  runs: number;
+  pairs: number;
+  flush: number;
+  jack: number;
+};
+
 export type GameState = {
   gameId: GameId;
   dealer: PlayerPos;

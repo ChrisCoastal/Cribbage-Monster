@@ -1,7 +1,7 @@
+import { FC, useEffect, useState } from 'react';
 import {
   CardBoxHeight,
   CardBoxWidth,
-  CardName,
   CardOverlap,
   CardsIndex,
   CardSize,
@@ -13,17 +13,10 @@ import {
   TurnType
 } from 'src/@types';
 
-import { rtdb } from 'src/firestore.config';
-import { set, ref, push, update, remove } from 'firebase/database';
+import { set, push, update } from 'firebase/database';
 
-import Avatar from 'src/components/Avatar/Avatar';
-import Board from 'src/components/Board/Board';
-import PlayingCard from 'src/components/PlayingCard/PlayingCard';
-import Deck from 'src/components/Deck/Deck';
-import CardBox from 'src/components/CardBox/CardBox';
-import Button from 'src/components/UI/Button';
-import useAuthContext from 'src/hooks/useAuthContext';
-import useGameContext from 'src/hooks/useGameContext';
+import { INITIAL_GAME_STATE } from 'src/utils/constants';
+
 import {
   dealHands,
   filterCard,
@@ -53,12 +46,22 @@ import {
   getPlayerScoreRef,
   getPone,
   updateCardTotal,
-  getDealerRef,
   getGameRef
 } from 'src/utils/helpers';
-import { FC, useEffect, useState } from 'react';
-import Score from '../Score/Score';
-import { INITIAL_GAME_STATE } from 'src/utils/constants';
+
+import Avatar from 'src/components/Avatar/Avatar';
+import Board from 'src/components/Board/Board';
+import Button from 'src/components/UI/Button';
+import CardBox from 'src/components/CardBox/CardBox';
+import Crib from 'src/components/Crib/Crib';
+import Deck from 'src/components/Deck/Deck';
+import HandTally from 'src/components/HandTally/HandTally';
+import PlayingCard from 'src/components/PlayingCard/PlayingCard';
+import Score from 'src/components/Score/Score';
+
+import useAuthContext from 'src/hooks/useAuthContext';
+import useGameContext from 'src/hooks/useGameContext';
+import useModal from 'src/hooks/useModal';
 
 type PlayFieldProps = {
   gameId: GameId;
@@ -68,6 +71,8 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   const [go, setGo] = useState<boolean>(false);
   const [tally, setTally] = useState<boolean>(false);
   const [countDown, setCountDown] = useState<number | null>(null);
+
+  const { Modal, isModal, modalHandler } = useModal();
 
   const { userAuth } = useAuthContext();
   const userId = userAuth!.uid!;
@@ -379,78 +384,82 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   }, [numCardsPlayed]);
 
   return (
-    <div className="relative grid h-full grid-cols-[1fr] items-center justify-items-center gap-2 py-12 px-4">
-      <div className="flex flex-col items-center justify-center gap-4">
-        <div className="flex w-full justify-between">
-          <div className="flex flex-col items-center justify-center gap-4">
-            <div className="flex flex-col items-center justify-center">
-              <Avatar displayName={gameState.players[opponent].displayName} />
-              <CardBox
-                size={{ height: CardBoxHeight.SM, width: CardBoxWidth.SM_SIX }}
-                maxCards={6}
-                overlap={CardOverlap.TWO_THIRDS}>
-                {renderOpponentHand}
-              </CardBox>
-            </div>
-            <div className="rounded-full bg-red-400 p-2">
-              <CardBox
-                size={{ height: CardBoxHeight.MD, width: CardBoxWidth.MD_FOUR_HALF }}
-                maxCards={4}
-                overlap={CardOverlap.HALF}
-                placement="self-center place-self-center">
-                {renderOpponentPlayed}
-              </CardBox>
+    <>
+      <Modal isVisible={isModal} modalHandler={modalHandler} modalContent={<HandTally />}></Modal>
+      <div className="relative grid h-full grid-cols-[1fr] items-center justify-items-center gap-2 py-12 px-4">
+        <div className="flex flex-col items-center justify-center gap-4">
+          <div className="flex w-full justify-between">
+            <div className="flex flex-col items-center justify-center gap-4">
+              <div className="flex flex-col items-center justify-center">
+                <Avatar displayName={gameState.players[opponent].displayName} />
+                <CardBox
+                  size={{ height: CardBoxHeight.SM, width: CardBoxWidth.SM_SIX }}
+                  maxCards={6}
+                  overlap={CardOverlap.TWO_THIRDS}>
+                  {renderOpponentHand}
+                </CardBox>
+              </div>
+              <div className="rounded-full bg-gradient-to-br from-emerald-400 to-emerald-500 p-2">
+                <CardBox
+                  size={{ height: CardBoxHeight.MD, width: CardBoxWidth.MD_FOUR_HALF }}
+                  maxCards={4}
+                  overlap={CardOverlap.HALF}
+                  placement="self-center place-self-center">
+                  {renderOpponentPlayed}
+                </CardBox>
 
-              <div>
-                <div className="flex flex-col items-center gap-1 py-4">
-                  <div className="grid grid-cols-2 gap-2">
-                    <Deck cutDeck={gameState.deckCut} callback={cutDeckHandler} />
-                  </div>
-                  <div>
-                    count: {gameState.turnTotals.cardTotal} {go && 'GO!!'}
-                  </div>
-                  <div>
-                    {gameState.players[player].activePlayer === IsActive.ACTIVE
-                      ? 'your turn'
-                      : `opponent's turn`}
+                <div>
+                  <div className="flex flex-col items-center gap-1 py-4">
+                    <div className="grid grid-cols-2 gap-2">
+                      <Deck cutDeck={gameState.deckCut} callback={cutDeckHandler} />
+                      <Crib cribCards={gameState.crib} />
+                    </div>
+                    <div>
+                      count: {gameState.turnTotals.cardTotal} {go && 'GO!!'}
+                    </div>
+                    <div>
+                      {gameState.players[player].activePlayer === IsActive.ACTIVE
+                        ? 'your turn'
+                        : `opponent's turn`}
+                    </div>
                   </div>
                 </div>
+                <CardBox
+                  size={{ height: CardBoxHeight.MD, width: CardBoxWidth.MD_FOUR_HALF }}
+                  maxCards={4}
+                  overlap={CardOverlap.HALF}
+                  placement="self-center place-self-center">
+                  {renderPlayerPlayed}
+                </CardBox>
               </div>
-              <CardBox
-                size={{ height: CardBoxHeight.MD, width: CardBoxWidth.MD_FOUR_HALF }}
-                maxCards={4}
-                overlap={CardOverlap.HALF}
-                placement="self-center place-self-center">
-                {renderPlayerPlayed}
-              </CardBox>
+            </div>
+            <div className="flex flex-col items-center justify-center gap-4">
+              <Score
+                displayName={gameState.players[opponent].displayName}
+                curScore={gameState.score[opponent].cur}
+                prevScore={gameState.score[opponent].prev}
+              />
+              <Board />
+              <Button handler={dealHandler}>START</Button>
+              <Score
+                displayName={gameState.players[player].displayName}
+                curScore={gameState.score[player].cur}
+                prevScore={gameState.score[player].prev}
+              />
             </div>
           </div>
-          <div className="flex flex-col items-center justify-center gap-4">
-            <Score
-              displayName={gameState.players[opponent].displayName}
-              curScore={gameState.score[opponent].cur}
-              prevScore={gameState.score[opponent].prev}
-            />
-            <Board />
-            <Button handler={dealHandler}>START</Button>
-            <Score
-              displayName={gameState.players[player].displayName}
-              curScore={gameState.score[player].cur}
-              prevScore={gameState.score[player].prev}
-            />
+          <div>
+            <CardBox
+              size={{ height: CardBoxHeight.LG, width: CardBoxWidth.LG_SIX }}
+              maxCards={6}
+              overlap={CardOverlap.TWO_THIRDS}
+              placement="self-center place-self-center">
+              {renderPlayerHand}
+            </CardBox>
           </div>
         </div>
-        <div>
-          <CardBox
-            size={{ height: CardBoxHeight.LG, width: CardBoxWidth.LG_SIX }}
-            maxCards={6}
-            overlap={CardOverlap.TWO_THIRDS}
-            placement="self-center place-self-center">
-            {renderPlayerHand}
-          </CardBox>
-        </div>
       </div>
-    </div>
+    </>
   );
 };
 

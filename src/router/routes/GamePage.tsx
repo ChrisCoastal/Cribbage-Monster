@@ -24,6 +24,8 @@ const GamePage = () => {
   const game = useLoaderData() as GameState;
   const { gameState, dispatchGame } = useGameContext();
 
+  function modalHandler() {}
+
   useEffect(() => {
     const gameRef = ref(rtdb, `games/${game.gameId}`);
     const unsubscribe = onValue(

@@ -32,7 +32,9 @@ const Deck: FC<DeckProps> = ({ cutDeck, callback }) => {
   return (
     <div className="relative">
       {cutDeck.status === Status.VALID && (
-        <p className="pointer-events-none absolute top-1/3 left-1/2 z-30 -translate-x-1/2">CUT</p>
+        <div className="pointer-events-none absolute top-1/4 left-1/2 z-30 flex h-10 w-10 -translate-x-1/2 items-center justify-center rounded-full bg-gradient-to-bl from-red-500 to-red-600">
+          CUT
+        </div>
       )}
       <CardBox
         size={{ height: CardBoxHeight.MD, width: CardBoxWidth.MD_ONE }}

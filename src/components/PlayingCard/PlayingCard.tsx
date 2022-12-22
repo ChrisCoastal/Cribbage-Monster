@@ -77,9 +77,9 @@ const PlayingCard: FC<PlayingCardProps> = ({
 
   const corners =
     cardSize === CardSize.LG
-      ? 'rounded-[4%]'
+      ? 'rounded-[4%] p-2'
       : cardSize === CardSize.MD
-      ? 'rounded-[8%]'
+      ? 'rounded-[8%] p-1'
       : 'rounded-[10%]';
 
   const sizeVars =
@@ -93,7 +93,7 @@ const PlayingCard: FC<PlayingCardProps> = ({
     activePlayer && valid && cardHover[cardIndex]
   } `;
 
-  const iconSize = cardSize === CardSize.LG ? '1.8rem' : '1.2rem';
+  const iconSize = cardSize === CardSize.LG ? '1.8rem' : '1rem';
   const cardMarking = (
     <>
       <span className="pointer-events-none font-bold">{card.name}</span>
@@ -109,14 +109,14 @@ const PlayingCard: FC<PlayingCardProps> = ({
   return isFaceUp ? (
     <div
       onClick={() => (handler ? handler(card) : null)}
-      className={`${conditionalStyles} ${sizeVars} ${corners} border border-solid border-neutral-100 bg-white p-2 transition-all duration-300`}>
+      className={`${conditionalStyles} ${sizeVars} ${corners} border border-solid border-neutral-100 bg-white transition-all duration-300`}>
       <div
         className={`${corners} grid-columns-3 shadow-[-4px_4px_8px_rgba(0,0,0,0.05) grid max-h-full max-w-full grid-rows-3 items-center border border-solid border-neutral-500 bg-white`}>
-        <div className="col-start-1 mt-4 flex-col gap-1 justify-self-center text-sm">
+        <div className="col-start-1 mt-2 flex-col gap-1 justify-self-center text-sm">
           {cardMarking}
         </div>
         <div className="col-start-3 row-start-3 flex flex-col justify-self-center text-sm">
-          <div className="col-start-1 mb-4 rotate-180 flex-col gap-1 justify-self-center text-sm">
+          <div className="col-start-1 mb-2 rotate-180 flex-col gap-1 justify-self-center text-sm">
             {cardMarking}
           </div>
         </div>
