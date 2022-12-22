@@ -46,7 +46,9 @@ import {
   getPlayerScoreRef,
   getPone,
   updateCardTotal,
-  getGameRef
+  getGameRef,
+  isPegJack,
+  scoreSuitedJack
 } from 'src/utils/helpers';
 
 import Avatar from 'src/components/Avatar/Avatar';
@@ -160,7 +162,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
       gameState.playerCards[opponent].played,
       gameState.deckCut.card!
     );
-    const cribScore = isScorePoints(gameState.crib, gameState.deckCut.card!);
+    const cribScore = isScorePoints(gameState.crib, gameState.deckCut.card!, 'crib');
 
     const playerScore = player === gameState.dealer ? playerHandScore + cribScore : playerHandScore;
     const opponentScore =
@@ -185,6 +187,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     const fifteens = scoreFifteens(hand, cutCard);
     const runs = scoreRuns(hand, cutCard);
     const flush = scoreFlush(hand, cutCard);
+    const jack = scoreSuitedJack(hand, cutCard);
     const points = pairs + fifteens + runs + flush;
 
     return points;
@@ -230,17 +233,18 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
         break;
       }
       case Status.COMPLETED: {
+        const jack = isPegJack(gameState.deckCut.card!.faceValue!);
         if (
           gameState.deckCut.status !== Status.VALID ||
           gameState.players[player].activePlayer === IsActive.NOT_ACTIVE
         )
           return console.log('cannot cut deck');
         set(deckCutRef, { status: Status.COMPLETED, card: gameState.deckCut.card });
-        if (gameState.deckCut.card?.name === 'J') {
+        if (jack) {
           const scoreRef = getScoreRef(gameId);
           update(scoreRef, {
             [opponent]: {
-              cur: gameState.score[opponent].cur + 2,
+              cur: gameState.score[opponent].cur + jack,
               prev: gameState.score[opponent].cur
             }
           });

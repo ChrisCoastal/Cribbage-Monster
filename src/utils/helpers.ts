@@ -208,7 +208,23 @@ export function filterCard(cards: CardsIndex, cardId: number): CardType[] {
   return cardIds.filter((card) => card.id !== cardId);
 }
 
+export function getCardValues(cards: CardsIndex, key?: CardKey) {
+  return key ? Object.values(cards).map((card) => card[key]) : Object.values(cards);
+}
+
+export function updateCardTotal(cardPlayValue: number, cardTotal: number): number {
+  return cardPlayValue + cardTotal;
+}
+
+export function isCardValid(cardPlayValue: number, cardTotal: number): boolean {
+  return cardPlayValue + cardTotal <= 31;
+}
+
 // PEGGING
+
+export function isPegJack(cardFaceValue: number): number {
+  return cardFaceValue === 11 ? 2 : 0;
+}
 
 export function isPegPairs(cardFaceValue: number, cardsPlayed: CardsIndex = {}): number {
   const cardFaceValues = getCardValues(cardsPlayed, CardKey.FACE) as number[];
@@ -245,26 +261,6 @@ export function isPegGo(cardPlayValue: number, cardTotal: number) {
 
 export function isPegThirtyOne(cardPlayValue: number, cardTotal: number): number {
   return cardPlayValue + cardTotal === 31 ? 2 : 0;
-}
-
-// export function getCardFaceValues(cards: CardsIndex) {
-//   return Object.values(cards).map((card) => card.faceValue);
-// }
-
-// export function getCardPlayValues(cards: CardsIndex) {
-//   return Object.values(cards).map((card) => card.playValue);
-// }
-
-export function getCardValues(cards: CardsIndex, key?: CardKey) {
-  return key ? Object.values(cards).map((card) => card[key]) : Object.values(cards);
-}
-
-export function updateCardTotal(cardPlayValue: number, cardTotal: number): number {
-  return cardPlayValue + cardTotal;
-}
-
-export function isCardValid(cardPlayValue: number, cardTotal: number): boolean {
-  return cardPlayValue + cardTotal <= 31;
 }
 
 export function isPegRun(cardFaceValue: number, cardsPlayed: CardsIndex = {}) {
@@ -369,11 +365,22 @@ export function scoreRuns(cards: CardsIndex, cutCard: CardType): number {
   return points;
 }
 
-export function scoreFlush(cards: CardsIndex, cutCard: CardType): number {
+export function scoreFlush(
+  cards: CardsIndex,
+  cutCard: CardType,
+  crib: 'crib' | false = false
+): number {
   const cardSuits = getCardValues(cards, CardKey.SUIT) as string[];
   let points = 0;
   const isFlush = [...new Set(cardSuits)].length === 1;
-  if (isFlush) points = 4;
-  if (isFlush && cardSuits[0] === cutCard.suit) points++;
+  const matchCut = isFlush && cardSuits[0] === cutCard.suit;
+  if (!crib && isFlush) points = 4;
+  if (!crib && matchCut) points++;
+  else if (crib && matchCut) points = 5;
   return points;
+}
+
+export function scoreSuitedJack(cards: CardsIndex, cutCard: CardType): number {
+  const cardValues = getCardValues(cards) as CardType[];
+  return cardValues.filter((card) => card.name === 'J' && card.suit === cutCard.suit).length;
 }
