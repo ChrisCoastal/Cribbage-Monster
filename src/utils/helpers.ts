@@ -17,6 +17,8 @@ import { ref } from 'firebase/database';
 import { rtdb } from 'src/firestore.config';
 
 // REALTIME DATABASE REFS
+export const getGameStatsRef = (gameId: GameId) => ref(rtdb, `gameStats/${gameId}`);
+
 export const getGameRef = (gameId: GameId) => ref(rtdb, `games/${gameId}`);
 
 export const getActivePlayerRef = (gameId: GameId, player: PlayerPos) =>
@@ -365,18 +367,14 @@ export function scoreRuns(cards: CardsIndex, cutCard: CardType): number {
   return points;
 }
 
-export function scoreFlush(
-  cards: CardsIndex,
-  cutCard: CardType,
-  crib: 'crib' | false = false
-): number {
+export function scoreFlush(cards: CardsIndex, cutCard: CardType, isCrib?: 'crib'): number {
   const cardSuits = getCardValues(cards, CardKey.SUIT) as string[];
   let points = 0;
   const isFlush = [...new Set(cardSuits)].length === 1;
   const matchCut = isFlush && cardSuits[0] === cutCard.suit;
-  if (!crib && isFlush) points = 4;
-  if (!crib && matchCut) points++;
-  else if (crib && matchCut) points = 5;
+  if (!isCrib && isFlush) points = 4;
+  if (!isCrib && matchCut) points++;
+  else if (isCrib && matchCut) points = 5;
   return points;
 }
 

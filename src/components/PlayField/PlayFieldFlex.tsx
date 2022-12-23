@@ -9,7 +9,10 @@ import {
   GameId,
   IsActive,
   PlayerPos,
+  ScoreType,
   Status,
+  Tally,
+  TallyPoints,
   TurnType
 } from 'src/@types';
 
@@ -48,7 +51,8 @@ import {
   updateCardTotal,
   getGameRef,
   isPegJack,
-  scoreSuitedJack
+  scoreSuitedJack,
+  getGameStatsRef
 } from 'src/utils/helpers';
 
 import Avatar from 'src/components/Avatar/Avatar';
@@ -71,7 +75,7 @@ type PlayFieldProps = {
 
 const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   const [go, setGo] = useState<boolean>(false);
-  const [tally, setTally] = useState<boolean>(false);
+  const [tally, setTally] = useState<{ [key: string]: TallyPoints }>(Object.create(null));
   const [countDown, setCountDown] = useState<number | null>(null);
 
   const { Modal, isModal, modalHandler } = useModal();
@@ -153,7 +157,6 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   }
 
   function scoreHand() {
-    const scoreRef = getScoreRef(gameId);
     const playerHandScore = isScorePoints(
       gameState.playerCards[player].played,
       gameState.deckCut.card!
@@ -164,9 +167,14 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     );
     const cribScore = isScorePoints(gameState.crib, gameState.deckCut.card!, 'crib');
 
-    const playerScore = player === gameState.dealer ? playerHandScore + cribScore : playerHandScore;
+    const playerScore =
+      player === gameState.dealer
+        ? playerHandScore.totalPoints + cribScore.totalPoints
+        : playerHandScore.totalPoints;
     const opponentScore =
-      opponent === gameState.dealer ? opponentHandScore + cribScore : opponentHandScore;
+      opponent === gameState.dealer
+        ? opponentHandScore.totalPoints + cribScore.totalPoints
+        : opponentHandScore.totalPoints;
 
     const updatedScore = {
       [player]: {
@@ -179,25 +187,35 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
       }
     };
 
-    player === PlayerPos.P_ONE && set(scoreRef, updatedScore);
+    if (player === PlayerPos.P_ONE) {
+      const scoreRef = getScoreRef(gameId);
+
+      set(scoreRef, updatedScore);
+    }
+
+    return { playerHandScore, opponentHandScore, cribScore };
   }
 
-  function isScorePoints(hand: CardsIndex, cutCard: CardType) {
+  function isScorePoints(hand: CardsIndex, cutCard: CardType, isCrib?: 'crib'): TallyPoints {
     const pairs = scorePairs(hand, cutCard);
     const fifteens = scoreFifteens(hand, cutCard);
     const runs = scoreRuns(hand, cutCard);
-    const flush = scoreFlush(hand, cutCard);
+    const flush = scoreFlush(hand, cutCard, isCrib);
     const jack = scoreSuitedJack(hand, cutCard);
-    const points = pairs + fifteens + runs + flush;
+    const totalPoints = pairs + fifteens + runs + flush + jack;
 
-    return points;
+    return { pairs, fifteens, runs, flush, jack, totalPoints };
   }
 
   function tallyHand() {
-    scoreHand();
-    setTally(true);
+    const score = scoreHand();
+    setTally({
+      [player]: score.playerHandScore,
+      [opponent]: score.opponentHandScore,
+      crib: score.cribScore
+    });
+    modalHandler(true);
     const cancelTimer = setTimeout(() => {
-      setTally(false);
       resetHand(dealHandler);
     }, 10000);
   }
@@ -214,12 +232,6 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
       turnTotals: INITIAL_GAME_STATE.turnTotals
     }).then(() => callback && callback());
   }
-
-  // function updateDealer(callback?: () => void) {
-  //   const dealerRef = getDealerRef(gameId);
-  //   const pone = getPone(gameState.dealer);
-  //   set(dealerRef, pone).then(() => callback && callback());
-  // }
 
   function cutDeckHandler(cutStatus: Status) {
     const deckCutRef = getDeckRef(gameId);
@@ -376,6 +388,19 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     }
   }
 
+  function getPlayerHandTally(hand: PlayerPos | 'crib') {
+    const handTally: TallyPoints = {
+      fifteens: tally[hand].fifteens,
+      pairs: tally[hand].pairs,
+      runs: tally[hand].runs,
+      flush: tally[hand].flush,
+      jack: tally[hand].jack,
+      totalPoints: tally[hand].totalPoints
+    };
+
+    return handTally;
+  }
+
   const numCardsPlayed =
     Object.keys(gameState.playerCards.player1.played).length +
     Object.keys(gameState.playerCards.player2.played).length;
@@ -389,7 +414,26 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
 
   return (
     <>
-      <Modal isVisible={isModal} modalHandler={modalHandler} modalContent={<HandTally />}></Modal>
+      {isModal && (
+        <Modal
+          isVisible={isModal}
+          modalHandler={modalHandler}
+          modalContent={
+            <HandTally
+              player={{
+                displayName: gameState.players[player].displayName,
+                isDealer: gameState.dealer === player,
+                score: getPlayerHandTally(player)
+              }}
+              opponent={{
+                displayName: gameState.players[player].displayName,
+                isDealer: gameState.dealer === opponent,
+                score: getPlayerHandTally(opponent)
+              }}
+              crib={getPlayerHandTally('crib')}
+            />
+          }></Modal>
+      )}
       <div className="relative grid h-full grid-cols-[1fr] items-center justify-items-center gap-2 py-12 px-4">
         <div className="flex flex-col items-center justify-center gap-4">
           <div className="flex w-full justify-between">

@@ -55,12 +55,20 @@ export type ScoreType = {
   prev: number;
 };
 
+export type Tally = {
+  displayName: string;
+  isDealer: boolean;
+  score: TallyPoints;
+  pegged?: number;
+};
+
 export type TallyPoints = {
   fifteens: number;
   runs: number;
   pairs: number;
   flush: number;
   jack: number;
+  totalPoints: number;
 };
 
 export type GameState = {

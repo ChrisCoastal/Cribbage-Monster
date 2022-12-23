@@ -11,7 +11,7 @@ type ModalProps = {
 };
 
 const useModal = () => {
-  const [isModal, setIsModal] = useState<boolean>(true);
+  const [isModal, setIsModal] = useState<boolean>(false);
 
   function modalHandler(visible?: boolean) {
     setIsModal((prev) => (visible !== undefined ? visible : !prev));
