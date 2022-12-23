@@ -10,6 +10,7 @@ import BottomNav from 'src/components/BottomNav/BottomNav';
 import useGameContext from 'src/hooks/useGameContext';
 import { GameId, GameReducerTypes, GameState } from 'src/@types';
 import { LoaderFunctionArgs, useLoaderData, useParams } from 'react-router-dom';
+import { getGameRef, getGameScoresRef } from 'src/utils/helpers';
 
 export async function gameLoader({ params }: LoaderFunctionArgs) {
   try {
@@ -24,18 +25,30 @@ const GamePage = () => {
   const game = useLoaderData() as GameState;
   const { gameState, dispatchGame } = useGameContext();
 
-  function modalHandler() {}
-
   useEffect(() => {
-    const gameRef = ref(rtdb, `games/${game.gameId}`);
-    const unsubscribe = onValue(
+    const gameRef = getGameRef(game.gameId);
+    const unsubscribeGame = onValue(
       gameRef,
       (snapshot) => {
         dispatchGame({ type: GameReducerTypes.UPDATE, payload: snapshot.val() });
       },
       (error) => console.log(error)
     );
-    return unsubscribe;
+    // const gameScoresRef = getGameScoresRef(game.gameId);
+    // const unsubscribeStats = onValue(
+    //   gameScoresRef,
+    //   (snapshot) => {
+    //     dispatchGame({ type: GameReducerTypes.UPDATE, payload: snapshot.val() });
+    //   },
+    //   (error) => console.log(error)
+    // );
+
+    function unsubscriber() {
+      unsubscribeGame();
+      // unsubscribeStats();
+    }
+
+    return unsubscriber;
   }, []);
 
   return (

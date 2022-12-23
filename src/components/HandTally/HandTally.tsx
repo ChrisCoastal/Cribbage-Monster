@@ -1,56 +1,27 @@
 import React, { FC } from 'react';
-import { Tally, TallyPoints } from 'src/@types';
+import { PlayerPos, Tally, TallyPoints } from 'src/@types';
 
 type HandTallyProps = {
+  dealer: PlayerPos;
   player: Tally;
   opponent: Tally;
   crib: TallyPoints;
 };
 
-const HandTally: FC<HandTallyProps> = ({ player, opponent, crib }) => {
+const HandTally: FC<HandTallyProps> = ({ dealer, player, opponent, crib }) => {
   function renderScore(playerTally: Tally) {
     return (
       <>
-        <div>
+        <div className="rounded-lg bg-red-500">
           <h3>{playerTally.displayName}</h3>
         </div>
         <div>
           <ul>
-            {playerTally.score.fifteens && (
-              <li>
-                <p>
-                  fifteens for <span>{playerTally.score.fifteens}</span>
-                </p>
-              </li>
-            )}
-            {playerTally.score.runs && (
-              <li>
-                <p>
-                  runs for <span>{playerTally.score.runs}</span>
-                </p>
-              </li>
-            )}
-            {playerTally.score.pairs && (
-              <li>
-                <p>
-                  pairs for <span>{playerTally.score.pairs}</span>
-                </p>
-              </li>
-            )}
-            {playerTally.score.flush && (
-              <li>
-                <p>
-                  flush for <span>{playerTally.score.flush}</span>
-                </p>
-              </li>
-            )}
-            {playerTally.score.jack && (
-              <li>
-                <p>
-                  suited jack for <span>{playerTally.score.jack}</span>
-                </p>
-              </li>
-            )}
+            <li>fifteens for {playerTally.score.fifteens}</li>
+            <li>runs for {playerTally.score.runs}</li>
+            <li>pairs for {playerTally.score.pairs}</li>
+            <li>flush for {playerTally.score.flush}</li>
+            <li>suited jack for {playerTally.score.jack}</li>
           </ul>
         </div>
       </>
@@ -60,7 +31,7 @@ const HandTally: FC<HandTallyProps> = ({ player, opponent, crib }) => {
   return (
     <div>
       <div className="flex">
-        {renderScore(player)}
+        <div>{renderScore(player)}</div>
         {renderScore(opponent)}
       </div>
     </div>

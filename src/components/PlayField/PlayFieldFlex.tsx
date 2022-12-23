@@ -51,8 +51,7 @@ import {
   updateCardTotal,
   getGameRef,
   isPegJack,
-  scoreSuitedJack,
-  getGameStatsRef
+  scoreSuitedJack
 } from 'src/utils/helpers';
 
 import Avatar from 'src/components/Avatar/Avatar';
@@ -89,10 +88,17 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   const opponentHand = Object.values(gameState.playerCards[opponent].inHand);
   const playerPlayed = Object.values(gameState.playerCards[player].played);
   const opponentPlayed = Object.values(gameState.playerCards[opponent].played);
+  const numCardsPlayed = playerPlayed.length + opponentPlayed.length;
   const renderPlayerHand = renderCards(playerHand, true, CardSize.LG, CardOverlap.TWO_THIRDS, true);
   const renderOpponentHand = renderCards(opponentHand, false, CardSize.SM, CardOverlap.TWO_THIRDS);
   const renderPlayerPlayed = renderCards(playerPlayed, true, CardSize.MD, CardOverlap.HALF);
   const renderOpponentPlayed = renderCards(opponentPlayed, true, CardSize.MD, CardOverlap.HALF);
+
+  useEffect(() => {
+    if (!numCardsPlayed || player !== PlayerPos.P_ONE) return;
+    if (numCardsPlayed !== 8) return;
+    tallyHand();
+  }, [numCardsPlayed]);
 
   //TODO: should all refs be moved into an object?
 
@@ -188,8 +194,8 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     };
 
     if (player === PlayerPos.P_ONE) {
+      // TODO: must check if pone (then dealer) wins before writing score to db
       const scoreRef = getScoreRef(gameId);
-
       set(scoreRef, updatedScore);
     }
 
@@ -217,6 +223,8 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     modalHandler(true);
     const cancelTimer = setTimeout(() => {
       resetHand(dealHandler);
+      modalHandler(false);
+      setTally({});
     }, 10000);
   }
 
@@ -312,35 +320,6 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     return !validCards.length;
   }
 
-  function renderGo(callback?: () => void) {
-    setGo(true);
-    const timer = setTimeout(() => {
-      setGo(false);
-      if (callback) callback();
-    }, 1500);
-  }
-
-  function renderCards(
-    cards: CardType[] = [],
-    faceUp: boolean,
-    cardSize: CardSize,
-    overlap: CardOverlap,
-    playerHand: boolean = false
-  ) {
-    return cards.map((card, i) => (
-      <PlayingCard
-        key={card.id}
-        isFaceUp={faceUp}
-        cardSize={cardSize}
-        cardIndex={i}
-        card={card}
-        overlap={overlap}
-        valid={playerHand ? isCardValid(card.playValue, gameState.turnTotals.cardTotal) : undefined}
-        handler={playerHand ? cardClickHandler : undefined}
-      />
-    ));
-  }
-
   function cardClickHandler(targetCard: CardType) {
     if (!isPlayerActive(gameState.players[player])) return console.log('player is not active');
     if (!isCardValid(targetCard.playValue, gameState.turnTotals.cardTotal))
@@ -401,38 +380,54 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     return handTally;
   }
 
-  const numCardsPlayed =
-    Object.keys(gameState.playerCards.player1.played).length +
-    Object.keys(gameState.playerCards.player2.played).length;
+  function renderGo(callback?: () => void) {
+    setGo(true);
+    const timer = setTimeout(() => {
+      setGo(false);
+      if (callback) callback();
+    }, 1500);
+  }
 
-  useEffect(() => {
-    console.log('useEffect');
-    if (!numCardsPlayed || player !== PlayerPos.P_ONE) return;
-    if (numCardsPlayed !== 8) return;
-    tallyHand();
-  }, [numCardsPlayed]);
+  function renderCards(
+    cards: CardType[] = [],
+    faceUp: boolean,
+    cardSize: CardSize,
+    overlap: CardOverlap,
+    playerHand: boolean = false
+  ) {
+    return cards.map((card, i) => (
+      <PlayingCard
+        key={card.id}
+        isFaceUp={faceUp}
+        cardSize={cardSize}
+        cardIndex={i}
+        card={card}
+        overlap={overlap}
+        valid={playerHand ? isCardValid(card.playValue, gameState.turnTotals.cardTotal) : undefined}
+        handler={playerHand ? cardClickHandler : undefined}
+      />
+    ));
+  }
 
   return (
     <>
       {isModal && (
-        <Modal
-          isVisible={isModal}
-          modalHandler={modalHandler}
-          modalContent={
-            <HandTally
-              player={{
-                displayName: gameState.players[player].displayName,
-                isDealer: gameState.dealer === player,
-                score: getPlayerHandTally(player)
-              }}
-              opponent={{
-                displayName: gameState.players[player].displayName,
-                isDealer: gameState.dealer === opponent,
-                score: getPlayerHandTally(opponent)
-              }}
-              crib={getPlayerHandTally('crib')}
-            />
-          }></Modal>
+        <Modal styles="rounded-xl" isVisible={isModal} modalHandler={modalHandler}>
+          <HandTally
+            dealer={gameState.dealer}
+            player={{
+              displayName: gameState.players[player].displayName,
+              playerPos: player,
+              score: getPlayerHandTally(player)
+            }}
+            opponent={{
+              displayName: gameState.players[opponent].displayName,
+              playerPos: opponent,
+              score: getPlayerHandTally(opponent)
+            }}
+            crib={getPlayerHandTally('crib')}
+          />
+        </Modal>
       )}
       <div className="relative grid h-full grid-cols-[1fr] items-center justify-items-center gap-2 py-12 px-4">
         <div className="flex flex-col items-center justify-center gap-4">

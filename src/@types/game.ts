@@ -57,7 +57,7 @@ export type ScoreType = {
 
 export type Tally = {
   displayName: string;
-  isDealer: boolean;
+  playerPos: PlayerPos;
   score: TallyPoints;
   pegged?: number;
 };

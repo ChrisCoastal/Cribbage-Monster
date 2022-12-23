@@ -4,7 +4,6 @@ import Button from 'src/components/UI/Button';
 
 type ModalProps = {
   isVisible: boolean;
-  modalContent: ReactNode;
   modalHandler: (visible?: boolean) => void;
   styles?: string;
   children?: ReactNode;
@@ -17,13 +16,7 @@ const useModal = () => {
     setIsModal((prev) => (visible !== undefined ? visible : !prev));
   }
 
-  const Modal: FC<ModalProps> = ({
-    isVisible,
-    modalContent,
-    modalHandler,
-    styles = '',
-    children
-  }) => {
+  const Modal: FC<ModalProps> = ({ isVisible, modalHandler, styles = '', children }) => {
     function keyDownHandler(event: React.KeyboardEvent<HTMLDivElement>) {
       console.log(event);
       if (event.key === 'escape') modalHandler(false);
@@ -35,9 +28,13 @@ const useModal = () => {
           createPortal(
             <>
               <div
-                className={`${styles} absolute top-1/2 left-1/2 z-[1000] -translate-x-1/2 -translate-y-1/2 rounded-lg bg-white`}>
-                <Button handler={() => modalHandler(false)}></Button>
-                {modalContent}
+                className={`${styles} absolute left-1/2 z-[1000] -translate-x-1/2 -translate-y-1/2 animate-modal-slide rounded-lg bg-white`}>
+                <div className="flex">
+                  <Button handler={() => modalHandler(false)} customStyles={`self-end`}>
+                    X
+                  </Button>
+                  {children}
+                </div>
               </div>
               <div
                 onClick={() => modalHandler(false)}
