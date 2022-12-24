@@ -1,13 +1,13 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 
 type T = any;
 
-export const useTimer = (callback: T, delay: number | null = 0) => {
+export const useInterval = (callback: T, delay: number | null = 0) => {
   const savedCallback: React.MutableRefObject<T> = useRef();
 
   useEffect(() => {
     savedCallback.current = callback;
-  });
+  }, [callback]);
 
   useEffect(() => {
     const tick = () => {

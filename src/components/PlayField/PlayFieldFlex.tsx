@@ -54,7 +54,7 @@ import {
   scoreSuitedJack
 } from 'src/utils/helpers';
 
-import Avatar from 'src/components/Avatar/Avatar';
+import Avatar from 'src/components/Opponent/Opponent';
 import Board from 'src/components/Board/Board';
 import Button from 'src/components/UI/Button';
 import CardBox from 'src/components/CardBox/CardBox';
@@ -75,7 +75,6 @@ type PlayFieldProps = {
 const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   const [go, setGo] = useState<boolean>(false);
   const [tally, setTally] = useState<{ [key: string]: TallyPoints }>(Object.create(null));
-  const [countDown, setCountDown] = useState<number | null>(null);
 
   const { Modal, isModal, modalHandler } = useModal();
 
@@ -93,10 +92,15 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   const renderOpponentHand = renderCards(opponentHand, false, CardSize.SM, CardOverlap.TWO_THIRDS);
   const renderPlayerPlayed = renderCards(playerPlayed, true, CardSize.MD, CardOverlap.HALF);
   const renderOpponentPlayed = renderCards(opponentPlayed, true, CardSize.MD, CardOverlap.HALF);
+  const dealer = gameState.dealer;
+  const pone = getPone(dealer);
 
   useEffect(() => {
-    if (!numCardsPlayed || player !== PlayerPos.P_ONE) return;
+    // if (!numCardsPlayed || player !== PlayerPos.P_ONE) return;
+    if (!numCardsPlayed) return;
     if (numCardsPlayed !== 8) return;
+    console.log('tallying hand');
+
     tallyHand();
   }, [numCardsPlayed]);
 
@@ -143,7 +147,6 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
         break;
       }
       case 'pone': {
-        const pone = getPone(gameState.dealer);
         const playerRef = getPlayerRef(gameId, pone);
         update(playerRef, { ...gameState.players[pone], activePlayer: IsActive.ACTIVE }).then(
           () => callback
@@ -222,14 +225,14 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     });
     modalHandler(true);
     const cancelTimer = setTimeout(() => {
-      resetHand(dealHandler);
       modalHandler(false);
       setTally({});
-    }, 10000);
+      player === PlayerPos.P_ONE && resetHand(dealHandler);
+    }, 30000);
   }
 
   function resetHand(callback?: () => void) {
-    const newDealer = getPone(gameState.dealer);
+    const newDealer = pone;
     const gameRef = getGameRef(gameId);
     update(gameRef, {
       ...gameState,
@@ -376,6 +379,9 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
       jack: tally[hand].jack,
       totalPoints: tally[hand].totalPoints
     };
+    for (const score in handTally) {
+      if (!handTally[score as keyof TallyPoints]) delete handTally[score as keyof TallyPoints];
+    }
 
     return handTally;
   }
@@ -412,17 +418,24 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   return (
     <>
       {isModal && (
-        <Modal styles="rounded-xl" isVisible={isModal} modalHandler={modalHandler}>
+        <Modal
+          isVisible={isModal}
+          title={'Hand Tally'}
+          modalHandler={modalHandler}
+          customStyles={'bg-neutral-800 text-white'}>
           <HandTally
             dealer={gameState.dealer}
+            cut={gameState.deckCut.card!}
             player={{
               displayName: gameState.players[player].displayName,
               playerPos: player,
+              cards: gameState.playerCards[player].played,
               score: getPlayerHandTally(player)
             }}
             opponent={{
               displayName: gameState.players[opponent].displayName,
               playerPos: opponent,
+              cards: gameState.playerCards[opponent].played,
               score: getPlayerHandTally(opponent)
             }}
             crib={getPlayerHandTally('crib')}
@@ -454,7 +467,11 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
                 <div>
                   <div className="flex flex-col items-center gap-1 py-4">
                     <div className="grid grid-cols-2 gap-2">
-                      <Deck cutDeck={gameState.deckCut} callback={cutDeckHandler} />
+                      <Deck
+                        cutDeck={gameState.deckCut}
+                        isPone={player === pone}
+                        callback={cutDeckHandler}
+                      />
                       <Crib cribCards={gameState.crib} />
                     </div>
                     <div>

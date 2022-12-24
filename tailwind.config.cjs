@@ -15,20 +15,32 @@ module.exports = {
         'cardback-sm': `url('src/assets/cardback-sm.svg')`
       },
       animation: {
-        'modal-slide': '0.8s ease-in-out slide-in both',
-        radiate: '0.8s ease-in-out radiate infinite'
+        'modal-slide-in': '0.8s ease-in-out slide-in both',
+        'modal-slide-out': '0.8s ease-in-out slide-in reverse both',
+        radiate: '0.8s radiate infinite',
+        grow: '0.6s ease-in grow',
+        'text-grow': '0.6s ease-out text-grow'
       },
       keyframes: {
         'slide-in': {
-          '0%': { bottom: '-100%' },
-          '75%': { bottom: '54%' },
-          '90%': { bottom: '46%' },
-          '100%': { bottom: '50%' }
+          '0%': { top: '140%' },
+          '75%': { top: '46%' },
+          '90%': { top: '52%' },
+          '100%': { top: '50%' }
         },
         radiate: {
-          '0%': { border: 'none' },
-          '80%': { border: 'solid 0.8rem border-red-300', opacity: '0.9' },
-          '100%': { border: 'solid 1rem border-red-300', opacity: '0' }
+          '0%': { outline: 'solid 0.2rem rgba(160,44,44,1)' },
+          '100%': { outline: 'solid 0.8rem rgba(160,44,44,0)' }
+        },
+        grow: {
+          '0%, 100%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.6)' }
+        },
+        'text-grow': {
+          '40%': { 'font-size': '250%' },
+          '70%': { 'font-size': '80%' },
+          '80%': { 'font-size': '120%' },
+          '90%': { 'font-size': '90%' }
         }
       }
     }

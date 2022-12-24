@@ -58,6 +58,7 @@ export type ScoreType = {
 export type Tally = {
   displayName: string;
   playerPos: PlayerPos;
+  cards: CardsIndex;
   score: TallyPoints;
   pegged?: number;
 };
