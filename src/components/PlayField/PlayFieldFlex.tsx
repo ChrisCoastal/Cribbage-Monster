@@ -86,6 +86,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   const userId = userAuth!.uid!;
 
   const { gameState } = useGameContext();
+
   const { player, opponent } = getPlayerOpponent(gameState.players, userId);
   const gameRef = getGameRef(gameId);
   const gameScore = getGameTalliesRef(gameId);
@@ -232,7 +233,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
           gameState.deckCut.status !== Status.VALID ||
           gameState.players[player].activePlayer === IsActive.NOT_ACTIVE
         )
-          return console.log('cannot cut deck');
+          return;
         set(deckCutRef, { status: Status.COMPLETED, card: gameState.deckCut.card });
         if (jack) {
           const scoreRef = getScoreRef(gameId);
@@ -292,13 +293,11 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     if (gameState.deckCut.status === Status.VALID) return;
 
     // FIXME: move to useEffect?
-    console.log(targetCard);
     if (playerHand.length > 4) {
       addCardToCrib(targetCard);
       // if 2nd card has just been moved to crib (=== 5), make player inactive
       playerHand.length === 5 && updateActivePlayer('inactive');
       if (Object.keys(gameState.crib).length === 3) {
-        console.log('waiting for cut!');
         cutDeckHandler(Status.VALID);
         updateActivePlayer('pone');
       }
@@ -437,11 +436,6 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
                 curScore={gameState.score[opponent].cur}
               />
               <Board />
-
-              <Score
-                displayName={gameState.players[player].displayName}
-                curScore={gameState.score[player].cur}
-              />
             </div>
           </div>
           <div>

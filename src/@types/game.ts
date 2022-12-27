@@ -59,7 +59,7 @@ export type Tally = {
   displayName: string;
   playerPos: PlayerPos;
   cards: CardsIndex;
-  score: TallyPoints;
+  points: TallyPoints;
 };
 
 export type TallyPoints = {
@@ -115,6 +115,16 @@ export type GameBrief = {
   scoreToWin: 121;
 };
 
+// board
+export enum BoardSectionType {
+  START = 'start',
+  STRAIGHT = 'straight',
+  SKUNK = 'skunk',
+  BEND_1 = 'bend 1',
+  BEND_2 = 'bend 2'
+}
+
+// sort
 export enum SortOrder {
   LOW_TO_HIGH = 'low high',
   HIGH_TO_LOW = 'high low'

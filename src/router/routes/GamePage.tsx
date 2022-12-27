@@ -128,7 +128,7 @@ const GamePage = () => {
         player2: { inHand: deal.hands.player2, played: {} }
       },
       crib: INITIAL_GAME_STATE.crib,
-      deckCut: INITIAL_GAME_STATE.deckCut,
+      deckCut: { status: Status.INVALID, card: deal.cut },
       turnTotals: INITIAL_GAME_STATE.turnTotals,
       tally: INITIAL_GAME_STATE.tally
     }).then(() => callback && callback());
@@ -154,13 +154,13 @@ const GamePage = () => {
               displayName: gameState.players[player].displayName,
               playerPos: player,
               cards: gameState.playerCards[player].played,
-              score: gameState?.tally[player]
+              points: gameState?.tally[player]
             }}
             opponent={{
               displayName: gameState.players[opponent].displayName,
               playerPos: opponent,
               cards: gameState.playerCards[opponent].played,
-              score: gameState?.tally[opponent]
+              points: gameState?.tally[opponent]
             }}
             crib={gameState?.tally.crib}
           />
@@ -170,7 +170,7 @@ const GamePage = () => {
         <div>
           <PlayFieldFlex gameId={game.gameId} />
         </div>
-        {canStartGame() && (
+        {canStartGame() && player === PlayerPos.P_ONE && (
           <Button
             handler={dealHandler}
             customStyles="absolute top-1/2 left-1/2  -translate-x-1/2 -translate-y-1/2">

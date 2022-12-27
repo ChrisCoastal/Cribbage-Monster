@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 import {
   CardBoxHeight,
   CardBoxWidth,
@@ -30,7 +30,7 @@ const HandTally: FC<HandTallyProps> = ({ dealer, cut, player, opponent, crib }) 
   const pone = getPone;
 
   function renderScoreItems(playerPos: PlayerPos, score: TallyPoints) {
-    const scores = Object.entries(score);
+    const scores = Object.entries(score).filter((score) => score[1] !== 0);
     const delay = playerPos === dealer ? scores.length + 1 : 1;
     const scoreItems = scores.map((score, i) => {
       const [key, value] = score;
@@ -62,9 +62,9 @@ const HandTally: FC<HandTallyProps> = ({ dealer, cut, player, opponent, crib }) 
     return scoreItems;
   }
 
-  const playerScores = renderScoreItems(player.playerPos, player.score);
+  const playerScores = renderScoreItems(player.playerPos, player.points);
   const playerTotal = playerScores.splice(-1, 1);
-  const opponentScores = renderScoreItems(opponent.playerPos, opponent.score);
+  const opponentScores = renderScoreItems(opponent.playerPos, opponent.points);
   const opponentTotal = opponentScores.splice(-1, 1);
 
   return (
