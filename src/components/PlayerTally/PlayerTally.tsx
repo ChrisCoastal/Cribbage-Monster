@@ -14,20 +14,22 @@ import PlayingCard from 'src/components/PlayingCard/PlayingCard';
 import { getCardValues } from 'src/utils/helpers';
 
 type PlayerTallyProps = {
+  displayName: string;
   cards: CardsIndex;
   cut: CardType;
+  scores: ReactNode;
+  total: ReactNode;
   children?: ReactNode;
 };
 
-const PlayerTally: FC<PlayerTallyProps> = ({ cards, cut, children }) => {
+const PlayerTally: FC<PlayerTallyProps> = ({ displayName, cards, cut, scores, total }) => {
   const cardValues = getCardValues(cards) as CardType[];
 
   function renderCards(
     cards: CardType[] = [],
     faceUp: boolean,
     cardSize: CardSize,
-    overlap: CardOverlap,
-    playerHand: boolean = false
+    overlap: CardOverlap
   ) {
     return cards.map((card, i) => (
       <PlayingCard
@@ -57,7 +59,7 @@ const PlayerTally: FC<PlayerTallyProps> = ({ cards, cut, children }) => {
       <div className="flex-col rounded-lg bg-gradient-to-br from-emerald-400 to-emerald-500 p-4 text-neutral-800">
         <div className="flex items-center gap-2">
           <Avatar />
-          <h3 className="text-lg font-bold">chris</h3>
+          <h3 className="text-lg font-bold">{displayName}</h3>
         </div>
         <div className="flex gap-4 py-4">
           <CardBox
@@ -74,8 +76,8 @@ const PlayerTally: FC<PlayerTallyProps> = ({ cards, cut, children }) => {
           </CardBox>
         </div>
         <div>
-          <ul className="grid grid-cols-2 justify-items-start gap-x-8 py-2 text-sm">{children}</ul>
-          <div className="text-center text-3xl font-bold">{`TOTAL: 100`}</div>
+          <ul className="grid grid-cols-2 justify-items-start gap-x-8 py-2 text-sm">{scores}</ul>
+          <ul className="flex items-center text-3xl font-bold">{total}</ul>
         </div>
       </div>
     </>

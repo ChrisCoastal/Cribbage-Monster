@@ -5,7 +5,6 @@ import Button from 'src/components/UI/Button';
 type ModalProps = {
   isVisible: boolean;
   title: string;
-  modalHandler: (visible?: boolean) => void;
   customStyles?: string;
   children?: ReactNode;
 };
@@ -13,19 +12,14 @@ type ModalProps = {
 const useModal = () => {
   const [isModal, setIsModal] = useState<boolean>(false);
 
-  function modalHandler(visible?: boolean) {
+  function modalHandler(isVisible: boolean) {
     console.log('setting modal');
 
-    setIsModal((prev) => (visible !== undefined ? visible : !prev));
+    // setIsModal((prev) => (isVisible !== undefined ? isVisible : !prev));
+    setIsModal(isVisible);
   }
 
-  const Modal: FC<ModalProps> = ({
-    isVisible,
-    title,
-    modalHandler,
-    customStyles = '',
-    children
-  }) => {
+  const Modal: FC<ModalProps> = ({ isVisible, title, customStyles = '', children }) => {
     function keyDownHandler(event: React.KeyboardEvent<HTMLDivElement>) {
       console.log(event);
       if (event.key === 'escape') modalHandler(false);

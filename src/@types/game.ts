@@ -60,7 +60,6 @@ export type Tally = {
   playerPos: PlayerPos;
   cards: CardsIndex;
   score: TallyPoints;
-  pegged?: number;
 };
 
 export type TallyPoints = {
@@ -70,11 +69,13 @@ export type TallyPoints = {
   flush: number;
   jack: number;
   totalPoints: number;
+  pegging?: number;
 };
 
 export type GameState = {
   gameId: GameId;
   dealer: PlayerPos;
+  handNum: number;
   players: {
     player1: Player;
     player2: Player;
@@ -83,19 +84,26 @@ export type GameState = {
     player1: {
       inHand: CardsIndex;
       played: CardsIndex;
-      isGo: Go;
     };
     player2: {
       inHand: CardsIndex;
       played: CardsIndex;
-      isGo: Go;
     };
+  };
+  isGo: {
+    player1: Go;
+    player2: Go;
   };
   crib: CardsIndex;
   deckCut: Cut;
   score: {
     player1: ScoreType;
     player2: ScoreType;
+  };
+  tally: null | {
+    player1: TallyPoints;
+    player2: TallyPoints;
+    crib: TallyPoints;
   };
   turnTotals: TurnType;
 };

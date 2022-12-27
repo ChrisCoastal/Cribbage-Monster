@@ -15,7 +15,7 @@ module.exports = {
         'cardback-sm': `url('src/assets/cardback-sm.svg')`
       },
       animation: {
-        'modal-slide-in': '0.8s ease-in-out slide-in both',
+        'modal-slide-in': '0.8s ease-in-out slide-in forwards',
         'modal-slide-out': '0.8s ease-in-out slide-in reverse both',
         radiate: '0.8s radiate infinite',
         grow: '0.6s ease-in grow',

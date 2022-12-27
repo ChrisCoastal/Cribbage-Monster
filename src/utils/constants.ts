@@ -13,6 +13,7 @@ export const PAIR_POINTS = [0, 2, 6, 12];
 export const INITIAL_GAME_STATE: GameState = {
   gameId: '',
   dealer: PlayerPos.P_ONE,
+  handNum: 0,
   players: {
     player1: {
       id: '',
@@ -28,14 +29,16 @@ export const INITIAL_GAME_STATE: GameState = {
   playerCards: {
     player1: {
       inHand: {},
-      played: {},
-      isGo: Go.NO_GO
+      played: {}
     },
     player2: {
       inHand: {},
-      played: {},
-      isGo: Go.NO_GO
+      played: {}
     }
+  },
+  isGo: {
+    player1: Go.NO_GO,
+    player2: Go.NO_GO
   },
   crib: {},
   deckCut: { status: Status.INVALID, card: null },
@@ -49,6 +52,7 @@ export const INITIAL_GAME_STATE: GameState = {
       prev: 0
     }
   },
+  tally: null,
   turnTotals: {
     cardsPlayed: {},
     cardTotal: 0

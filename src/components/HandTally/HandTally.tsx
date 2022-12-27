@@ -14,6 +14,7 @@ import { useInterval } from 'src/hooks/useInterval';
 import Avatar from 'src/components/Avatar/Avatar';
 import CardBox from 'src/components/CardBox/CardBox';
 import PlayerTally from 'src/components/PlayerTally/PlayerTally';
+import { getPone } from 'src/utils/helpers';
 
 type HandTallyProps = {
   dealer: PlayerPos;
@@ -25,46 +26,67 @@ type HandTallyProps = {
 
 const HandTally: FC<HandTallyProps> = ({ dealer, cut, player, opponent, crib }) => {
   const [count, setCount] = useState<number>(0);
-  const playerCards = useInterval(() => setCount((prev) => prev + 1), 1000);
+  useInterval(() => setCount((prev) => prev + 1), 1000);
+  const pone = getPone;
 
-  function renderScoreItems(playerTally: Tally) {
-    const { totalPoints, ...points } = playerTally.score;
-    const scores = Object.entries(points);
-    const delay = playerTally.playerPos === dealer ? scores.length : 0;
-    console.log(scores);
-
+  function renderScoreItems(playerPos: PlayerPos, score: TallyPoints) {
+    const scores = Object.entries(score);
+    const delay = playerPos === dealer ? scores.length : 0;
     const scoreItems = scores.map((score, i) => {
       const [key, value] = score;
-      const animate = count === i + delay ? 'animate-text-grow' : '';
-      console.log('value', typeof value);
-
-      return (
-        <li key={nanoid()} className="relative inline">
-          <span>{key.slice(0, 1).toUpperCase() + key.slice(1) + ' for '}</span>
-          {count >= i + delay ? (
-            <span className={`${animate} absolute left-[104%] text-sm font-bold`}>
-              {value.toString()}
-            </span>
-          ) : (
-            `  `
-          )}
-        </li>
-      );
+      const animate = count === i + 2 + delay ? 'animate-text-grow' : '';
+      if (key === 'totalPoints')
+        return (
+          <li key={key} className="relative inline">
+            <span>{key.slice(0, 5).toUpperCase() + ': '}</span>
+            {count >= i + delay ? (
+              <span className={`${animate} absolute left-[104%] text-3xl font-bold`}>{value}</span>
+            ) : (
+              `  `
+            )}
+          </li>
+        );
+      else
+        return (
+          <li key={key} className="relative inline">
+            <span>{key.slice(0, 1).toUpperCase() + key.slice(1) + ' for '}</span>
+            {count >= i + delay ? (
+              <span className={`${animate} absolute left-[104%] font-bold`}>{value}</span>
+            ) : (
+              `  `
+            )}
+          </li>
+        );
     });
 
     return scoreItems;
   }
 
+  const playerScores = renderScoreItems(player.playerPos, player.score);
+  const playerTotal = playerScores.splice(-1, 1);
+  const opponentScores = renderScoreItems(opponent.playerPos, opponent.score);
+  const opponentTotal = opponentScores.splice(-1, 1);
+
   return (
     <div>
       <div className="flex flex-col gap-4 pt-2">
-        <PlayerTally cards={player.cards} cut={cut}>
-          {renderScoreItems(player)}
-        </PlayerTally>
-        <PlayerTally cards={opponent.cards} cut={cut}>
-          {renderScoreItems(opponent)}
-        </PlayerTally>
-        <div className="self-end text-sm">...next round in {12 - count}</div>
+        <PlayerTally
+          displayName={player.displayName}
+          cards={player.cards}
+          cut={cut}
+          scores={playerScores}
+          total={playerTotal}
+        />
+
+        <PlayerTally
+          displayName={opponent.displayName}
+          cards={opponent.cards}
+          cut={cut}
+          scores={opponentScores}
+          total={opponentTotal}
+        />
+
+        <div className="self-end text-sm">...next round in {20 - count > 0 ? 20 - count : 0}</div>
       </div>
     </div>
   );

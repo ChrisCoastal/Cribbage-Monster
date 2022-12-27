@@ -1,5 +1,5 @@
 import { Dispatch } from 'react';
-import { CardType, GameState } from './index';
+import { CardType, GameState, TallyPoints } from './index';
 
 export type GameContextType = {
   gameState: GameState;
@@ -11,7 +11,8 @@ export enum GameReducerTypes {
   JOIN_PLAYER = 'join',
   DEAL = 'deal',
   PLAY_CARD = 'play card',
-  UPDATE = 'update'
+  UPDATE = 'update',
+  HAND_TALLY = 'tally'
 }
 
 export type CreateGameAction = {
@@ -39,9 +40,15 @@ export type UpdateGameAction = {
   payload: GameState;
 };
 
+export type HandTallyAction = {
+  type: GameReducerTypes.HAND_TALLY;
+  payload: { player1: TallyPoints; player2: TallyPoints; crib: TallyPoints };
+};
+
 export type GameReducerActions =
   | CreateGameAction
   | JoinPlayerAction
   | DealCardAction
   | PlayCardAction
-  | UpdateGameAction;
+  | UpdateGameAction
+  | HandTallyAction;

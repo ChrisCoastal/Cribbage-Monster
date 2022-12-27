@@ -18,10 +18,10 @@ import { rtdb } from 'src/firestore.config';
 
 // REALTIME DATABASE REFS
 // game scores
-export const getGameScoresRef = (gameId: GameId) => ref(rtdb, `gameScores/${gameId}`);
+export const getGameTalliesRef = (gameId: GameId) => ref(rtdb, `gameTallies/${gameId}`);
 
 // game list
-export const getGamesList = () => ref(rtdb, `gameslist`);
+export const getGamesList = () => ref(rtdb, `gamesList`);
 
 // game
 export const getGameRef = (gameId: GameId) => ref(rtdb, `games/${gameId}`);
@@ -56,6 +56,8 @@ export const getCardsPlayedRef = (gameId: GameId) =>
 
 export const getCardTotalRef = (gameId: GameId) =>
   ref(rtdb, `games/${gameId}/turnTotals/cardTotal`);
+
+export const getTallyRef = (gameId: GameId) => ref(rtdb, `games/${gameId}/tally`);
 
 export const getScoreRef = (gameId: GameId) => ref(rtdb, `games/${gameId}/score`);
 
