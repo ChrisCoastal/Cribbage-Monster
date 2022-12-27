@@ -11,7 +11,7 @@ const BoardSectionTopBend: FC<BoardSectionProps> = ({ rotate }) => {
   return (
     <div className={`${rotate && 'rotate-180'} relative`}>
       <ul>
-        <li className="absolute left-[9%] bottom-[8%] h-1 w-1 justify-self-center rounded-full bg-white"></li>
+        <li className="absolute left-[10%] bottom-[8%] h-1 w-1 justify-self-center rounded-full bg-white"></li>
         <li className="absolute left-[23%] bottom-[40%] h-1 w-1 justify-self-center rounded-full bg-white"></li>
         <li className="absolute left-[53%] bottom-[60%] h-1 w-1 justify-self-center rounded-full bg-white"></li>
         <li className="absolute left-[84%] bottom-[40%] h-1 w-1 justify-self-center rounded-full bg-white"></li>

@@ -3,11 +3,27 @@ import BoardSectionBend from 'src/components/BoardSectionBend/BoardSectionBend';
 import BoardPegHole from '../BoardPegHole/BoardPegHole';
 
 const Board = () => {
+  const sectionCol = ['col-start-1', 'col-start-2', 'col-start-3'];
+  const sectionRow = [
+    'row-start-1',
+    'row-start-2',
+    'row-start-3',
+    'row-start-4',
+    'row-start-5',
+    'row-start-6',
+    'row-start-7'
+  ];
+
   function renderSections() {
     const sections = [];
     for (let i = 0; i < 21; i++) {
-      const customStyles = i > 18 ? 'border-b-[1px]' : '';
-      sections.push(<BoardSection key={i} customStyles={customStyles} />);
+      const colIndex = Math.floor(i / 7);
+      const col = sectionCol[colIndex];
+      const row = colIndex === 1 ? sectionRow[i - 7] : sectionRow[Math.abs(Math.floor(i % 7) - 6)];
+      const bendBorder = i === 13 || i === 14 ? 'border-b-[1px]' : '';
+      sections.push(
+        <BoardSection key={i} customStyles={`${col} ${row} ${bendBorder} index-${i}`} />
+      );
     }
     return sections;
   }
