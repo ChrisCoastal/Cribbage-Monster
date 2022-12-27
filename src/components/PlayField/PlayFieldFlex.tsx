@@ -23,6 +23,7 @@ import { INITIAL_GAME_STATE } from 'src/utils/constants';
 
 import {
   dealHands,
+  expectGo,
   filterCard,
   getActivePlayerRef,
   getPlayerOpponent,
@@ -42,7 +43,9 @@ import {
   isPegGo,
   isPegPairs,
   isPegRun,
+  isPegPoints,
   isPlayerActive,
+  isScorePoints,
   scorePairs,
   scoreFifteens,
   scoreRuns,
@@ -54,7 +57,8 @@ import {
   isPegJack,
   scoreSuitedJack,
   getGameTalliesRef,
-  getTallyRef
+  getTallyRef,
+  isWinner
 } from 'src/utils/helpers';
 
 import Avatar from 'src/components/Opponent/Opponent';
@@ -77,10 +81,6 @@ type PlayFieldProps = {
 
 const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   const [go, setGo] = useState<boolean>(false);
-  const [tally, setTally] = useState<{ [key: string]: TallyPoints }>(Object.create(null));
-
-  // const { Modal, isModal, modalHandler } = useModal();
-  console.log('rerendering');
 
   const { userAuth } = useAuthContext();
   const userId = userAuth!.uid!;
@@ -107,28 +107,13 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     player === PlayerPos.P_ONE && tallyHand();
   }, [numCardsPlayed]);
 
-  // useEffect(() => {
-  //   if (!gameState.tally) return;
-  //   renderTally();
-  // }, [gameState.tally]);
-
-  // function renderTally() {
-  //   if (!isModal) modalHandler(true);
-  //   const timer = setTimeout(() => {
-  //     modalHandler(false);
-  //     const tallyRef = getTallyRef(gameId);
-  //     player === PlayerPos.P_ONE && resetHand(dealHandler);
-  //     // set(tallyRef, null);
-  //     // setTally({});
-  //   }, 20000);
-  // }
-
   //TODO: should all refs be moved into an object?
 
   function addCardToCrib(card: CardType, callback?: () => void): void {
     const playerHandRef = getInHandRef(gameId, player);
     const cribRef = getCribRef(gameId);
-    const updatedCrib = { ...gameState.crib, [card.id]: card };
+    const cribKey = push(cribRef).key;
+    const updatedCrib = { ...gameState.crib, [cribKey!]: card };
     // const pushCribRef = push(cribRef);
     const updatedHand = filterCard(gameState.playerCards[player].inHand, card.id);
     set(playerHandRef, updatedHand)
@@ -178,12 +163,20 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     );
     const cribTally = isScorePoints(gameState.crib, gameState.deckCut.card!, 'crib');
 
+    return { playerHandTally, opponentHandTally, cribTally };
+  }
+
+  function getPlayerScores(
+    playerHandTally: TallyPoints,
+    opponentHandTally: TallyPoints,
+    cribTally: TallyPoints
+  ) {
     const playerScore =
-      player === gameState.dealer
+      player === dealer
         ? playerHandTally.totalPoints + cribTally.totalPoints
         : playerHandTally.totalPoints;
     const opponentScore =
-      opponent === gameState.dealer
+      opponent === dealer
         ? opponentHandTally.totalPoints + cribTally.totalPoints
         : opponentHandTally.totalPoints;
 
@@ -196,32 +189,9 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
         cur: gameState.score[opponent].cur + opponentScore,
         prev: gameState.score[opponent].cur
       }
-    };
-    // const updatedTally;
+    } as { player1: ScoreType; player2: ScoreType };
 
-    if (player === PlayerPos.P_ONE) {
-      // TODO: must check if pone (then dealer) wins before writing score to db
-      const scoreRef = getScoreRef(gameId);
-      const gameTallies = getGameTalliesRef(gameId);
-      const pushTally = push(gameTallies, {
-        [player]: playerHandTally,
-        [opponent]: opponentHandTally
-      });
-      update(scoreRef, updatedScore);
-    }
-
-    return { playerHandTally, opponentHandTally, cribTally };
-  }
-
-  function isScorePoints(hand: CardsIndex, cutCard: CardType, isCrib?: 'crib'): TallyPoints {
-    const pairs = scorePairs(hand, cutCard);
-    const fifteens = scoreFifteens(hand, cutCard);
-    const runs = scoreRuns(hand, cutCard);
-    const flush = scoreFlush(hand, cutCard, isCrib);
-    const jack = scoreSuitedJack(hand, cutCard);
-    const totalPoints = pairs + fifteens + runs + flush + jack;
-
-    return { pairs, fifteens, runs, flush, jack, totalPoints };
+    return updatedScore;
   }
 
   function tallyHand() {
@@ -231,18 +201,18 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
       [opponent]: score.opponentHandTally,
       crib: score.cribTally
     };
+    const updatedScore = getPlayerScores(
+      score.playerHandTally,
+      score.opponentHandTally,
+      score.cribTally
+    );
+    const winner = isWinner(updatedScore, dealer);
     const tallyRef = getTallyRef(gameId);
-    set(tallyRef, tally);
-    // setTally({
-    //   [player]: score.playerHandTally,
-    //   [opponent]: score.opponentHandTally,
-    //   crib: score.cribScore
-    // });
-    // const cancelTimer = setTimeout(() => {
-    //   modalHandler(false);
-    //   // setTally({});
-    //   player === PlayerPos.P_ONE && resetHand(dealHandler);
-    // }, 20000);
+    const scoreRef = getScoreRef(gameId);
+    set(tallyRef, tally).then(() => {
+      // if the pone has won, dealer's score is not recorded (pone counts first)
+      winner === pone ? update(scoreRef, updatedScore[pone]) : update(scoreRef, updatedScore);
+    });
   }
 
   function cutDeckHandler(cutStatus: Status) {
@@ -285,61 +255,35 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     const playerHandRef = getInHandRef(gameId, player);
     const playerCardsPlayedRef = getPlayerCardsPlayedRef(gameId, player);
     const cardsPlayedRef = getCardsPlayedRef(gameId);
-    const addPlayerPlayedRef = push(playerCardsPlayedRef);
-    const addPlayedRef = push(cardsPlayedRef);
+    const addPlayerPlayedKey = push(playerCardsPlayedRef).key;
+    const addPlayedKey = push(cardsPlayedRef).key;
 
     const updatedHand = filterCard(gameState.playerCards[player].inHand, card.id);
-    const updatedPlayerPlayed = { ...gameState.playerCards[player].played, [card.id]: card };
-    const updatedPlayed = { ...gameState.turnTotals.cardsPlayed, [card.id]: card };
+    const updatedPlayerPlayed = {
+      ...gameState.playerCards[player].played,
+      [addPlayerPlayedKey!]: card
+    };
+    const updatedPlayed = { ...gameState.turnTotals.cardsPlayed, [addPlayedKey!]: card };
     const updates = {
       playerCards: {
         ...gameState.playerCards,
         [player]: {
           played: updatedPlayerPlayed,
           inHand: updatedHand
-        },
-        turnTotals: {
-          ...gameState.turnTotals,
-          cardsPlayed: updatedPlayed
         }
+      },
+      turnTotals: {
+        ...gameState.turnTotals,
+        cardsPlayed: updatedPlayed
       }
     };
 
     update(gameRef, updates);
-    // set(playerHandRef, updatedHand)
-    //   .then(() => {
-    //     set(addPlayerPlayedRef, card);
-    //     set(addPlayedRef, card);
-    //   })
-    //   .then(callback);
   }
 
   function resetCardTotal() {
     const turnRef = getTurnRef(gameId);
     set(turnRef, { cardsPlayed: {}, cardTotal: 0 });
-  }
-
-  function isPegPoints(card: CardType, turnTotals: TurnType) {
-    const updatedCardTotal = updateCardTotal(card.playValue, gameState.turnTotals.cardTotal);
-    const opponentGo = expectGo(opponentHand, updatedCardTotal);
-    const playerGo = expectGo(playerHand, updatedCardTotal, card);
-
-    const pairs = isPegPairs(card.faceValue, turnTotals.cardsPlayed);
-    const fifteen = isPegFifteen(card.playValue, turnTotals.cardTotal);
-    const run = isPegRun(card.faceValue, turnTotals.cardsPlayed);
-    const go = opponentGo && playerGo ? isPegGo(card.playValue, turnTotals.cardTotal) : 0;
-    const points = pairs + fifteen + run + go;
-
-    return points;
-  }
-
-  function expectGo(hand: CardsIndex, cardTotal: number, cardPlayed?: CardType): boolean {
-    // played card still in state, must be filtered from array
-    const validCards = Object.values(hand).filter(
-      (card) => card.id !== cardPlayed?.id && isCardValid(card.playValue, cardTotal)
-    );
-
-    return !validCards.length;
   }
 
   function cardClickHandler(targetCard: CardType) {
@@ -367,7 +311,12 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
         gameState.turnTotals.cardTotal
       );
       set(cardTotalRef, updatedCardTotal);
-      const points = isPegPoints(targetCard, gameState.turnTotals);
+      const points = isPegPoints(
+        targetCard,
+        gameState.turnTotals,
+        gameState.playerCards[player].inHand,
+        gameState.playerCards[opponent].inHand
+      );
       const playerScore = gameState.score[player].cur;
       const playerScoreRef = getPlayerScoreRef(gameId, player);
       points && set(playerScoreRef, { cur: playerScore + points, prev: playerScore });
@@ -398,22 +347,6 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
 
   function isLastCard(playerHand: CardsIndex | null, opponentHand: CardsIndex | null): boolean {
     return Object.keys(playerHand || {}).length + Object.keys(opponentHand || {}).length === 1;
-  }
-
-  function getPlayerHandTally(hand: PlayerPos | 'crib') {
-    const handTally: TallyPoints = {
-      fifteens: tally[hand].fifteens,
-      pairs: tally[hand].pairs,
-      runs: tally[hand].runs,
-      flush: tally[hand].flush,
-      jack: tally[hand].jack,
-      totalPoints: tally[hand].totalPoints
-    };
-    for (const score in handTally) {
-      if (!handTally[score as keyof TallyPoints]) delete handTally[score as keyof TallyPoints];
-    }
-
-    return handTally;
   }
 
   function renderGo(callback?: () => void) {
@@ -502,14 +435,12 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
               <Score
                 displayName={gameState.players[opponent].displayName}
                 curScore={gameState.score[opponent].cur}
-                prevScore={gameState.score[opponent].prev}
               />
               <Board />
 
               <Score
                 displayName={gameState.players[player].displayName}
                 curScore={gameState.score[player].cur}
-                prevScore={gameState.score[player].prev}
               />
             </div>
           </div>

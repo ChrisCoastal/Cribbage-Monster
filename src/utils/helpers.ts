@@ -7,9 +7,12 @@ import {
   IsActive,
   Player,
   PlayerPos,
+  ScoreType,
   SortBy,
   SortOrder,
   Suit,
+  TallyPoints,
+  TurnType,
   UserId
 } from 'src/@types';
 import { CARDS_IN_DECK, CARDS_PER_SUIT, HAND_SIZE } from './constants';
@@ -230,6 +233,33 @@ export function isCardValid(cardPlayValue: number, cardTotal: number): boolean {
 }
 
 // PEGGING
+export function isPegPoints(
+  card: CardType,
+  turnTotals: TurnType,
+  playerHand: CardsIndex,
+  opponentHand: CardsIndex
+) {
+  const updatedCardTotal = updateCardTotal(card.playValue, turnTotals.cardTotal);
+  const opponentGo = expectGo(opponentHand, updatedCardTotal);
+  const playerGo = expectGo(playerHand, updatedCardTotal, card);
+
+  const pairs = isPegPairs(card.faceValue, turnTotals.cardsPlayed);
+  const fifteen = isPegFifteen(card.playValue, turnTotals.cardTotal);
+  const run = isPegRun(card.faceValue, turnTotals.cardsPlayed);
+  const go = opponentGo && playerGo ? isPegGo(card.playValue, turnTotals.cardTotal) : 0;
+  const points = pairs + fifteen + run + go;
+
+  return points;
+}
+
+export function expectGo(hand: CardsIndex, cardTotal: number, cardPlayed?: CardType): boolean {
+  // played card still in state, must be filtered from array
+  const validCards = Object.values(hand).filter(
+    (card) => card.id !== cardPlayed?.id && isCardValid(card.playValue, cardTotal)
+  );
+
+  return !validCards.length;
+}
 
 export function isPegJack(cardFaceValue: number): number {
   return cardFaceValue === 11 ? 2 : 0;
@@ -307,6 +337,28 @@ export function isPegRun(cardFaceValue: number, cardsPlayed: CardsIndex = {}) {
 }
 
 // SCORING
+export function isWinner(
+  score: { player1: ScoreType; player2: ScoreType },
+  dealer: PlayerPos
+): PlayerPos | null {
+  const pone = getPone(dealer);
+  // pone counts first
+  if (score[pone].cur >= 121) return pone;
+  if (score[dealer].cur >= 121) return dealer;
+  return null;
+}
+
+export function isScorePoints(hand: CardsIndex, cutCard: CardType, isCrib?: 'crib'): TallyPoints {
+  const pairs = scorePairs(hand, cutCard);
+  const fifteens = scoreFifteens(hand, cutCard);
+  const runs = scoreRuns(hand, cutCard);
+  const flush = scoreFlush(hand, cutCard, isCrib);
+  const jack = scoreSuitedJack(hand, cutCard);
+  const totalPoints = pairs + fifteens + runs + flush + jack;
+
+  return { pairs, fifteens, runs, flush, jack, totalPoints };
+}
+
 export function scorePairs(cards: CardsIndex, cutCard: CardType): number {
   // TODO: refactor to separate function; all used in scoreRuns
   const cardFaceValues = getCardValues(cards, CardKey.FACE) as number[];

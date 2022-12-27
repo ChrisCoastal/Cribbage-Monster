@@ -47,26 +47,26 @@ const GamePage = () => {
     const unsubscribeGame = onValue(
       gameRef,
       (snapshot) => {
-        console.log(snapshot.val());
+        // console.log(snapshot.val());
 
         dispatchGame({ type: GameReducerTypes.UPDATE, payload: snapshot.val() });
       },
       (error) => console.log(error)
     );
-    const gameTalliesRef = getGameTalliesRef(game.gameId);
-    const unsubscribeScores = onValue(
-      gameTalliesRef,
-      (snapshot) => {
-        console.log(snapshot.val());
+    // const gameTalliesRef = getGameTalliesRef(game.gameId);
+    // const unsubscribeScores = onValue(
+    //   gameTalliesRef,
+    //   (snapshot) => {
+    //     console.log(snapshot.val());
 
-        // dispatchGame({ type: GameReducerTypes.UPDATE, payload: snapshot.val() });
-      },
-      (error) => console.log(error)
-    );
+    //     // dispatchGame({ type: GameReducerTypes.UPDATE, payload: snapshot.val() });
+    //   },
+    //   (error) => console.log(error)
+    // );
 
     function unsubscriber() {
       unsubscribeGame();
-      unsubscribeScores();
+      // unsubscribeScores();
     }
 
     return unsubscriber;
@@ -81,11 +81,8 @@ const GamePage = () => {
     modalHandler(true);
     const timer = setTimeout(() => {
       modalHandler(false);
-      // const tallyRef = getTallyRef(gameId);
-      player === PlayerPos.P_ONE && resetHand(dealHandler);
-      // set(tallyRef, null);
-      // setTally({});
-    }, 20000);
+      player === PlayerPos.P_ONE && resetHand();
+    }, 16000);
   }
 
   async function dealHandler() {
@@ -117,26 +114,27 @@ const GamePage = () => {
   function resetHand(callback?: () => void) {
     const newDealer = getPone(gameState.dealer);
     const gameRef = getGameRef(game.gameId);
+    const deal = dealHands();
     update(gameRef, {
       ...gameState,
       dealer: newDealer,
-      playerCards: INITIAL_GAME_STATE.playerCards,
-      crib: null,
+      handNum: gameState.handNum + 1,
+      players: {
+        player1: { ...gameState.players.player1, activePlayer: IsActive.ACTIVE },
+        player2: { ...gameState.players.player2, activePlayer: IsActive.ACTIVE }
+      },
+      playerCards: {
+        player1: { inHand: deal.hands.player1, played: {} },
+        player2: { inHand: deal.hands.player2, played: {} }
+      },
+      crib: INITIAL_GAME_STATE.crib,
       deckCut: INITIAL_GAME_STATE.deckCut,
       turnTotals: INITIAL_GAME_STATE.turnTotals,
-      tally: {}
+      tally: INITIAL_GAME_STATE.tally
     }).then(() => callback && callback());
   }
 
   function canStartGame() {
-    console.log('start?');
-    console.log(
-      Boolean(gameState.players.player1.displayName.length),
-      Boolean(gameState.players.player2.displayName.length),
-      !gameState.handNum,
-      !gameState?.playerCards
-    );
-
     return (
       Boolean(gameState.players.player1.displayName.length) &&
       Boolean(gameState.players.player2.displayName.length) &&

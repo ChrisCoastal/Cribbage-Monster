@@ -21,7 +21,7 @@ const Opponent: FC<OpponentProps> = ({ displayName }) => {
 
   return (
     <div className="col-start-3 flex flex-col items-center justify-center">
-      <p className="text-sm text-white">{displayName}</p>
+      <p className="h-5 text-sm text-white">{displayName}</p>
       <Avatar />
       {/* 
       <CardBox size={{ height: CardBoxHeight.SM, width: CardBoxWidth.SM_SIX }} maxCards={6}>

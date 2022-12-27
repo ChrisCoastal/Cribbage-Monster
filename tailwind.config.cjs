@@ -37,7 +37,7 @@ module.exports = {
           '50%': { transform: 'scale(1.6)' }
         },
         'text-grow': {
-          '40%': { 'font-size': '250%' },
+          '40%': { 'font-size': '200%' },
           '70%': { 'font-size': '80%' },
           '80%': { 'font-size': '120%' },
           '90%': { 'font-size': '90%' }
