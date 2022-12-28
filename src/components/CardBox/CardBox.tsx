@@ -1,7 +1,5 @@
 import React, { FC } from 'react';
-import { useDroppable } from '@dnd-kit/core';
-import { nanoid } from 'nanoid';
-import { CardOverlap, CardType } from 'src/@types';
+import { CardOverlap } from 'src/@types';
 import useGameContext from 'src/hooks/useGameContext';
 
 type CardBoxProps = {

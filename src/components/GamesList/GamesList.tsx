@@ -1,6 +1,4 @@
-import React, { FC, ReactNode, useEffect, useState } from 'react';
-import { onValue, ref } from 'firebase/database';
-import { rtdb } from 'src/firestore.config';
+import React, { FC } from 'react';
 import { GameBrief } from 'src/@types';
 import JoinGame from '../JoinGame/JoinGame';
 type GamesListProps = {

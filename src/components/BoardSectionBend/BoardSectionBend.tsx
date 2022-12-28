@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { BoardSectionType, PlayerPos, ScoreType } from 'src/@types';
+import { PlayerPos, ScoreType } from 'src/@types';
 
 import BoardPegHole from 'src/components/BoardPegHole/BoardPegHole';
 
@@ -19,7 +19,6 @@ const BoardSectionTopBend: FC<BoardSectionProps> = ({
   sectionIndex,
   score,
   rotate = false,
-  moveDirection = 'up',
   numPegHoles = 5,
   customStyles
 }) => {
@@ -52,20 +51,14 @@ const BoardSectionTopBend: FC<BoardSectionProps> = ({
       const peg = score[playerTrack].cur === holeIndex || score[playerTrack].prev === holeIndex;
       const position = getPosition(playerTrack, i);
       pegHoles.push(
-        <BoardPegHole
-          key={holeIndex}
-          holeIndex={holeIndex}
-          track={playerTrack}
-          isPeg={peg}
-          customStyles={position}
-        />
+        <BoardPegHole key={holeIndex} track={playerTrack} isPeg={peg} customStyles={position} />
       );
     }
     return pegHoles;
   }
 
   return (
-    <div className={`${rotate && 'rotate-180'} relative`}>
+    <div className={`${customStyles} ${rotate && 'rotate-180'} relative`}>
       <ul>{renderPegHoles(rotate ? PlayerPos.P_ONE : PlayerPos.P_TWO)}</ul>
       <ul>{renderPegHoles(rotate ? PlayerPos.P_TWO : PlayerPos.P_ONE)}</ul>
       {/* <ul>

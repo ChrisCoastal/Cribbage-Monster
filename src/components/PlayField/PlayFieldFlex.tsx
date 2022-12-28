@@ -7,25 +7,18 @@ import {
   CardSize,
   CardType,
   GameId,
-  GameState,
   IsActive,
   PlayerPos,
   ScoreType,
   Status,
-  Tally,
-  TallyPoints,
-  TurnType
+  TallyPoints
 } from 'src/@types';
 
 import { set, push, update } from 'firebase/database';
 
-import { INITIAL_GAME_STATE } from 'src/utils/constants';
-
 import {
-  dealHands,
   expectGo,
   filterCard,
-  getActivePlayerRef,
   getPlayerOpponent,
   getInHandRef,
   getPlayerCardsPlayedRef,
@@ -35,27 +28,17 @@ import {
   getCardTotalRef,
   getCardsPlayedRef,
   getTurnRef,
-  getPlayerCards,
   getDeckRef,
   getScoreRef,
   isCardValid,
-  isPegFifteen,
-  isPegGo,
-  isPegPairs,
-  isPegRun,
   isPegPoints,
   isPlayerActive,
   isScorePoints,
-  scorePairs,
-  scoreFifteens,
-  scoreRuns,
-  scoreFlush,
   getPlayerScoreRef,
   getPone,
   updateCardTotal,
   getGameRef,
   isPegJack,
-  scoreSuitedJack,
   getGameTalliesRef,
   getTallyRef,
   isWinner
@@ -63,17 +46,14 @@ import {
 
 import Avatar from 'src/components/Opponent/Opponent';
 import Board from 'src/components/Board/Board';
-import Button from 'src/components/UI/Button';
 import CardBox from 'src/components/CardBox/CardBox';
 import Crib from 'src/components/Crib/Crib';
 import Deck from 'src/components/Deck/Deck';
-import HandTally from 'src/components/HandTally/HandTally';
 import PlayingCard from 'src/components/PlayingCard/PlayingCard';
 import Score from 'src/components/Score/Score';
 
 import useAuthContext from 'src/hooks/useAuthContext';
 import useGameContext from 'src/hooks/useGameContext';
-import useModal from 'src/hooks/useModal';
 
 type PlayFieldProps = {
   gameId: GameId;
@@ -147,6 +127,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
           ...gameState.players[player],
           activePlayer: IsActive.NOT_ACTIVE
         }).then(() => callback);
+        break;
       }
       default:
         return;
@@ -361,7 +342,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     faceUp: boolean,
     cardSize: CardSize,
     overlap: CardOverlap,
-    playerHand: boolean = false
+    playerHand = false
   ) {
     return cards.map((card, i) => (
       <PlayingCard

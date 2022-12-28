@@ -2,13 +2,12 @@ import React, { FC } from 'react';
 import { PlayerPos } from 'src/@types';
 
 type BoardPegHoleProps = {
-  holeIndex: number;
   track: PlayerPos | PlayerPos[];
   isPeg: boolean;
   customStyles?: string;
 };
 
-const BoardPegHole: FC<BoardPegHoleProps> = ({ holeIndex, track, isPeg, customStyles }) => {
+const BoardPegHole: FC<BoardPegHoleProps> = ({ track, isPeg, customStyles }) => {
   function renderPeg() {
     const peg = 'outline outline-2';
     const pegColor =

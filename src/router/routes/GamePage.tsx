@@ -1,25 +1,17 @@
-import { FC, useEffect } from 'react';
-import { LoaderFunctionArgs, useLoaderData, useParams } from 'react-router-dom';
+import { useCallback, useEffect } from 'react';
+import { LoaderFunctionArgs, useLoaderData } from 'react-router-dom';
 
-import { collection, doc, onSnapshot } from 'firebase/firestore';
 import { rtdb } from 'src/firestore.config';
-import { getDatabase, ref, child, get, onValue, set, update } from 'firebase/database';
+import { ref, get, onValue, set, update } from 'firebase/database';
 
-import BottomNav from 'src/components/BottomNav/BottomNav';
 import Button from 'src/components/UI/Button';
 import HandTally from 'src/components/HandTally/HandTally';
 import PlayFieldFlex from 'src/components/PlayField/PlayFieldFlex';
 
 import useAuthContext from 'src/hooks/useAuthContext';
 import useGameContext from 'src/hooks/useGameContext';
-import { GameId, GameReducerTypes, GameState, IsActive, Status, PlayerPos } from 'src/@types';
-import {
-  dealHands,
-  getGameRef,
-  getGameTalliesRef,
-  getPlayerOpponent,
-  getPone
-} from 'src/utils/helpers';
+import { GameReducerTypes, GameState, IsActive, Status, PlayerPos } from 'src/@types';
+import { dealHands, getGameRef, getPlayerOpponent, getPone } from 'src/utils/helpers';
 import { INITIAL_GAME_STATE } from 'src/utils/constants';
 import useModal from 'src/hooks/useModal';
 
@@ -42,48 +34,13 @@ const GamePage = () => {
   const { Modal, isModal, modalHandler } = useModal();
   const { player, opponent } = getPlayerOpponent(gameState.players, userId);
 
-  useEffect(() => {
-    const gameRef = getGameRef(game.gameId);
-    const unsubscribeGame = onValue(
-      gameRef,
-      (snapshot) => {
-        // console.log(snapshot.val());
-
-        dispatchGame({ type: GameReducerTypes.UPDATE, payload: snapshot.val() });
-      },
-      (error) => console.log(error)
-    );
-    // const gameTalliesRef = getGameTalliesRef(game.gameId);
-    // const unsubscribeScores = onValue(
-    //   gameTalliesRef,
-    //   (snapshot) => {
-    //     console.log(snapshot.val());
-
-    //     // dispatchGame({ type: GameReducerTypes.UPDATE, payload: snapshot.val() });
-    //   },
-    //   (error) => console.log(error)
-    // );
-
-    function unsubscriber() {
-      unsubscribeGame();
-      // unsubscribeScores();
-    }
-
-    return unsubscriber;
-  }, []);
-
-  useEffect(() => {
-    if (!gameState.tally) return;
-    renderTally();
-  }, [gameState.tally]);
-
-  function renderTally() {
-    modalHandler(true);
-    const timer = setTimeout(() => {
-      modalHandler(false);
-      player === PlayerPos.P_ONE && resetHand();
-    }, 16000);
-  }
+  // function renderTally() {
+  //   modalHandler(true);
+  //   const timer = setTimeout(() => {
+  //     modalHandler(false);
+  //     player === PlayerPos.P_ONE && resetHand();
+  //   }, 16000);
+  // }
 
   async function dealHandler() {
     if (player !== PlayerPos.P_ONE) return;
@@ -111,7 +68,7 @@ const GamePage = () => {
     set(gameRef, update);
   }
 
-  function resetHand(callback?: () => void) {
+  const resetHand = useCallback(() => {
     const newDealer = getPone(gameState.dealer);
     const gameRef = getGameRef(game.gameId);
     const deal = dealHands();
@@ -131,8 +88,31 @@ const GamePage = () => {
       deckCut: { status: Status.INVALID, card: deal.cut },
       turnTotals: INITIAL_GAME_STATE.turnTotals,
       tally: INITIAL_GAME_STATE.tally
-    }).then(() => callback && callback());
-  }
+    });
+  }, [game.gameId, gameState]);
+
+  // function resetHand(callback?: () => void) {
+  //   const newDealer = getPone(gameState.dealer);
+  //   const gameRef = getGameRef(game.gameId);
+  //   const deal = dealHands();
+  //   update(gameRef, {
+  //     ...gameState,
+  //     dealer: newDealer,
+  //     handNum: gameState.handNum + 1,
+  //     players: {
+  //       player1: { ...gameState.players.player1, activePlayer: IsActive.ACTIVE },
+  //       player2: { ...gameState.players.player2, activePlayer: IsActive.ACTIVE }
+  //     },
+  //     playerCards: {
+  //       player1: { inHand: deal.hands.player1, played: {} },
+  //       player2: { inHand: deal.hands.player2, played: {} }
+  //     },
+  //     crib: INITIAL_GAME_STATE.crib,
+  //     deckCut: { status: Status.INVALID, card: deal.cut },
+  //     turnTotals: INITIAL_GAME_STATE.turnTotals,
+  //     tally: INITIAL_GAME_STATE.tally
+  //   }).then(() => callback && callback());
+  // }
 
   function canStartGame() {
     return (
@@ -142,6 +122,38 @@ const GamePage = () => {
       !Object.keys(gameState.playerCards.player1.inHand).length
     );
   }
+
+  const renderTally = useCallback(() => {
+    modalHandler(true);
+    const timer = setTimeout(() => {
+      modalHandler(false);
+      player === PlayerPos.P_ONE && resetHand();
+    }, 16000);
+  }, [player, modalHandler, resetHand]);
+
+  useEffect(() => {
+    const gameRef = getGameRef(game.gameId);
+    const unsubscribeGame = onValue(
+      gameRef,
+      (snapshot) => {
+        // console.log(snapshot.val());
+
+        dispatchGame({ type: GameReducerTypes.UPDATE, payload: snapshot.val() });
+      },
+      (error) => console.log(error)
+    );
+
+    function unsubscriber() {
+      unsubscribeGame();
+    }
+
+    return unsubscriber;
+  }, []);
+
+  useEffect(() => {
+    if (!gameState.tally) return;
+    renderTally();
+  }, [gameState.tally]);
 
   return (
     <>
@@ -177,7 +189,6 @@ const GamePage = () => {
             START
           </Button>
         )}
-        {/* <BottomNav /> */}
       </div>
     </>
   );

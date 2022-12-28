@@ -1,15 +1,6 @@
-import { Dispatch } from 'react';
-import { AppState } from './index';
 import { User } from 'firebase/auth';
 
 export type UserId = string;
-
-type Metadata = {
-  createdAt: string; // ex: '1670192291830'
-  lastLoginAt: string; // ex: '1670192291830'
-  lastSignInTime: string; // ex: "Tue, 06 Dec 2022 05:46:05 GMT"
-  creationTime: string; // ex: "Tue, 06 Dec 2022 05:46:05 GMT"
-};
 
 export type AuthContextType = {
   userAuth: User | null;

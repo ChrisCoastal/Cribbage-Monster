@@ -1,11 +1,10 @@
 import { useEffect, useState, FC } from 'react';
-import { Navigate, Outlet, redirect, useLocation } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import useAuthContext from 'src/hooks/useAuthContext';
 import { useInterval } from 'src/hooks/useInterval';
 
 // firebase
-import { firebaseAuth } from 'src/firestore.config';
-import { getAuth, User } from 'firebase/auth';
+import { User } from 'firebase/auth';
 
 //types
 import { ProtectedAuth } from 'src/@types';
@@ -15,13 +14,6 @@ interface ProtectedRoutesProps {
   redirectPath?: string;
   children?: React.ReactElement;
 }
-
-const loader = async () => {
-  const user = useAuthContext().userAuth;
-  if (!user) {
-    return redirect('/login');
-  }
-};
 
 const ProtectedRoutes: FC<ProtectedRoutesProps> = ({
   redirectPath = '/login',
