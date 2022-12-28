@@ -24,7 +24,7 @@
   "rules": {
     "react/react-in-jsx-scope": "off",
     // "react-hooks/exhaustive-deps": "on",
-    "@typescript-eslint/no-non-null-assertion": "warn",
+    "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/quotes": [
       "warn",
       "single",

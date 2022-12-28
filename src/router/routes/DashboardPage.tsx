@@ -6,7 +6,6 @@ import { GameBrief } from 'src/@types';
 
 import CreateGame from 'src/components/CreateGame/CreateGame';
 import useAuthContext from 'src/hooks/useAuthContext';
-import Button from 'src/components/UI/Button';
 import GamesList from 'src/components/GamesList/GamesList';
 import { getGamesList } from 'src/utils/helpers';
 
@@ -15,26 +14,34 @@ const DashboardPage = () => {
   const { userAuth } = useAuthContext();
 
   useEffect(() => {
-    const games: GameBrief[] = [];
     const gamesListRef = getGamesList();
-    const unsubscribe = onValue(gamesListRef, (snapshot) => {
-      const gameBriefs = (snapshot.val() as { [key: string]: GameBrief }) || {};
-      const keys = Object.keys(gameBriefs);
-      keys.forEach((key) => {
-        games.push(gameBriefs[key]);
-      });
-      setGames(() => games);
+    const unsubscribe = onValue(
+      gamesListRef,
+      (snapshot) => {
+        console.log(snapshot.val());
+        const updatedGames: GameBrief[] = [];
 
-      // dispatchGame({ type: GameReducerTypes.UPDATE, payload: snapshot.val() });
-    });
+        const gameBriefs = (snapshot.val() as { [key: string]: GameBrief }) || {};
+        const values = Object.values(gameBriefs);
+        values.forEach((value) => {
+          updatedGames.push(value);
+        });
+        setGames(() => updatedGames);
+
+        // dispatchGame({ type: GameReducerTypes.UPDATE, payload: snapshot.val() });
+      },
+      (error) => console.log(error)
+    );
+
     return unsubscribe;
   }, []);
+
+  console.log(games);
 
   return (
     <div className="grid">
       <div className="">
         <p>{`Hey ${userAuth?.displayName}`}</p>
-        <Button handler={() => console.log(userAuth)}>USER?</Button>
         <GamesList games={games} />
         <CreateGame />
       </div>

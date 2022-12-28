@@ -1,23 +1,24 @@
 import { useCallback, useEffect } from 'react';
 import { LoaderFunctionArgs, useLoaderData } from 'react-router-dom';
 
-import { rtdb } from 'src/firestore.config';
-import { ref, get, onValue, set, update } from 'firebase/database';
+import { get, onValue, set, update } from 'firebase/database';
+
+import { GameReducerTypes, GameState, IsActive, Status, PlayerPos } from 'src/@types';
+
+import useAuthContext from 'src/hooks/useAuthContext';
+import useGameContext from 'src/hooks/useGameContext';
+import useModal from 'src/hooks/useModal';
 
 import Button from 'src/components/UI/Button';
 import HandTally from 'src/components/HandTally/HandTally';
 import PlayFieldFlex from 'src/components/PlayField/PlayFieldFlex';
 
-import useAuthContext from 'src/hooks/useAuthContext';
-import useGameContext from 'src/hooks/useGameContext';
-import { GameReducerTypes, GameState, IsActive, Status, PlayerPos } from 'src/@types';
 import { dealHands, getGameRef, getPlayerOpponent, getPone } from 'src/utils/helpers';
 import { INITIAL_GAME_STATE } from 'src/utils/constants';
-import useModal from 'src/hooks/useModal';
 
 export async function gameLoader({ params }: LoaderFunctionArgs) {
   try {
-    const game = await get(ref(rtdb, `games/${params.gameId}`));
+    const game = await get(getGameRef(params.gameId!));
     return game.val();
   } catch (err) {
     console.log(err);
@@ -82,29 +83,6 @@ const GamePage = () => {
       tally: INITIAL_GAME_STATE.tally
     });
   }, [game.gameId, gameState]);
-
-  // function resetHand(callback?: () => void) {
-  //   const newDealer = getPone(gameState.dealer);
-  //   const gameRef = getGameRef(game.gameId);
-  //   const deal = dealHands();
-  //   update(gameRef, {
-  //     ...gameState,
-  //     dealer: newDealer,
-  //     handNum: gameState.handNum + 1,
-  //     players: {
-  //       player1: { ...gameState.players.player1, activePlayer: IsActive.ACTIVE },
-  //       player2: { ...gameState.players.player2, activePlayer: IsActive.ACTIVE }
-  //     },
-  //     playerCards: {
-  //       player1: { inHand: deal.hands.player1, played: {} },
-  //       player2: { inHand: deal.hands.player2, played: {} }
-  //     },
-  //     crib: INITIAL_GAME_STATE.crib,
-  //     deckCut: { status: Status.INVALID, card: deal.cut },
-  //     turnTotals: INITIAL_GAME_STATE.turnTotals,
-  //     tally: INITIAL_GAME_STATE.tally
-  //   }).then(() => callback && callback());
-  // }
 
   function canStartGame() {
     return (

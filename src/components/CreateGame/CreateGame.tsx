@@ -1,17 +1,18 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import { nanoid } from 'nanoid';
-import { db, rtdb } from 'src/firestore.config';
-import { addDoc, collection } from 'firebase/firestore';
-import { getDatabase, ref, set } from 'firebase/database';
+
+import { rtdb } from 'src/firestore.config';
+import { ref, set } from 'firebase/database';
+
+import { GameBrief, GameReducerTypes } from 'src/@types';
+import { INITIAL_GAME_STATE } from 'src/utils/constants';
+import { getGameFromList, getGameRef } from 'src/utils/helpers';
 
 import useAuthContext from 'src/hooks/useAuthContext';
 import useGameContext from 'src/hooks/useGameContext';
-import { INITIAL_GAME_STATE } from 'src/utils/constants';
 
 import Button from 'src/components/UI/Button';
-import { GameBrief, GameReducerTypes, Player, PlayerPos } from 'src/@types';
 
 const CreateGame = () => {
   const { userAuth } = useAuthContext();
@@ -43,9 +44,9 @@ const CreateGame = () => {
         player2: '',
         scoreToWin: 121
       };
-      const gameslistRef = ref(rtdb, `gamesList/${gameId}`);
-      const gameRef = ref(rtdb, `games/${gameId}`);
-      set(gameslistRef, gameBrief);
+      const gameFromListRef = getGameFromList(gameId);
+      const gameRef = getGameRef(gameId);
+      set(gameFromListRef, gameBrief);
       set(gameRef, newGame).then(() => {
         dispatchGame({ type: GameReducerTypes.CREATE_GAME, payload: newGame });
         navigate(`/game/${gameId}`);

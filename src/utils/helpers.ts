@@ -26,6 +26,8 @@ export const getGameTalliesRef = (gameId: GameId) => ref(rtdb, `gameTallies/${ga
 // game list
 export const getGamesList = () => ref(rtdb, `gamesList`);
 
+export const getGameFromList = (gameId: GameId) => ref(rtdb, `gamesList/${gameId}`);
+
 // game
 export const getGameRef = (gameId: GameId) => ref(rtdb, `games/${gameId}`);
 

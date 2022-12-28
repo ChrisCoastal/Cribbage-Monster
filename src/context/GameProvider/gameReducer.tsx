@@ -1,4 +1,4 @@
-import { CardType, GameReducerActions, GameReducerTypes, GameState } from 'src/@types';
+import { GameReducerActions, GameReducerTypes, GameState } from 'src/@types';
 
 const gameReducer = (state: GameState, action: GameReducerActions): GameState => {
   const { type, payload } = action;

@@ -18,7 +18,6 @@ const GamesList: FC<GamesListProps> = ({ games }) => {
   });
 
   // FIXME: not rendering new games, but games are in state
-  // check this might be a dev server issue
 
   return (
     <div>

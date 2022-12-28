@@ -7,7 +7,7 @@ import { update, ref, get } from 'firebase/database';
 
 import useAuthContext from 'src/hooks/useAuthContext';
 
-import { findPlayerPos } from 'src/utils/helpers';
+import { findPlayerPos, getGameFromList } from 'src/utils/helpers';
 
 import Button from 'src/components/UI/Button';
 import { GameId, Player } from 'src/@types';
@@ -25,7 +25,7 @@ const JoinGame: FC<JoinGameProps> = ({ gameId }) => {
     const { uid, displayName } = userAuth;
     try {
       const gamePlayersRef = ref(rtdb, `games/${gameId}/players`);
-      const gamelistRef = ref(rtdb, `gameslist/${gameId}`);
+      const gameFromListRef = getGameFromList(gameId);
 
       get(gamePlayersRef).then((snapshot) => {
         if (!snapshot.exists()) throw new Error('Sorry that game is not available');
@@ -38,7 +38,7 @@ const JoinGame: FC<JoinGameProps> = ({ gameId }) => {
         const PlayerPos = findPlayerPos(players, uid);
 
         if (!PlayerPos) throw new Error('Sorry that game already has 2 players');
-        update(gamelistRef, { [PlayerPos]: displayName! });
+        update(gameFromListRef, { [PlayerPos]: displayName! });
         update(gamePlayersRef, {
           ...players,
           [PlayerPos]: {
