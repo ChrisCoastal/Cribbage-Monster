@@ -45,11 +45,11 @@ export const INITIAL_GAME_STATE: GameState = {
   score: {
     player1: {
       cur: 0,
-      prev: 0
+      prev: -1
     },
     player2: {
       cur: 0,
-      prev: 0
+      prev: -1
     }
   },
   tally: null,
