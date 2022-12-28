@@ -6,13 +6,11 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
-  sendPasswordResetEmail,
-  confirmPasswordReset,
   updateProfile,
   UserCredential
 } from 'firebase/auth';
-import { db, rtdb, firebaseAuth } from 'src/firestore.config';
-import { doc, setDoc, collection, Timestamp } from 'firebase/firestore';
+import { rtdb, firebaseAuth } from 'src/firestore.config';
+import { Timestamp } from 'firebase/firestore';
 import { update, ref, set } from 'firebase/database';
 import { User } from 'firebase/auth';
 
@@ -26,7 +24,6 @@ const useFirebaseAuth = (): AuthContextType => {
       displayName: newDisplayName
     })
       .then(() => {
-        console.log('DisplayName updated');
         return userAuth;
       })
       .catch((error) => console.log('update displayName error', error));
@@ -68,10 +65,8 @@ const useFirebaseAuth = (): AuthContextType => {
     createUserWithEmailAndPassword(firebaseAuth, email, password)
       .then(async (userData: UserCredential) => {
         // automatically logged in after signup
-        console.log('User has been created/logged in', userData.user);
         await updateDisplayName(displayName);
         await updateUserDoc(userData);
-        console.log('here');
 
         setUserDoc(userData);
         setUserAuth(() => userData.user);
@@ -138,11 +133,9 @@ const useFirebaseAuth = (): AuthContextType => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(firebaseAuth, (userData) => {
       if (userData) {
-        console.log('Userstate is logged in via useEffect', userData);
         setUserAuth(userData);
       } else {
         console.log('Userstate set to null');
-
         setUserAuth(null);
       }
     });

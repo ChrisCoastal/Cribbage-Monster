@@ -9,14 +9,6 @@ const Nav = () => {
   const { logoutUser } = useFirebaseAuth();
   const navigate = useNavigate();
 
-  function loginHandler() {
-    console.log('login');
-  }
-
-  function signupHandler() {
-    console.log('login');
-  }
-
   return (
     <div className="sticky z-50 flex h-12 w-full items-center justify-between px-4">
       <span>CRIB</span>

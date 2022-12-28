@@ -7,8 +7,6 @@ type GamesListProps = {
 
 const GamesList: FC<GamesListProps> = ({ games }) => {
   const gamesListItems = games.map((game) => {
-    console.log('rendering gamelist', game);
-
     return (
       <div key={game.gameId}>
         <li className="flex gap-4 py-1">

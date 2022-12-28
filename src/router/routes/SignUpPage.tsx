@@ -2,9 +2,6 @@ import { useEffect, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
-import { firebaseAuth, db } from 'src/firestore.config';
-import { collection } from 'firebase/firestore';
-
 import useFirebaseAuth from 'src/hooks/useFirebaseAuth';
 import useAuthContext from 'src/hooks/useAuthContext';
 import Button from 'src/components/UI/Button';
@@ -26,13 +23,12 @@ const SignUpPage = () => {
   // const { setAuth } = useFirebaseAuth();
 
   function redirectAuthUser() {
-    console.log('redir');
     navigate('/dashboard');
   }
 
   useEffect(() => {
     if (userAuth) navigate('/dashboard');
-  }, [userAuth]);
+  }, [userAuth, navigate]);
 
   async function submitHandler(event: React.FormEvent<HTMLFormElement>) {
     try {

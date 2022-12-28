@@ -27,7 +27,6 @@ const ProtectedRoutes: FC<ProtectedRoutesProps> = ({
   // TODO: set timeout for auth; see frondly
   useInterval(
     () => {
-      console.log('using timer');
       setTimeout(timeout + 1);
     },
     !userAuth ? 100 : null

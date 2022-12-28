@@ -34,14 +34,6 @@ const GamePage = () => {
   const { Modal, isModal, modalHandler } = useModal();
   const { player, opponent } = getPlayerOpponent(gameState.players, userId);
 
-  // function renderTally() {
-  //   modalHandler(true);
-  //   const timer = setTimeout(() => {
-  //     modalHandler(false);
-  //     player === PlayerPos.P_ONE && resetHand();
-  //   }, 16000);
-  // }
-
   async function dealHandler() {
     if (player !== PlayerPos.P_ONE) return;
     const gameRef = getGameRef(game.gameId);
@@ -136,8 +128,6 @@ const GamePage = () => {
     const unsubscribeGame = onValue(
       gameRef,
       (snapshot) => {
-        // console.log(snapshot.val());
-
         dispatchGame({ type: GameReducerTypes.UPDATE, payload: snapshot.val() });
       },
       (error) => console.log(error)

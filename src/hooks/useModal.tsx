@@ -13,15 +13,11 @@ const useModal = () => {
   const [isModal, setIsModal] = useState<boolean>(false);
 
   function modalHandler(isVisible: boolean) {
-    console.log('setting modal');
-
-    // setIsModal((prev) => (isVisible !== undefined ? isVisible : !prev));
     setIsModal(isVisible);
   }
 
   const Modal: FC<ModalProps> = ({ isVisible, title, customStyles = '', children }) => {
     function keyDownHandler(event: React.KeyboardEvent<HTMLDivElement>) {
-      console.log(event);
       if (event.key === 'escape') modalHandler(false);
     }
 

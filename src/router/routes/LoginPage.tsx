@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 import useFirebaseAuth from 'src/hooks/useFirebaseAuth';
-import Button from 'src/components/UI/Button';
 import useAuthContext from 'src/hooks/useAuthContext';
 
 const LoginPage = () => {
@@ -14,7 +13,6 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   function redirectAuthUser() {
-    console.log('redir');
     navigate('/dashboard');
   }
 

@@ -29,8 +29,6 @@ const JoinGame: FC<JoinGameProps> = ({ gameId }) => {
 
       get(gamePlayersRef).then((snapshot) => {
         if (!snapshot.exists()) throw new Error('Sorry that game is not available');
-
-        console.log(snapshot.val());
         const players = snapshot.val() as {
           player1: Player;
           player2: Player;

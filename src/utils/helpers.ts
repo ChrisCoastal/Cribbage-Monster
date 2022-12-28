@@ -312,7 +312,6 @@ export function isPegRun(cardFaceValue: number, cardsPlayed: CardsIndex = {}) {
     runStart !== -1
       ? cardsPlayedFaceValues.slice(runStart + 1).concat(cardFaceValue)
       : cardsPlayedFaceValues.concat(cardFaceValue);
-  console.log('validPlayed', validPlayed);
 
   const validateRun = validPlayed.reduceRight(
     (runAcc: { points: number; prevCardValues: number[] }, cardFv: number) => {

@@ -43,26 +43,16 @@ const CreateGame = () => {
         player2: '',
         scoreToWin: 121
       };
-      console.log('creating game');
       const gameslistRef = ref(rtdb, `gamesList/${gameId}`);
       const gameRef = ref(rtdb, `games/${gameId}`);
       set(gameslistRef, gameBrief);
       set(gameRef, newGame).then(() => {
-        console.log('complete');
         dispatchGame({ type: GameReducerTypes.CREATE_GAME, payload: newGame });
         navigate(`/game/${gameId}`);
       });
     } catch (err) {
       console.log(err);
     }
-    // await addDoc(gamesRef, newGame)
-    //   .then((data) => {
-    //     console.log(data, data.id);
-    //     // const gameId = data.id;
-    //     dispatchGame({ type: GameReducerTypes.CREATE_GAME, payload: newGame });
-    //     navigate(`/game/${gameId}`);
-    //   })
-    //   .catch((err) => console.log(err));
   }
 
   return <Button handler={createGameHandler}>Create Game</Button>;
