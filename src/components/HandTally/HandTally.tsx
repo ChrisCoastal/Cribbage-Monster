@@ -31,7 +31,7 @@ const HandTally: FC<HandTallyProps> = ({ dealer, cut, player, opponent, crib }) 
 
   function renderScoreItems(playerPos: PlayerPos, score: TallyPoints) {
     const scores = Object.entries(score).filter((score) => score[1] !== 0);
-    const delay = playerPos === dealer ? scores.length + 1 : 1;
+    const delay = playerPos === dealer ? scores.length + 2 : 1;
     const scoreItems = scores.map((score, i) => {
       const [key, value] = score;
       const animate = count === i + delay ? 'animate-text-grow' : '';

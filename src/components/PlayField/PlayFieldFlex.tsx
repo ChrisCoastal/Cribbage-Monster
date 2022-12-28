@@ -432,8 +432,14 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
             </div>
             <div className="flex flex-col items-center justify-center gap-4">
               <Score
-                displayName={gameState.players[opponent].displayName}
-                curScore={gameState.score[opponent].cur}
+                player={{
+                  displayName: gameState.players[player].displayName,
+                  curScore: gameState.score[player].cur
+                }}
+                opponent={{
+                  displayName: gameState.players[opponent].displayName,
+                  curScore: gameState.score[opponent].cur
+                }}
               />
               <Board />
             </div>

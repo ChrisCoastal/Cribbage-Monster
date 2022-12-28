@@ -26,12 +26,13 @@ const Board = () => {
       const colIndex = Math.floor(i / 7);
       const col = sectionCol[colIndex];
       const row = colIndex === 1 ? sectionRow[i - 7] : sectionRow[Math.abs(Math.floor(i % 7) - 6)];
-      const bendBorder = i === 13 || i === 14 ? 'border-b-[1px]' : '';
+      const bendBorder = i === 7 || i === 14 ? 'border-b-[1px]' : '';
       sections.push(
         <BoardSection
           key={i}
           sectionIndex={i + colIndex}
           score={gameState.score}
+          rotate={colIndex === 1}
           customStyles={`${col} ${row} ${bendBorder} index-${i + colIndex}`}
         />
       );
@@ -49,15 +50,15 @@ const Board = () => {
         </ul>
       </div>
       <div className="grid grid-cols-[2fr,_1fr] gap-x-4 px-1">
-        <BoardSectionBend />
-        <BoardSection score={gameState.score} sectionIndex={7} />
+        <BoardSectionBend score={gameState.score} sectionIndex={7} />
+        <BoardSection score={gameState.score} sectionIndex={24} />
       </div>
       <div className={`grid grid-cols-3 grid-rows-[repeat(7,_minmax(0,_1fr))] gap-x-2 px-1`}>
         {renderSections()}
       </div>
       <div className="grid grid-cols-[1fr,_2fr] gap-x-4 px-1">
-        <BoardSection score={gameState.score} sectionIndex={15} numPegHoles={2} />
-        <BoardSectionBend rotate={true} />
+        <BoardSection score={gameState.score} sectionIndex={-1} numPegHoles={2} />
+        <BoardSectionBend score={gameState.score} rotate={true} sectionIndex={15} />
       </div>
     </div>
   );

@@ -9,10 +9,19 @@ type BoardPegHoleProps = {
 };
 
 const BoardPegHole: FC<BoardPegHoleProps> = ({ holeIndex, track, isPeg, customStyles }) => {
-  const renderPeg = isPeg && 'bg-red-500';
+  function renderPeg() {
+    const peg = 'outline outline-2';
+    const pegColor =
+      track === PlayerPos.P_ONE
+        ? 'bg-red-500 outline-red-500'
+        : 'bg-emerald-400 outline-emerald-400';
+    return `${peg} ${pegColor}`;
+  }
+
+  const peg = isPeg && renderPeg();
   return (
     <li
-      className={`${customStyles} ${renderPeg} h-1 w-1 justify-self-center rounded-full bg-white`}></li>
+      className={`${customStyles} ${peg} h-1 w-1 justify-self-center rounded-full bg-white `}></li>
   );
 };
 
