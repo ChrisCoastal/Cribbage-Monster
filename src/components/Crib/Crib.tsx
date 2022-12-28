@@ -1,33 +1,34 @@
 import { nanoid } from 'nanoid';
 import { FC, useState } from 'react';
-import { CardSize, CardType, CardBoxHeight, CardBoxWidth, CardOverlap, Status } from 'src/@types';
+import {
+  CardSize,
+  CardType,
+  CardBoxHeight,
+  CardBoxWidth,
+  CardOverlap,
+  Status,
+  CardsIndex
+} from 'src/@types';
 
 import PlayingCard from 'src/components/PlayingCard/PlayingCard';
 import CardBox from '../CardBox/CardBox';
 
 type CribProps = {
-  cutDeck: { status: Status; card: CardType | null };
-  callback: (cutDeck: Status) => void;
+  cribCards: CardsIndex;
 };
 
-const Crib: FC<CribProps> = ({ cutDeck, callback }) => {
-  const isCut = cutDeck.status === Status.COMPLETED;
-
-  function clickDeckHandler() {
-    callback(Status.COMPLETED);
-  }
-
-  const renderCrib = (
+const Crib: FC<CribProps> = ({ cribCards }) => {
+  const renderCrib = Object.values(cribCards).map((card) => (
     <PlayingCard
-      // key={nanoid()}
-      isFaceUp={isCut}
+      key={nanoid()}
+      isFaceUp={false}
       cardSize={CardSize.MD}
       cardIndex={0}
-      card={isCut ? cutDeck.card! : ({} as CardType)}
+      card={card}
       overlap={CardOverlap.TWO_THIRDS}
-      handler={clickDeckHandler}
+      handler={() => null}
     />
-  );
+  ));
 
   return (
     <>

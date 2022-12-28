@@ -4,12 +4,10 @@ import { rtdb } from 'src/firestore.config';
 import { GameBrief } from 'src/@types';
 import JoinGame from '../JoinGame/JoinGame';
 type GamesListProps = {
-  // games:
+  games: GameBrief[];
 };
 
-const GamesList: FC<GamesListProps> = () => {
-  const [games, setGames] = useState<GameBrief[]>([]);
-
+const GamesList: FC<GamesListProps> = ({ games }) => {
   const gamesListItems = games.map((game) => {
     console.log('rendering gamelist', game);
 
@@ -25,22 +23,6 @@ const GamesList: FC<GamesListProps> = () => {
 
   // FIXME: not rendering new games, but games are in state
   // check this might be a dev server issue
-  useEffect(() => {
-    const games: GameBrief[] = [];
-    const gamesListRef = ref(rtdb, `gameslist`);
-    const unsubscribe = onValue(gamesListRef, (snapshot) => {
-      console.log(snapshot.val());
-      const gameBriefs = (snapshot.val() as { [key: string]: GameBrief }) || {};
-      const keys = Object.keys(gameBriefs);
-      keys.forEach((key) => {
-        games.push(gameBriefs[key]);
-      });
-      setGames(() => games);
-
-      // dispatchGame({ type: GameReducerTypes.UPDATE, payload: snapshot.val() });
-    });
-    return unsubscribe;
-  }, []);
 
   return (
     <div>

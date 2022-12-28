@@ -2,20 +2,34 @@ import React, { FC } from 'react';
 import { PlayerPos } from 'src/@types';
 
 import useGameContext from 'src/hooks/useGameContext';
+import { getPlayerOpponent } from 'src/utils/helpers';
 
 type ScoreProps = {
-  curScore: number;
-  prevScore: number;
-  displayName: string;
+  player: {
+    displayName: string;
+    curScore: number;
+  };
+  opponent: {
+    displayName: string;
+    curScore: number;
+  };
 };
 
-const Score: FC<ScoreProps> = ({ curScore, prevScore, displayName }) => {
-  const { gameState } = useGameContext();
-
+const Score: FC<ScoreProps> = ({ player, opponent }) => {
   return (
-    <div className="flex w-full flex-col items-center rounded-md border border-solid border-black p-2">
-      <h3>{displayName}</h3>
-      <p>{curScore}/121</p>
+    <div className="rounded-md border border-solid border-white p-2 text-white">
+      <div className="flex items-center gap-2 ">
+        <h3 className="text-sm">{opponent.displayName}</h3>
+        <p className="text-sm">
+          <span>{opponent.curScore}</span>/121
+        </p>
+      </div>
+      <div className="flex items-center gap-2 ">
+        <h3 className="text-sm">{player.displayName}</h3>
+        <p className="text-sm">
+          <span>{player.curScore}</span>/121
+        </p>
+      </div>
     </div>
   );
 };

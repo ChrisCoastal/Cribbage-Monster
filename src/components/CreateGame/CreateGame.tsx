@@ -44,7 +44,7 @@ const CreateGame = () => {
         scoreToWin: 121
       };
       console.log('creating game');
-      const gameslistRef = ref(rtdb, `gameslist/${gameId}`);
+      const gameslistRef = ref(rtdb, `gamesList/${gameId}`);
       const gameRef = ref(rtdb, `games/${gameId}`);
       set(gameslistRef, gameBrief);
       set(gameRef, newGame).then(() => {

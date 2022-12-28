@@ -23,7 +23,7 @@ const CardBox: FC<CardBoxProps> = ({ maxCards, size, overlap, placement, childre
   //   disabled: !gameState.activePlayer
   // });
 
-  // const style = isOver ? 'bg-teal-300' : undefined;
+  // const style = isOver ? 'bg-neutral-800' : undefined;
 
   // const cardPos = [
   //   'bg-red-200 col-start-1 col-end-4 row-start-1',

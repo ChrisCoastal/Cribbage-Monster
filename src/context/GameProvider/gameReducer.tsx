@@ -14,16 +14,15 @@ const gameReducer = (state: GameState, action: GameReducerActions): GameState =>
     case GameReducerTypes.UPDATE: {
       const updatedState = {
         ...payload,
+        handNum: payload?.handNum || 0,
         playerCards: {
           player1: {
             inHand: payload?.playerCards?.player1?.inHand || {},
-            played: payload?.playerCards?.player1?.played || {},
-            isGo: payload.playerCards.player1.isGo
+            played: payload?.playerCards?.player1?.played || {}
           },
           player2: {
             inHand: payload?.playerCards?.player2?.inHand || {},
-            played: payload?.playerCards?.player2?.played || {},
-            isGo: payload.playerCards.player2.isGo
+            played: payload?.playerCards?.player2?.played || {}
           }
         },
         crib: payload?.crib || {},
@@ -34,6 +33,19 @@ const gameReducer = (state: GameState, action: GameReducerActions): GameState =>
         }
       };
 
+      return updatedState;
+    }
+
+    case GameReducerTypes.HAND_TALLY: {
+      const updatedState = {
+        ...state,
+        tally: {
+          ...state.tally,
+          player1: payload.player1,
+          player2: payload.player2,
+          crib: payload.crib
+        }
+      };
       return updatedState;
     }
     // case GameReducerTypes.DEAL: {

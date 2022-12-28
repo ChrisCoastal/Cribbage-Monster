@@ -3,6 +3,7 @@ import { CardOverlap, CardSize, CardType, IsActive, UserId } from 'src/@types';
 import useAuthContext from 'src/hooks/useAuthContext';
 import useGameContext from 'src/hooks/useGameContext';
 import { getPlayerOpponent } from 'src/utils/helpers';
+import SuitIcon from '../UI/icons/SuitIcon/SuitIcon';
 
 type PlayingCardProps = {
   cardSize: string;
@@ -23,6 +24,7 @@ const PlayingCard: FC<PlayingCardProps> = ({
   valid,
   handler
 }) => {
+  // const style = { 'var(--color)': yourColor } as React.CSSProperties;
   const { userAuth } = useAuthContext();
   const { gameState } = useGameContext();
   const { player } = getPlayerOpponent(gameState.players, userAuth!.uid!);
@@ -47,7 +49,7 @@ const PlayingCard: FC<PlayingCardProps> = ({
           'col-start-6 col-end-9 row-start-1 z-[30]'
         ];
 
-  const cardRotation = ['-rotate-3', 'rotate-3']; // ${cardRotation[cardIndex % 2]}
+  const cardRotation = ['-rotate-3', 'rotate-3 -translate-y-1']; // ${cardRotation[cardIndex % 2]}
   const cardRotationHand = [
     'rotate-[-8deg] translate-y-2',
     'rotate-[-4deg] translate-y-1',
@@ -55,6 +57,14 @@ const PlayingCard: FC<PlayingCardProps> = ({
     'rotate-[2deg]',
     'rotate-[4deg] translate-y-1',
     'rotate-[8deg] translate-y-2'
+  ];
+  const cardRotationOpponentHand = [
+    'rotate-[28deg] -translate-y-[0.2rem]',
+    'rotate-[16deg] -translate-y-[0.1rem]',
+    'rotate-[4deg]',
+    'rotate-[-4deg]',
+    'rotate-[-16deg] -translate-y-[0.1rem]',
+    'rotate-[-28deg] -translate-y-[0.2rem]'
   ];
   const cardHover = [
     'hover:translate-y-0',
@@ -65,30 +75,59 @@ const PlayingCard: FC<PlayingCardProps> = ({
     'hover:translate-y-0'
   ];
 
+  const corners =
+    cardSize === CardSize.LG
+      ? 'rounded-[4%] p-2'
+      : cardSize === CardSize.MD
+      ? 'rounded-[8%] p-1'
+      : 'rounded-[10%]';
+
+  const sizeVars =
+    cardSize === CardSize.LG
+      ? `${cardRotationHand[cardIndex]}`
+      : cardSize === CardSize.MD
+      ? `${overlap === CardOverlap.HALF && cardRotation[cardIndex % 2]}`
+      : `${cardRotationOpponentHand[cardIndex]}`;
+
   const conditionalStyles = `${cardSize} ${cardPos[cardIndex]} ${
-    cardSize === CardSize.LG && cardRotationHand[cardIndex]
-  } ${overlap === CardOverlap.HALF && cardRotation[cardIndex % 2]}
-  } ${activePlayer && valid && cardHover[cardIndex]}`;
+    activePlayer && valid && cardHover[cardIndex]
+  } `;
+
+  const iconSize = cardSize === CardSize.LG ? '1.8rem' : '1rem';
+  const cardMarking = (
+    <>
+      <span className="pointer-events-none font-bold">{card.name}</span>
+      <span className="pointer-events-none">
+        <SuitIcon suit={card.suit} height={iconSize} width={iconSize} />
+      </span>
+    </>
+  );
+
+  const cardBack = cardSize === CardSize.MD ? 'bg-cardback-md' : 'bg-cardback-sm';
+  const cardBackBorder = cardSize === CardSize.MD ? 'p-[3px]' : 'p-[2px]';
 
   return isFaceUp ? (
     <div
       onClick={() => (handler ? handler(card) : null)}
-      className={`${conditionalStyles} grid-columns-3 grid grid-rows-3 items-center rounded-[4%] border border-solid border-neutral-300 bg-white shadow-[-4px_4px_8px_rgba(0,0,0,0.05)] transition-all duration-300`}>
-      <div className="col-start-1 flex gap-1 justify-self-center text-sm">
-        <span className="pointer-events-none">{card.name}</span>
-        <span className="pointer-events-none">{card.suit.slice(0, 2)}</span>
-      </div>
-      <div className="col-start-3 row-start-3 flex flex-col justify-self-center text-sm">
-        <div className="col-start-1 flex flex-col text-sm">
-          <span className="pointer-events-none">{card.faceValue}</span>
-          <span className="pointer-events-none">{card.suit.slice(0, 2)}</span>
+      className={`${conditionalStyles} ${sizeVars} ${corners} border border-solid border-neutral-100 bg-white transition-all duration-300`}>
+      <div
+        className={`${corners} grid-columns-3 shadow-[-4px_4px_8px_rgba(0,0,0,0.05) grid max-h-full max-w-full grid-rows-3 items-center border border-solid border-neutral-500 bg-white`}>
+        <div className="col-start-1 mt-2 flex-col gap-1 justify-self-center text-sm">
+          {cardMarking}
+        </div>
+        <div className="col-start-3 row-start-3 flex flex-col justify-self-center text-sm">
+          <div className="col-start-1 mb-2 rotate-180 flex-col gap-1 justify-self-center text-sm">
+            {cardMarking}
+          </div>
         </div>
       </div>
     </div>
   ) : (
     <div
-      className={`${cardSize} ${cardPos[cardIndex]} grid-columns-3 grid grid-rows-3 items-center rounded-[4%] border border-solid border-neutral-300 bg-white transition-all duration-300`}
-      onClick={() => (handler ? handler(card) : null)}></div>
+      className={`${cardSize} ${cardPos[cardIndex]} ${sizeVars} ${cardBackBorder} ${corners} border border-solid border-neutral-100 bg-white transition-all duration-300`}
+      onClick={() => (handler ? handler(card) : null)}>
+      <div className={`${cardBack} h-full w-full bg-repeat`}></div>
+    </div>
   );
 };
 

@@ -55,9 +55,27 @@ export type ScoreType = {
   prev: number;
 };
 
+export type Tally = {
+  displayName: string;
+  playerPos: PlayerPos;
+  cards: CardsIndex;
+  points: TallyPoints;
+};
+
+export type TallyPoints = {
+  fifteens: number;
+  runs: number;
+  pairs: number;
+  flush: number;
+  jack: number;
+  totalPoints: number;
+  pegging?: number;
+};
+
 export type GameState = {
   gameId: GameId;
   dealer: PlayerPos;
+  handNum: number;
   players: {
     player1: Player;
     player2: Player;
@@ -66,19 +84,26 @@ export type GameState = {
     player1: {
       inHand: CardsIndex;
       played: CardsIndex;
-      isGo: Go;
     };
     player2: {
       inHand: CardsIndex;
       played: CardsIndex;
-      isGo: Go;
     };
+  };
+  isGo: {
+    player1: Go;
+    player2: Go;
   };
   crib: CardsIndex;
   deckCut: Cut;
   score: {
     player1: ScoreType;
     player2: ScoreType;
+  };
+  tally: null | {
+    player1: TallyPoints;
+    player2: TallyPoints;
+    crib: TallyPoints;
   };
   turnTotals: TurnType;
 };
@@ -90,6 +115,16 @@ export type GameBrief = {
   scoreToWin: 121;
 };
 
+// board
+export enum BoardSectionType {
+  START = 'start',
+  STRAIGHT = 'straight',
+  SKUNK = 'skunk',
+  BEND_1 = 'bend 1',
+  BEND_2 = 'bend 2'
+}
+
+// sort
 export enum SortOrder {
   LOW_TO_HIGH = 'low high',
   HIGH_TO_LOW = 'high low'

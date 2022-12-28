@@ -1,17 +1,17 @@
 import { useEffect, useState, FC } from 'react';
 import { Navigate, Outlet, redirect, useLocation } from 'react-router-dom';
 import useAuthContext from 'src/hooks/useAuthContext';
-import { useTimer } from 'src/hooks/useTimer';
+import { useInterval } from 'src/hooks/useInterval';
 
 // firebase
 import { firebaseAuth } from 'src/firestore.config';
-import { getAuth } from 'firebase/auth';
+import { getAuth, User } from 'firebase/auth';
 
 //types
-import { UserState, ProtectedAuth } from 'src/@types';
+import { ProtectedAuth } from 'src/@types';
 
 interface ProtectedRoutesProps {
-  user?: UserState | null;
+  user?: User | null;
   redirectPath?: string;
   children?: React.ReactElement;
 }
@@ -33,7 +33,7 @@ const ProtectedRoutes: FC<ProtectedRoutesProps> = ({
   const { userAuth } = useAuthContext();
 
   // TODO: set timeout for auth; see frondly
-  useTimer(
+  useInterval(
     () => {
       console.log('using timer');
       setTimeout(timeout + 1);

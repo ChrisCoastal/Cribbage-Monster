@@ -7,9 +7,12 @@ import {
   IsActive,
   Player,
   PlayerPos,
+  ScoreType,
   SortBy,
   SortOrder,
   Suit,
+  TallyPoints,
+  TurnType,
   UserId
 } from 'src/@types';
 import { CARDS_IN_DECK, CARDS_PER_SUIT, HAND_SIZE } from './constants';
@@ -17,6 +20,13 @@ import { ref } from 'firebase/database';
 import { rtdb } from 'src/firestore.config';
 
 // REALTIME DATABASE REFS
+// game scores
+export const getGameTalliesRef = (gameId: GameId) => ref(rtdb, `gameTallies/${gameId}`);
+
+// game list
+export const getGamesList = () => ref(rtdb, `gamesList`);
+
+// game
 export const getGameRef = (gameId: GameId) => ref(rtdb, `games/${gameId}`);
 
 export const getActivePlayerRef = (gameId: GameId, player: PlayerPos) =>
@@ -49,6 +59,8 @@ export const getCardsPlayedRef = (gameId: GameId) =>
 
 export const getCardTotalRef = (gameId: GameId) =>
   ref(rtdb, `games/${gameId}/turnTotals/cardTotal`);
+
+export const getTallyRef = (gameId: GameId) => ref(rtdb, `games/${gameId}/tally`);
 
 export const getScoreRef = (gameId: GameId) => ref(rtdb, `games/${gameId}/score`);
 
@@ -208,7 +220,50 @@ export function filterCard(cards: CardsIndex, cardId: number): CardType[] {
   return cardIds.filter((card) => card.id !== cardId);
 }
 
+export function getCardValues(cards: CardsIndex, key?: CardKey) {
+  return key ? Object.values(cards).map((card) => card[key]) : Object.values(cards);
+}
+
+export function updateCardTotal(cardPlayValue: number, cardTotal: number): number {
+  return cardPlayValue + cardTotal;
+}
+
+export function isCardValid(cardPlayValue: number, cardTotal: number): boolean {
+  return cardPlayValue + cardTotal <= 31;
+}
+
 // PEGGING
+export function isPegPoints(
+  card: CardType,
+  turnTotals: TurnType,
+  playerHand: CardsIndex,
+  opponentHand: CardsIndex
+) {
+  const updatedCardTotal = updateCardTotal(card.playValue, turnTotals.cardTotal);
+  const opponentGo = expectGo(opponentHand, updatedCardTotal);
+  const playerGo = expectGo(playerHand, updatedCardTotal, card);
+
+  const pairs = isPegPairs(card.faceValue, turnTotals.cardsPlayed);
+  const fifteen = isPegFifteen(card.playValue, turnTotals.cardTotal);
+  const run = isPegRun(card.faceValue, turnTotals.cardsPlayed);
+  const go = opponentGo && playerGo ? isPegGo(card.playValue, turnTotals.cardTotal) : 0;
+  const points = pairs + fifteen + run + go;
+
+  return points;
+}
+
+export function expectGo(hand: CardsIndex, cardTotal: number, cardPlayed?: CardType): boolean {
+  // played card still in state, must be filtered from array
+  const validCards = Object.values(hand).filter(
+    (card) => card.id !== cardPlayed?.id && isCardValid(card.playValue, cardTotal)
+  );
+
+  return !validCards.length;
+}
+
+export function isPegJack(cardFaceValue: number): number {
+  return cardFaceValue === 11 ? 2 : 0;
+}
 
 export function isPegPairs(cardFaceValue: number, cardsPlayed: CardsIndex = {}): number {
   const cardFaceValues = getCardValues(cardsPlayed, CardKey.FACE) as number[];
@@ -247,26 +302,6 @@ export function isPegThirtyOne(cardPlayValue: number, cardTotal: number): number
   return cardPlayValue + cardTotal === 31 ? 2 : 0;
 }
 
-// export function getCardFaceValues(cards: CardsIndex) {
-//   return Object.values(cards).map((card) => card.faceValue);
-// }
-
-// export function getCardPlayValues(cards: CardsIndex) {
-//   return Object.values(cards).map((card) => card.playValue);
-// }
-
-export function getCardValues(cards: CardsIndex, key?: CardKey) {
-  return key ? Object.values(cards).map((card) => card[key]) : Object.values(cards);
-}
-
-export function updateCardTotal(cardPlayValue: number, cardTotal: number): number {
-  return cardPlayValue + cardTotal;
-}
-
-export function isCardValid(cardPlayValue: number, cardTotal: number): boolean {
-  return cardPlayValue + cardTotal <= 31;
-}
-
 export function isPegRun(cardFaceValue: number, cardsPlayed: CardsIndex = {}) {
   const cardsPlayedFaceValues = getCardValues(cardsPlayed, CardKey.FACE) as number[];
   if (cardsPlayedFaceValues.length < 2) return 0;
@@ -302,6 +337,28 @@ export function isPegRun(cardFaceValue: number, cardsPlayed: CardsIndex = {}) {
 }
 
 // SCORING
+export function isWinner(
+  score: { player1: ScoreType; player2: ScoreType },
+  dealer: PlayerPos
+): PlayerPos | null {
+  const pone = getPone(dealer);
+  // pone counts first
+  if (score[pone].cur >= 121) return pone;
+  if (score[dealer].cur >= 121) return dealer;
+  return null;
+}
+
+export function isScorePoints(hand: CardsIndex, cutCard: CardType, isCrib?: 'crib'): TallyPoints {
+  const pairs = scorePairs(hand, cutCard);
+  const fifteens = scoreFifteens(hand, cutCard);
+  const runs = scoreRuns(hand, cutCard);
+  const flush = scoreFlush(hand, cutCard, isCrib);
+  const jack = scoreSuitedJack(hand, cutCard);
+  const totalPoints = pairs + fifteens + runs + flush + jack;
+
+  return { pairs, fifteens, runs, flush, jack, totalPoints };
+}
+
 export function scorePairs(cards: CardsIndex, cutCard: CardType): number {
   // TODO: refactor to separate function; all used in scoreRuns
   const cardFaceValues = getCardValues(cards, CardKey.FACE) as number[];
@@ -369,11 +426,18 @@ export function scoreRuns(cards: CardsIndex, cutCard: CardType): number {
   return points;
 }
 
-export function scoreFlush(cards: CardsIndex, cutCard: CardType): number {
+export function scoreFlush(cards: CardsIndex, cutCard: CardType, isCrib?: 'crib'): number {
   const cardSuits = getCardValues(cards, CardKey.SUIT) as string[];
   let points = 0;
   const isFlush = [...new Set(cardSuits)].length === 1;
-  if (isFlush) points = 4;
-  if (isFlush && cardSuits[0] === cutCard.suit) points++;
+  const matchCut = isFlush && cardSuits[0] === cutCard.suit;
+  if (!isCrib && isFlush) points = 4;
+  if (!isCrib && matchCut) points++;
+  else if (isCrib && matchCut) points = 5;
   return points;
+}
+
+export function scoreSuitedJack(cards: CardsIndex, cutCard: CardType): number {
+  const cardValues = getCardValues(cards) as CardType[];
+  return cardValues.filter((card) => card.name === 'J' && card.suit === cutCard.suit).length;
 }

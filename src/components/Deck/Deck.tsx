@@ -3,14 +3,18 @@ import { FC, useState } from 'react';
 import { CardSize, CardType, CardBoxHeight, CardBoxWidth, CardOverlap, Status } from 'src/@types';
 
 import PlayingCard from 'src/components/PlayingCard/PlayingCard';
-import CardBox from '../CardBox/CardBox';
+import CardBox from 'src/components/CardBox/CardBox';
+import useGameContext from 'src/hooks/useGameContext';
+import { getPone, getPlayerOpponent } from 'src/utils/helpers';
 
 type DeckProps = {
   cutDeck: { status: Status; card: CardType | null };
+  isPone: boolean;
   callback: (cutDeck: Status) => void;
 };
 
-const Deck: FC<DeckProps> = ({ cutDeck, callback }) => {
+const Deck: FC<DeckProps> = ({ cutDeck, isPone, callback }) => {
+  const { gameState } = useGameContext();
   const isCut = cutDeck.status === Status.COMPLETED;
 
   function clickDeckHandler() {
@@ -31,8 +35,10 @@ const Deck: FC<DeckProps> = ({ cutDeck, callback }) => {
 
   return (
     <div className="relative">
-      {cutDeck.status === Status.VALID && (
-        <p className="pointer-events-none absolute top-1/3 left-1/2 z-30 -translate-x-1/2">CUT</p>
+      {cutDeck.status === Status.VALID && isPone && (
+        <div className="pointer-events-none absolute top-1/4 left-1/2 z-30 flex h-10 w-10 -translate-x-1/2 animate-radiate items-center justify-center rounded-full bg-gradient-to-bl from-red-500 to-red-600 text-white">
+          CUT
+        </div>
       )}
       <CardBox
         size={{ height: CardBoxHeight.MD, width: CardBoxWidth.MD_ONE }}
