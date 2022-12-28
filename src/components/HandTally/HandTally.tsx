@@ -1,18 +1,6 @@
-import { nanoid } from 'nanoid';
-import React, { FC, useEffect, useMemo, useState } from 'react';
-import {
-  CardBoxHeight,
-  CardBoxWidth,
-  CardOverlap,
-  CardsIndex,
-  CardType,
-  PlayerPos,
-  Tally,
-  TallyPoints
-} from 'src/@types';
+import React, { FC, useState } from 'react';
+import { CardType, PlayerPos, Tally, TallyPoints } from 'src/@types';
 import { useInterval } from 'src/hooks/useInterval';
-import Avatar from 'src/components/Avatar/Avatar';
-import CardBox from 'src/components/CardBox/CardBox';
 import PlayerTally from 'src/components/PlayerTally/PlayerTally';
 import { getPone } from 'src/utils/helpers';
 

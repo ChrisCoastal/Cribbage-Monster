@@ -1,17 +1,16 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { db, rtdb } from 'src/firestore.config';
-import { addDoc, collection } from 'firebase/firestore';
-import { getDatabase, update, ref, set, get, runTransaction } from 'firebase/database';
+import { rtdb } from 'src/firestore.config';
+
+import { update, ref, get } from 'firebase/database';
 
 import useAuthContext from 'src/hooks/useAuthContext';
-import useGameContext from 'src/hooks/useGameContext';
-import { INITIAL_GAME_STATE } from 'src/utils/constants';
+
 import { findPlayerPos } from 'src/utils/helpers';
 
 import Button from 'src/components/UI/Button';
-import { GameId, GameReducerTypes, GameState, Player, PlayerPos, UserId } from 'src/@types';
+import { GameId, Player } from 'src/@types';
 
 type JoinGameProps = {
   gameId: GameId;
@@ -19,7 +18,6 @@ type JoinGameProps = {
 
 const JoinGame: FC<JoinGameProps> = ({ gameId }) => {
   const { userAuth } = useAuthContext();
-  const { gameState, dispatchGame } = useGameContext();
   const navigate = useNavigate();
 
   async function joinGameHandler() {

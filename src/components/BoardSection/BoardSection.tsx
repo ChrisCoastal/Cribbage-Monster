@@ -1,6 +1,5 @@
 import React, { FC } from 'react';
-import { render } from 'react-dom';
-import { BoardSectionType, PlayerPos, ScoreType } from 'src/@types';
+import { PlayerPos, ScoreType } from 'src/@types';
 import BoardPegHole from 'src/components/BoardPegHole/BoardPegHole';
 
 type BoardSectionProps = {
@@ -27,9 +26,7 @@ const BoardSection: FC<BoardSectionProps> = ({
       const holeIndex = sectionIndex * numPegHoles + i;
       const peg = score[playerTrack].cur === holeIndex || score[playerTrack].prev === holeIndex;
 
-      pegHoles.unshift(
-        <BoardPegHole key={holeIndex} holeIndex={holeIndex} track={playerTrack} isPeg={peg} />
-      );
+      pegHoles.unshift(<BoardPegHole key={holeIndex} track={playerTrack} isPeg={peg} />);
     }
     return pegHoles;
   }
