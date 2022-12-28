@@ -12,8 +12,7 @@ node_modules
 dist
 dist-ssr
 *.local
-.env
-.env.development
+.env*
 
 # firebase
 /functions
@@ -21,7 +20,7 @@ firebase.json
 firestore.indexes.json
 firestore.rules
 .firebaserc
-**/firestore.config.ts
+# **/firestore.config.ts
 
 # Editor directories and files
 .vscode/*
