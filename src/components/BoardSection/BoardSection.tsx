@@ -24,15 +24,11 @@ const BoardSection: FC<BoardSectionProps> = ({
   function renderPegHoles(playerTrack: PlayerPos) {
     const pegHoles = [];
     for (let i = 1; i <= numPegHoles; i++) {
-      const holeIndex = sectionIndex * 5 + i;
+      const holeIndex = sectionIndex * numPegHoles + i;
       const peg = score[playerTrack].cur === holeIndex || score[playerTrack].prev === holeIndex;
-      // moveDirection === 'up'
-      //   ? pegHoles.unshift(
-      //       <BoardPegHole key={holeIndex} holeIndex={121} track={playerTrack} isPeg={peg} />
-      //     )
-      //   :
+
       pegHoles.unshift(
-        <BoardPegHole key={holeIndex} holeIndex={121} track={playerTrack} isPeg={peg} />
+        <BoardPegHole key={holeIndex} holeIndex={holeIndex} track={playerTrack} isPeg={peg} />
       );
     }
     return pegHoles;
@@ -47,23 +43,3 @@ const BoardSection: FC<BoardSectionProps> = ({
 };
 
 export default BoardSection;
-
-// {isUp ? (
-//   <>
-//     <ul className="grid grid-cols-1 grid-rows-5 gap-1 py-1">
-//       {renderPegHoles(PlayerPos.P_ONE)}
-//     </ul>
-//     <ul className="grid grid-cols-1 grid-rows-5 gap-1 py-1">
-//       {renderPegHoles(PlayerPos.P_TWO)}
-//     </ul>
-//   </>
-// ) : (
-//   <>
-//     <ul className="grid grid-cols-1 grid-rows-5 gap-1 py-1">
-//       {renderPegHoles(PlayerPos.P_TWO)}
-//     </ul>
-//     <ul className="grid grid-cols-1 grid-rows-5 gap-1 py-1">
-//       {renderPegHoles(PlayerPos.P_ONE)}
-//     </ul>
-//   </>
-// )}
