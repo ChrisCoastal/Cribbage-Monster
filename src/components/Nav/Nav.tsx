@@ -1,8 +1,5 @@
 import { Link } from 'react-router-dom';
 
-import Button from 'src/components/UI/Button';
-
-import { firebaseAuth } from 'src/firestore.config';
 import useAuthContext from 'src/hooks/useAuthContext';
 import useFirebaseAuth from 'src/hooks/useFirebaseAuth';
 import { useNavigate } from 'react-router-dom';
@@ -15,15 +12,13 @@ const Nav = () => {
   function loginHandler() {
     console.log('login');
   }
-  // function logoutHandler() {
-  //   console.log('login');
-  // }
+
   function signupHandler() {
     console.log('login');
   }
 
   return (
-    <div className="relative sticky top-0 z-50 flex h-12 w-full items-center justify-between px-4">
+    <div className="sticky z-50 flex h-12 w-full items-center justify-between px-4">
       <span>CRIB</span>
       <ul className="flex items-center gap-3">
         <li>

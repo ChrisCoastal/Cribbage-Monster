@@ -4,7 +4,6 @@ import BoardSectionBend from 'src/components/BoardSectionBend/BoardSectionBend';
 import BoardPegHole from '../BoardPegHole/BoardPegHole';
 
 import useGameContext from 'src/hooks/useGameContext';
-import { isWinner } from 'src/utils/helpers';
 
 const Board = () => {
   const { gameState } = useGameContext();
@@ -46,7 +45,7 @@ const Board = () => {
     <div className="grid w-28 grid-cols-1 grid-rows-[0.2fr,_1fr,_7fr,_1fr]">
       <div className="grid grid-cols-[2fr,_1fr] gap-x-4 px-1">
         <ul className="col-start-2 justify-self-center">
-          <BoardPegHole holeIndex={121} track={[PlayerPos.P_ONE, PlayerPos.P_TWO]} isPeg={winner} />
+          <BoardPegHole track={[PlayerPos.P_ONE, PlayerPos.P_TWO]} isPeg={winner} />
         </ul>
       </div>
       <div className="grid grid-cols-[2fr,_1fr] gap-x-4 px-1">
