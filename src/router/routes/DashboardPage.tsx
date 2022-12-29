@@ -9,6 +9,7 @@ import useAuthContext from 'src/hooks/useAuthContext';
 import GamesList from 'src/components/GamesList/GamesList';
 import { getGamesList } from 'src/utils/helpers';
 import Carousel from 'src/components/UI/Carousel';
+import Badges from 'src/components/Badges/Badges';
 
 const DashboardPage = () => {
   const [games, setGames] = useState<GameBrief[]>([]);
@@ -37,13 +38,16 @@ const DashboardPage = () => {
 
   return (
     <div className="flex justify-center">
-      <div className="grid w-full gap-4 rounded-lg bg-stone-600 p-6 md:w-3/4">
+      <div className="grid w-full grid-cols-4 gap-4 rounded-lg bg-stone-600 p-6 md:w-3/4">
         <div className="">
-          <p>{`Hey ${userAuth?.displayName}`}</p>
+          <p>{`${userAuth?.displayName}`}</p>
         </div>
-        <Carousel />
+        <div className=" col-span-3 col-start-2">
+          <Carousel />
+        </div>
         <GamesList games={games} />
         <CreateGame />
+        <Badges />
       </div>
     </div>
   );

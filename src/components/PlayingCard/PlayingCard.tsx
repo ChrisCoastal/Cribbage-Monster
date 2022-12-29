@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { CardOverlap, CardSize, CardType, IsActive, UserId } from 'src/@types';
+import { CardOverlap, CardSize, CardType, IsActive } from 'src/@types';
 import useAuthContext from 'src/hooks/useAuthContext';
 import useGameContext from 'src/hooks/useGameContext';
 import { getPlayerOpponent } from 'src/utils/helpers';

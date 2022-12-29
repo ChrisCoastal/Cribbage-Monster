@@ -1,3 +1,4 @@
+//playing cards
 export enum CardSize {
   SM = 'w-6 h-8',
   MD = 'w-15 h-20',
@@ -24,3 +25,6 @@ export enum CardOverlap {
   TWO_THIRDS,
   HALF
 }
+
+// badges
+export type BadgeName = 'trophy' | 'first' | 'jack' | 'five' | 'star' | 'suits';

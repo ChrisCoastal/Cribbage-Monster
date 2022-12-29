@@ -15,7 +15,6 @@ type HandTallyProps = {
 const HandTally: FC<HandTallyProps> = ({ dealer, cut, player, opponent, crib }) => {
   const [count, setCount] = useState<number>(0);
   useInterval(() => setCount((prev) => prev + 1), 1000);
-  const pone = getPone;
 
   function renderScoreItems(playerPos: PlayerPos, score: TallyPoints) {
     const scores = Object.entries(score).filter((score) => score[1] !== 0);
