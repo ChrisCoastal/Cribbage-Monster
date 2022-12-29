@@ -17,8 +17,6 @@ const GamesList: FC<GamesListProps> = ({ games }) => {
     );
   });
 
-  // FIXME: not rendering new games, but games are in state
-
   return (
     <div>
       <ul className="border border-solid border-black p-2">{gamesListItems}</ul>

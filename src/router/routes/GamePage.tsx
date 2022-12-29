@@ -146,7 +146,7 @@ const GamePage = () => {
           />
         </Modal>
       )}
-      <div className="relative h-screen bg-neutral-800">
+      <div className="relative">
         <div>
           <PlayFieldFlex gameId={game.gameId} />
         </div>

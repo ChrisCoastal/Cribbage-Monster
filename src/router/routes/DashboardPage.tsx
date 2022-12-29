@@ -8,6 +8,7 @@ import CreateGame from 'src/components/CreateGame/CreateGame';
 import useAuthContext from 'src/hooks/useAuthContext';
 import GamesList from 'src/components/GamesList/GamesList';
 import { getGamesList } from 'src/utils/helpers';
+import Carousel from 'src/components/UI/Carousel';
 
 const DashboardPage = () => {
   const [games, setGames] = useState<GameBrief[]>([]);
@@ -18,9 +19,7 @@ const DashboardPage = () => {
     const unsubscribe = onValue(
       gamesListRef,
       (snapshot) => {
-        console.log(snapshot.val());
         const updatedGames: GameBrief[] = [];
-
         const gameBriefs = (snapshot.val() as { [key: string]: GameBrief }) || {};
         const values = Object.values(gameBriefs);
         values.forEach((value) => {
@@ -36,12 +35,13 @@ const DashboardPage = () => {
     return unsubscribe;
   }, []);
 
-  console.log(games);
-
   return (
-    <div className="grid">
-      <div className="">
-        <p>{`Hey ${userAuth?.displayName}`}</p>
+    <div className="flex justify-center">
+      <div className="grid w-full gap-4 rounded-lg bg-stone-600 p-6 md:w-3/4">
+        <div className="">
+          <p>{`Hey ${userAuth?.displayName}`}</p>
+        </div>
+        <Carousel />
         <GamesList games={games} />
         <CreateGame />
       </div>
