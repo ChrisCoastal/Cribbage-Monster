@@ -7,7 +7,7 @@ import SignUpPage from 'src/router/routes/SignUpPage';
 import LoginPage from 'src/router/routes/LoginPage';
 import ProtectedRoutes from 'src/router/routes/ProtectedRoutes';
 import HomePage from 'src/router/routes/HomePage';
-import DashboardPage from './router/routes/DashboardPage';
+import DashboardPage, { dashboardLoader } from 'src/router/routes/DashboardPage';
 
 import { gameLoader } from 'src/router/routes/GamePage';
 
@@ -34,8 +34,9 @@ const router = createBrowserRouter([
         element: <ProtectedRoutes />,
         children: [
           {
-            // path: '/dashboard/:userId',
-            path: '/dashboard',
+            path: '/dashboard/:uid',
+            // path: '/dashboard',
+            loader: dashboardLoader,
             element: <DashboardPage />
           },
           {

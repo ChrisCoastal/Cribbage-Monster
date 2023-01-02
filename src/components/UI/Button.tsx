@@ -17,14 +17,13 @@ const Button: FC<ButtonProps> = ({
   children
 }) => {
   const buttonColor =
-    color === 'primary' ? 'bg-red-600 dark:bg-red-200' : 'bg-blue-600 dark:bg-blue-200';
+    color === 'primary' ? 'bg-emerald-600 dark:bg-red-200' : 'bg-blue-600 dark:bg-blue-200';
 
   return (
     <button
       type={type}
       onClick={handler}
-      className={`${customStyles} ${buttonColor} cursor-pointer rounded-full py-1 px-4 hover:bg-red-400`}
-    >
+      className={`${customStyles} ${buttonColor} cursor-pointer rounded-full py-1 px-4 hover:bg-red-400`}>
       {children}
     </button>
   );

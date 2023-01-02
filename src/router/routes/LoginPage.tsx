@@ -1,20 +1,27 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 import useFirebaseAuth from 'src/hooks/useFirebaseAuth';
 import useAuthContext from 'src/hooks/useAuthContext';
+import { get } from 'firebase/database';
+import { getUserSettingsRef } from 'src/utils/helpers';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState<boolean>(false);
 
   const { loginUser } = useFirebaseAuth();
   const { userAuth } = useAuthContext();
   const navigate = useNavigate();
 
-  function redirectAuthUser() {
-    navigate('/dashboard');
+  // const redirectAuthUser = useCallback(
+  //   (uid: string) =>
+  function redirectAuthUser(uid: string) {
+    navigate(`/dashboard/${uid}`);
   }
+  //   [navigate]
+  // );
 
   async function submitHandler(event: React.FormEvent<HTMLFormElement>) {
     try {
@@ -28,6 +35,11 @@ const LoginPage = () => {
       console.log(err);
     }
   }
+
+  // useEffect(() => {
+  //   if (!userAuth?.uid) return;
+  //   get(getUserSettingsRef(userAuth.uid)).then(() => redirectAuthUser(userAuth.uid));
+  // }, [userAuth?.uid, redirectAuthUser]);
 
   return (
     <div className="flex justify-center">

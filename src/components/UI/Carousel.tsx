@@ -1,27 +1,35 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 
 import { useInterval } from 'src/hooks/useInterval';
 
-const Carousel = () => {
-  const [carouselIndex, setCarouselIndex] = useState<number>(0);
-  useInterval(() => incrementCarousel(), 5000);
+type CarouselProps = {
+  customStyles?: string;
+  auto?: null | number;
+};
 
+const Carousel: FC<CarouselProps> = ({ customStyles, auto = 5000 }) => {
+  // const [carouselIndex, setCarouselIndex] = useState<{ prev: number; cur: number; next: number }>({
+  //   prev: 2,
+  //   cur: 0,
+  //   next: 1
+  // });
+  const [carouselIndex, setCarouselIndex] = useState<number>(0);
+  useInterval(() => incrementCarousel(), auto);
   const carouselPos = ['left-[0%]', 'left-[-100%]', 'left-[-200%]', 'left-[-300%]', 'left-[-400%]'];
 
   const placeHolder = [
-    <div key={1} className="h-32 w-96 bg-red-500 text-center"></div>,
-    <div key={2} className="h-32 w-96 bg-emerald-500 text-center"></div>,
-    <div key={3} className="h-32 w-96 bg-pink-500 text-center"></div>
+    <div key={0} className="h-32 w-96 bg-red-500 text-center"></div>,
+    <div key={1} className="h-32 w-96 bg-emerald-500 text-center"></div>,
+    <div key={2} className="h-32 w-96 bg-pink-500 text-center"></div>
   ];
 
-  const slides = placeHolder.map((item, i) => (
-    <li key={i} className="">
-      {item}
-    </li>
-  ));
+  const slides = placeHolder.map((item, i) => {
+    return <li key={i}>{item}</li>;
+  });
+  const lastSlide = slides.length - 1;
 
   function incrementCarousel() {
-    carouselIndex < slides.length - 1 ? setCarouselIndex((prev) => prev + 1) : setCarouselIndex(0);
+    setCarouselIndex((index) => (index < lastSlide ? index + 1 : 0));
   }
 
   function carouselButtonHandler(buttonIndex: number) {
@@ -47,12 +55,12 @@ const Carousel = () => {
   const buttons = renderCarouselButtons();
 
   return (
-    <div className="relative h-32 w-96 overflow-hidden rounded-md">
+    <div className={`${customStyles} relative overflow-hidden rounded-md`}>
       <ul
-        className={`absolute top-0 ${carouselPos[carouselIndex]} flex h-full w-full transition-all duration-700 ease-in-out`}>
+        className={`absolute ${carouselPos[carouselIndex]} top-0 flex h-full w-full transition-all duration-700 ease-out`}>
         {slides}
       </ul>
-      <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-4">{buttons}</div>
+      <div className="absolute bottom-3 left-1/2 z-30 flex -translate-x-1/2 gap-4">{buttons}</div>
     </div>
   );
 };

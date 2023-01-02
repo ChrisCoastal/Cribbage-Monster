@@ -22,12 +22,12 @@ const SignUpPage = () => {
   const navigate = useNavigate();
   // const { setAuth } = useFirebaseAuth();
 
-  function redirectAuthUser() {
-    navigate('/dashboard');
+  function redirectAuthUser(uid: string) {
+    navigate(`/dashboard/${uid}`);
   }
 
   useEffect(() => {
-    if (userAuth) navigate('/dashboard');
+    if (userAuth) navigate(`/dashboard/${userAuth.uid}`);
   }, [userAuth, navigate]);
 
   async function submitHandler(event: React.FormEvent<HTMLFormElement>) {

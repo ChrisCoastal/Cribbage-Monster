@@ -109,9 +109,9 @@ const PlayingCard: FC<PlayingCardProps> = ({
   return isFaceUp ? (
     <div
       onClick={() => (handler ? handler(card) : null)}
-      className={`${conditionalStyles} ${sizeVars} ${corners} border border-solid border-neutral-100 bg-white transition-all duration-300`}>
+      className={`${conditionalStyles} ${sizeVars} ${corners} border border-solid border-stone-100 bg-white transition-all duration-300`}>
       <div
-        className={`${corners} grid-columns-3 shadow-[-4px_4px_8px_rgba(0,0,0,0.05) grid max-h-full max-w-full grid-rows-3 items-center border border-solid border-neutral-500 bg-white`}>
+        className={`${corners} grid-columns-3 shadow-[-4px_4px_8px_rgba(0,0,0,0.05) grid max-h-full max-w-full grid-rows-3 items-center border border-solid border-stone-500 bg-white`}>
         <div className="col-start-1 mt-2 flex-col gap-1 justify-self-center text-sm">
           {cardMarking}
         </div>
@@ -124,7 +124,7 @@ const PlayingCard: FC<PlayingCardProps> = ({
     </div>
   ) : (
     <div
-      className={`${cardSize} ${cardPos[cardIndex]} ${sizeVars} ${cardBackBorder} ${corners} border border-solid border-neutral-100 bg-white transition-all duration-300`}
+      className={`${cardSize} ${cardPos[cardIndex]} ${sizeVars} ${cardBackBorder} ${corners} border border-solid border-stone-100 bg-white transition-all duration-300`}
       onClick={() => (handler ? handler(card) : null)}>
       <div className={`${cardBack} h-full w-full bg-repeat`}></div>
     </div>

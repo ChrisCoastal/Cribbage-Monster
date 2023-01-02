@@ -20,7 +20,10 @@ import { ref } from 'firebase/database';
 import { rtdb } from 'src/firestore.config';
 
 // REALTIME DATABASE REFS
-// game scores
+// user settings
+export const getUserSettingsRef = (uid: string) => ref(rtdb, `userSettings/${uid}`);
+
+// game tallies
 export const getGameTalliesRef = (gameId: GameId) => ref(rtdb, `gameTallies/${gameId}`);
 
 // game list

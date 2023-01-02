@@ -39,7 +39,7 @@ const useModal = () => {
               <div
                 onClick={() => modalHandler(false)}
                 onKeyDown={keyDownHandler}
-                className="absolute top-0 left-0 z-[900] h-full w-full bg-neutral-900 opacity-60"></div>
+                className="absolute top-0 left-0 z-[900] h-full w-full bg-stone-900 opacity-60"></div>
             </>,
             document.getElementById('overlay-root')!
           )}

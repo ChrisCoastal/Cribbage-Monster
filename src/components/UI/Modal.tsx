@@ -26,7 +26,7 @@ const Modal: FC<ModalProps> = ({ modalContent, callback, children }) => {
       </div>
       <div
         onClick={toggleModal}
-        className="absolute top-0 left-0 z-[900] h-full w-full bg-neutral-900 opacity-60"></div>
+        className="absolute top-0 left-0 z-[900] h-full w-full bg-stone-900 opacity-60"></div>
     </>
   );
 };

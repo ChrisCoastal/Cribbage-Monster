@@ -1,12 +1,17 @@
 import React, { FC } from 'react';
+import { AvatarSize } from 'src/@types';
 
 type AvatarProps = {
-  imageUrl?: string;
+  size: AvatarSize;
+  avatar?: string;
 };
 
-const Avatar: FC<AvatarProps> = ({ imageUrl }) => {
+const Avatar: FC<AvatarProps> = ({ size = AvatarSize.SM, avatar }) => {
   return (
-    <div className=" mb-2 h-10 w-10 overflow-hidden rounded-full border border-white bg-slate-400"></div>
+    <div
+      className={`${size} flex items-center justify-center overflow-hidden rounded-full border border-stone-600 bg-slate-400 `}>
+      <p className="pt-2">{avatar}</p>
+    </div>
   );
 };
 

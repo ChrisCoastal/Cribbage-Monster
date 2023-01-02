@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { BadgeName } from 'src/@types';
-import Badge from 'src/components/UI/badges/Badge/Badge';
+import Badge from 'src/components/Badge/Badge';
 
 type BadgesProps = {
   //
@@ -9,12 +9,16 @@ type BadgesProps = {
 const Badges: FC<BadgesProps> = () => {
   const badgeNames: BadgeName[] = ['trophy', 'first', 'jack', 'five', 'star', 'suits'];
   const renderBadges = badgeNames.map((name) => (
-    <div key={name} className=" rounded-full">
-      <Badge badge={name} height={'4rem'} width={'4rem'}></Badge>
+    <div key={name} className="h-fit opacity-60">
+      <Badge badge={name} height={'4rem'} width={'4rem'} color={'#333'}></Badge>
     </div>
   ));
 
-  return <div className="grid grid-cols-3 justify-items-center gap-1">{renderBadges}</div>;
+  return (
+    <div className="flex flex-col items-center">
+      <div className="grid h-fit grid-cols-3 justify-items-center gap-1">{renderBadges}</div>
+    </div>
+  );
 };
 
 export default Badges;

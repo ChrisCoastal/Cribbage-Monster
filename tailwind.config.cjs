@@ -15,7 +15,7 @@ module.exports = {
         'cardback-sm': `url('src/assets/cardback-sm.svg')`
       },
       animation: {
-        'modal-slide-in': '0.8s ease-in-out slide-in forwards',
+        'modal-slide-in': '0.6s ease-in-out slide-in forwards',
         'modal-slide-out': '0.8s ease-in-out slide-in reverse both',
         radiate: '0.8s radiate infinite',
         grow: '0.6s ease-in grow',
@@ -24,8 +24,8 @@ module.exports = {
       keyframes: {
         'slide-in': {
           '0%': { top: '140%' },
-          '75%': { top: '46%' },
-          '90%': { top: '52%' },
+          '56%': { top: '46%' },
+          '88%': { top: '52%' },
           '100%': { top: '50%' }
         },
         radiate: {

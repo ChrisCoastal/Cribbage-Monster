@@ -108,10 +108,15 @@ export type GameState = {
   turnTotals: TurnType;
 };
 
+export type PlayerBrief = {
+  displayName: string;
+  avatar: string;
+};
+
 export type GameBrief = {
   gameId: GameId;
-  player1: string; // display name
-  player2: string; // display name
+  player1: PlayerBrief;
+  player2: PlayerBrief;
   scoreToWin: 121;
 };
 

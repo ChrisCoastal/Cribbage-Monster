@@ -5,7 +5,7 @@ const AppLayout = () => {
   return (
     <>
       <div id="overlay-root"></div>
-      <div className="relative h-screen overflow-hidden bg-neutral-800">
+      <div className="relative h-screen overflow-x-hidden bg-stone-800">
         <Nav />
         <main className="px-4">
           <Outlet />

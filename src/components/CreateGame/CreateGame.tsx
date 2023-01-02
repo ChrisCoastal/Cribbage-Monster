@@ -16,7 +16,7 @@ import Button from 'src/components/UI/Button';
 
 const CreateGame = () => {
   const { userAuth } = useAuthContext();
-  const { gameState, dispatchGame } = useGameContext();
+  const { dispatchGame } = useGameContext();
   const navigate = useNavigate();
 
   async function createGameHandler() {
@@ -40,8 +40,14 @@ const CreateGame = () => {
       };
       const gameBrief: GameBrief = {
         gameId,
-        player1: displayName!,
-        player2: '',
+        player1: {
+          displayName: displayName!,
+          avatar: ''
+        },
+        player2: {
+          displayName: displayName!,
+          avatar: ''
+        },
         scoreToWin: 121
       };
       const gameFromListRef = getGameFromList(gameId);

@@ -27,4 +27,11 @@ export enum CardOverlap {
 }
 
 // badges
+export enum AvatarSize {
+  SM = 'h-10 w-10 text-[1.9rem]',
+  MD = 'h-16 w-16 text-[3.6rem]',
+  LG = 'h-20 w-20 text-[4.2rem]',
+  XL = 'h-48 w-48 text-[8.8rem]'
+}
+
 export type BadgeName = 'trophy' | 'first' | 'jack' | 'five' | 'star' | 'suits';

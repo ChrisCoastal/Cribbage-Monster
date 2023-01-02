@@ -56,7 +56,7 @@ const PlayerTally: FC<PlayerTallyProps> = ({ displayName, cards, cut, scores, to
 
   return (
     <>
-      <div className="flex-col rounded-lg bg-gradient-to-br from-emerald-400 to-emerald-500 p-4 text-neutral-800">
+      <div className="flex-col rounded-lg bg-gradient-to-br from-emerald-400 to-emerald-500 p-4 text-stone-800">
         <div className="flex items-center gap-2">
           <Avatar />
           <h3 className="text-lg font-bold">{displayName}</h3>
