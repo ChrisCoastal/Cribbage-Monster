@@ -28,9 +28,9 @@ const useModal = () => {
             <>
               <div
                 className={`${customStyles} absolute top-1/2 left-1/2 z-[1000] -translate-x-1/2 -translate-y-1/2 animate-modal-slide-in rounded-lg bg-white p-4`}>
-                <div>
+                <div className="">
                   <div className="flex items-center justify-between gap-8">
-                    <h2 className=" text-xl font-extrabold">{title}</h2>
+                    <h2 className=" text-xl font-extrabold">{title.toUpperCase()}</h2>
                     <Button handler={() => modalHandler(false)}>X</Button>
                   </div>
                   {children}

@@ -1,6 +1,6 @@
 import { createContext, FC, ReactNode, useReducer } from 'react';
 import { SettingsContextType } from 'src/@types';
-import { INITIAL_SETTINGS_STATE } from 'src/utils/constants';
+import { INITIAL_USER_SETTING } from 'src/utils/constants';
 import settingsReducer from './settingsReducer';
 
 type SettingsProviderProps = {
@@ -10,7 +10,7 @@ type SettingsProviderProps = {
 const SettingsContext = createContext({} as SettingsContextType);
 
 const SettingsProvider: FC<SettingsProviderProps> = ({ children }) => {
-  const [userSettingsState, dispatchSettings] = useReducer(settingsReducer, INITIAL_SETTINGS_STATE);
+  const [userSettingsState, dispatchSettings] = useReducer(settingsReducer, INITIAL_USER_SETTING);
 
   return (
     <SettingsContext.Provider value={{ userSettingsState, dispatchSettings }}>

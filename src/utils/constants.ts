@@ -10,6 +10,15 @@ export const CARDS_PER_SUIT = 13;
 
 export const PAIR_POINTS = [0, 2, 6, 12];
 
+export const INITIAL_USER_SETTING: UserSettingsState = {
+  uid: '',
+  displayName: '',
+  email: '',
+  avatar: '',
+  online: false,
+  lastVisibleAt: ''
+};
+
 export const INITIAL_GAME_STATE: GameState = {
   gameId: '',
   dealer: PlayerPos.P_ONE,

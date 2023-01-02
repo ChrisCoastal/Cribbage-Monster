@@ -13,9 +13,12 @@ import useAuthContext from 'src/hooks/useAuthContext';
 import useGameContext from 'src/hooks/useGameContext';
 
 import Button from 'src/components/UI/Button';
+import useSettingsContext from 'src/hooks/useSettingsContext';
 
 const CreateGame = () => {
   const { userAuth } = useAuthContext();
+  const { userSettingsState } = useSettingsContext();
+
   const { dispatchGame } = useGameContext();
   const navigate = useNavigate();
 
@@ -42,10 +45,10 @@ const CreateGame = () => {
         gameId,
         player1: {
           displayName: displayName!,
-          avatar: ''
+          avatar: userSettingsState.avatar
         },
         player2: {
-          displayName: displayName!,
+          displayName: '',
           avatar: ''
         },
         scoreToWin: 121

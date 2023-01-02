@@ -4,15 +4,18 @@ import App from './App';
 
 import 'tailwindcss/tailwind.css';
 
-import { AuthProvider } from './context/AuthProvider/AuthProvider';
+import { AuthProvider } from 'src/context/AuthProvider/AuthProvider';
 import { GameProvider } from 'src/context/GameProvider/GameProvider';
+import { SettingsProvider } from 'src/context/SettingsProvider/SettingsProvider';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <AuthProvider>
-      <GameProvider>
-        <App />
-      </GameProvider>
+      <SettingsProvider>
+        <GameProvider>
+          <App />
+        </GameProvider>
+      </SettingsProvider>
     </AuthProvider>
   </React.StrictMode>
 );

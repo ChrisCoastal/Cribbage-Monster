@@ -38,7 +38,9 @@ const GamesList: FC<GamesListProps> = () => {
   }, []);
 
   const gamesListItems = games.map((game) => {
-    const vacantPlayer = !game.player1.displayName.length || !game.player2.displayName.length;
+    console.log(game);
+
+    // const vacantPlayer = !game.player1?.displayName.length || !game.player2?.displayName.length;
     return (
       <li
         key={game.gameId}
@@ -50,8 +52,8 @@ const GamesList: FC<GamesListProps> = () => {
           </span>
           <p>{game.scoreToWin}</p>
         </span>
-
-        {!vacantPlayer && <JoinGame gameId={game.gameId} />}
+        <JoinGame gameId={game.gameId} />
+        {/* {!vacantPlayer && <JoinGame gameId={game.gameId} />} */}
       </li>
     );
   });
