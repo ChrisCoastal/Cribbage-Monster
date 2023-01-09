@@ -30,7 +30,7 @@ const AvatarModal: FC<AvatarModalProps> = ({ Modal, isModal, modalHandler }) => 
   function saveAvatarHandler() {
     modalHandler(false);
     const userSettingsRef = getUserSettingsRef(userAuth!.uid!);
-    update(userSettingsRef, { ...userSettingsState, avatar: avatarSelection });
+    update(userSettingsRef, { avatar: avatarSelection });
   }
 
   function changeAvatar() {

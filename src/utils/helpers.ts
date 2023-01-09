@@ -25,10 +25,12 @@ export const getConnectionRef = () => ref(rtdb, `.info/connected`);
 
 export const getPresenceRef = () => ref(rtdb, `disconnectmessage`);
 
-export const getUserStatusRef = (uid: string) => ref(rtdb, `userStatus/${uid}`);
+// export const getUserStatusRef = (uid: string) => ref(rtdb, `userStatus/${uid}`);
 
 // user settings
 export const getUserSettingsRef = (uid: string) => ref(rtdb, `userSettings/${uid}`);
+
+export const getIsOnlineRef = (uid: string) => ref(rtdb, `userSettings/${uid}/online`);
 
 // game tallies
 export const getGameTalliesRef = (gameId: GameId) => ref(rtdb, `gameTallies/${gameId}`);

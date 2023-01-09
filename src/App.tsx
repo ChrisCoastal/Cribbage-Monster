@@ -10,8 +10,13 @@ import HomePage from 'src/router/routes/HomePage';
 import DashboardPage, { dashboardLoader } from 'src/router/routes/DashboardPage';
 
 import { gameLoader } from 'src/router/routes/GamePage';
-import { getConnectionRef, getPresenceRef, getUserStatusRef } from './utils/helpers';
-import { onDisconnect, onValue, push, set } from 'firebase/database';
+import {
+  getConnectionRef,
+  getIsOnlineRef,
+  getPresenceRef,
+  getUserSettingsRef
+} from './utils/helpers';
+import { onDisconnect, update, onValue, push, set } from 'firebase/database';
 import { useEffect } from 'react';
 import useAuthContext from './hooks/useAuthContext';
 
@@ -60,11 +65,10 @@ function App() {
 
   // presence if app is open
   useEffect(() => {
-    console.log('rendering useEffect');
     if (!uid) return;
     const presenceRef = getPresenceRef();
-    const statusRef = getUserStatusRef(uid);
-    set(presenceRef, true);
+    const isOnlineRef = getIsOnlineRef(uid);
+    set(isOnlineRef, true);
     // const disconnect = onDisconnect(statusRef);
     // disconnect.set('disconnected');
     // Write a string when this client loses connection
@@ -74,7 +78,7 @@ function App() {
     // onDisconnect(statusRef)
     //   .remove()
     //   .then(() => console.log('On disconnect function configured.'));
-    onDisconnect(presenceRef)
+    onDisconnect(isOnlineRef)
       .set(false)
       .then(() => console.log('disconnected'));
 

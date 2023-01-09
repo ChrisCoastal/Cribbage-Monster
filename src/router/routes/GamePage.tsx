@@ -22,8 +22,7 @@ import {
   getPlayerPresenceRef,
   getPlayerRef,
   getPone,
-  getPresenceRef,
-  getUserStatusRef
+  getPresenceRef
 } from 'src/utils/helpers';
 import { INITIAL_GAME_STATE } from 'src/utils/constants';
 import { useInterval } from 'src/hooks/useInterval';
@@ -219,8 +218,6 @@ const GamePage = () => {
   //   return disconnect();
   // }, []);
   function leaveGameHandler() {
-    const ref = getUserStatusRef(uid);
-
     const playerRef = getPlayerRef(game.gameId, player);
     const gameListRef = getGameFromList(game.gameId);
     const gameRef = getGameRef(game.gameId);
