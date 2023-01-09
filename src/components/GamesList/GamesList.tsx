@@ -37,26 +37,26 @@ const GamesList: FC<GamesListProps> = () => {
     return unsubscribe;
   }, []);
 
-  const gamesListItems = games.map((game) => {
-    console.log(game);
-
-    // const vacantPlayer = !game.player1?.displayName.length || !game.player2?.displayName.length;
-    return (
-      <li
-        key={game.gameId}
-        className="flex items-center justify-between gap-4 rounded-full bg-gradient-to-br from-stone-700 to-stone-800 p-2 text-xs">
-        <span className="flex items-center justify-between gap-4">
-          <span className="flex items-center gap-1">
-            <Avatar size={AvatarSize.SM} />
-            <p>{game.player1.displayName}</p>
+  const gamesListItems = games
+    .filter((game) => game.player1.displayName.length || game.player2.displayName.length)
+    .map((game) => {
+      const inProgress = game.player1.displayName.length && game.player2.displayName.length;
+      return (
+        <li
+          key={game.gameId}
+          className="flex items-center justify-between gap-4 rounded-full bg-gradient-to-br from-stone-700 to-stone-800 p-2 text-xs">
+          <span className="flex items-center justify-between gap-4">
+            <span className="flex items-center gap-1">
+              <Avatar size={AvatarSize.SM} avatar={game.player1.avatar} />
+              <p>{game.player1.displayName}</p>
+            </span>
+            <p>{game.scoreToWin}</p>
           </span>
-          <p>{game.scoreToWin}</p>
-        </span>
-        <JoinGame gameId={game.gameId} />
-        {/* {!vacantPlayer && <JoinGame gameId={game.gameId} />} */}
-      </li>
-    );
-  });
+          {inProgress ? <p>In Progress</p> : <JoinGame gameId={game.gameId} />}
+          {/* {!vacantPlayer && <JoinGame gameId={game.gameId} />} */}
+        </li>
+      );
+    });
 
   return (
     <div className="w-full rounded-md bg-gradient-to-br from-stone-600 to-stone-700 p-4 text-white">

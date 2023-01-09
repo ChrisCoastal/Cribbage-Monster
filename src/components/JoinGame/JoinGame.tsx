@@ -6,6 +6,7 @@ import { rtdb } from 'src/firestore.config';
 import { update, ref, get } from 'firebase/database';
 
 import useAuthContext from 'src/hooks/useAuthContext';
+import useSettingsContext from 'src/hooks/useSettingsContext';
 
 import { findPlayerPos, getGameFromList } from 'src/utils/helpers';
 
@@ -18,6 +19,7 @@ type JoinGameProps = {
 
 const JoinGame: FC<JoinGameProps> = ({ gameId }) => {
   const { userAuth } = useAuthContext();
+  const { userSettingsState } = useSettingsContext();
   const navigate = useNavigate();
 
   async function joinGameHandler() {
@@ -38,7 +40,7 @@ const JoinGame: FC<JoinGameProps> = ({ gameId }) => {
         const PlayerPos = findPlayerPos(players, uid);
 
         if (!PlayerPos) throw new Error('Sorry that game already has 2 players');
-        update(gameFromListRef, { [PlayerPos]: displayName! });
+        update(gameFromListRef, { [PlayerPos]: { displayName, avatar: userSettingsState.avatar } });
         update(gamePlayersRef, {
           ...players,
           [PlayerPos]: {

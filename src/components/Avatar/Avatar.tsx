@@ -9,7 +9,7 @@ type AvatarProps = {
 const Avatar: FC<AvatarProps> = ({ size = AvatarSize.SM, avatar }) => {
   return (
     <div
-      className={`${size} flex items-center justify-center overflow-hidden rounded-full border border-stone-600 bg-slate-400 `}>
+      className={`${size} flex items-center justify-center overflow-hidden rounded-full border border-stone-600 bg-gradient-to-br from-emerald-300 to-emerald-600`}>
       <p className="pt-2">{avatar}</p>
     </div>
   );

@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import {
   CardBoxHeight,
   CardBoxWidth,
@@ -14,7 +14,7 @@ import {
   TallyPoints
 } from 'src/@types';
 
-import { set, push, update } from 'firebase/database';
+import { set, push, update, onDisconnect } from 'firebase/database';
 
 import {
   expectGo,
@@ -41,7 +41,10 @@ import {
   isPegJack,
   getGameTalliesRef,
   getTallyRef,
-  isWinner
+  isWinner,
+  getGameFromList,
+  getPresenceRef,
+  getUserStatusRef
 } from 'src/utils/helpers';
 
 import Avatar from 'src/components/Opponent/Opponent';
@@ -54,6 +57,7 @@ import Score from 'src/components/Score/Score';
 
 import useAuthContext from 'src/hooks/useAuthContext';
 import useGameContext from 'src/hooks/useGameContext';
+import { useBeforeUnload } from 'react-router-dom';
 
 type PlayFieldProps = {
   gameId: GameId;
@@ -61,13 +65,24 @@ type PlayFieldProps = {
 
 const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   const [go, setGo] = useState<boolean>(false);
+  // useBeforeUnload(
+  //   useCallback(() => {
+  //     console.log('unload');
+  //   }, [])
+  // );
+  // useEffect(() => {
+  //   window.addEventListener('beforeunload', () => console.log('unload'));
+  //   return () => {
+  //     window.removeEventListener('beforeunload', () => console.log('unload'));
+  //   };
+  // }, []);
 
   const { userAuth } = useAuthContext();
-  const userId = userAuth!.uid!;
+  const uid = userAuth!.uid!;
 
   const { gameState } = useGameContext();
 
-  const { player, opponent } = getPlayerOpponent(gameState.players, userId);
+  const { player, opponent } = getPlayerOpponent(gameState.players, uid);
   const gameRef = getGameRef(gameId);
   const gameScore = getGameTalliesRef(gameId);
   const playerHand = Object.values(gameState.playerCards[player].inHand);
@@ -87,6 +102,18 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     if (numCardsPlayed !== 8) return;
     player === PlayerPos.P_ONE && tallyHand();
   }, [numCardsPlayed]);
+
+  // useEffect(() => {
+  //   const gameRef = getGameRef(gameState.gameId);
+  //   const gameBriefRef = getGameFromList(gameState.gameId);
+
+  //   function deleteGameFromDB() {
+  //     set(gameRef, null);
+  //     set(gameBriefRef, null);
+  //   }
+
+  //   return () => deleteGameFromDB();
+  // }, []);
 
   //TODO: should all refs be moved into an object?
 

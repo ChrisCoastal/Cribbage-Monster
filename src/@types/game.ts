@@ -17,6 +17,8 @@ export enum IsActive {
   NOT_ACTIVE = 'not active'
 }
 
+export type Presence = { id: UserId; presentAt: string };
+
 export type Player = { id: UserId; displayName: string; activePlayer: IsActive };
 
 export type CardsIndex = { [key: number]: CardType };
@@ -110,6 +112,7 @@ export type GameState = {
 
 export type PlayerBrief = {
   displayName: string;
+  presence: string;
   avatar: string;
 };
 

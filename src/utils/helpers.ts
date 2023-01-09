@@ -20,6 +20,13 @@ import { ref } from 'firebase/database';
 import { rtdb } from 'src/firestore.config';
 
 // REALTIME DATABASE REFS
+// presence
+export const getConnectionRef = () => ref(rtdb, `.info/connected`);
+
+export const getPresenceRef = () => ref(rtdb, `disconnectmessage`);
+
+export const getUserStatusRef = (uid: string) => ref(rtdb, `userStatus/${uid}`);
+
 // user settings
 export const getUserSettingsRef = (uid: string) => ref(rtdb, `userSettings/${uid}`);
 
@@ -30,6 +37,9 @@ export const getGameTalliesRef = (gameId: GameId) => ref(rtdb, `gameTallies/${ga
 export const getGamesList = () => ref(rtdb, `gamesList`);
 
 export const getGameFromList = (gameId: GameId) => ref(rtdb, `gamesList/${gameId}`);
+
+export const getPlayerPresenceRef = (gameId: GameId, playerPos: PlayerPos) =>
+  ref(rtdb, `gamesList/${gameId}/${playerPos}`);
 
 // game
 export const getGameRef = (gameId: GameId) => ref(rtdb, `games/${gameId}`);
