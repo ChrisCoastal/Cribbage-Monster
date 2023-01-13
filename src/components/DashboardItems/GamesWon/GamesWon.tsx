@@ -1,6 +1,8 @@
 import React, { FC } from 'react';
 import Card from 'src/components/UI/Card';
 import Doughnut from 'src/components/UI/Doughnut';
+import SubHeading from 'src/components/UI/SubHeading';
+import ToolTip from 'src/components/UI/ToolTip';
 
 type GamesWonProps = {
   gamesPlayed: number;
@@ -14,8 +16,11 @@ const GamesWon: FC<GamesWonProps> = ({ gamesPlayed, gamesWon }) => {
   return (
     <Card customStyles="w-full h-full">
       <div>
-        <h3>WIN RATIO</h3>
-        <Doughnut degFill={winRatio} centerText={centerText} />
+        <SubHeading>WIN RATIO</SubHeading>
+        <div className="relative">
+          <ToolTip text={`${gamesWon} / ${gamesPlayed}`} />
+          <Doughnut degFill={winRatio} centerText={centerText} />
+        </div>
       </div>
     </Card>
   );

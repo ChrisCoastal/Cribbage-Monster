@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { DailyGames } from 'src/@types';
 import BarChart from 'src/components/UI/BarChart';
 import Card from 'src/components/UI/Card';
+import SubHeading from 'src/components/UI/SubHeading';
 import { MILLISEC_PER_DAY } from 'src/utils/constants';
 
 type GamesPlayedProps = {
@@ -27,7 +28,7 @@ const GamesPlayed: FC<GamesPlayedProps> = ({ dailyGames }) => {
   return (
     <Card customStyles="w-full">
       <div className="h-full">
-        <h3>GAMES PLAYED</h3>
+        <SubHeading>GAMES PLAYED</SubHeading>
         <BarChart barValues={barValues} colLabels={colLabels} />
       </div>
     </Card>
