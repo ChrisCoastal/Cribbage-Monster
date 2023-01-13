@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import { LoaderFunctionArgs, useLoaderData, useBeforeUnload } from 'react-router-dom';
 
-import { get, onValue, set, update, onDisconnect, serverTimestamp, push } from 'firebase/database';
+import { get, onValue, set, update } from 'firebase/database';
 
 import { GameReducerTypes, GameState, IsActive, Status, PlayerPos } from 'src/@types';
 
@@ -15,17 +15,13 @@ import PlayFieldFlex from 'src/components/PlayField/PlayField';
 
 import {
   dealHands,
-  getConnectionRef,
   getGameFromList,
   getGameRef,
   getPlayerOpponent,
-  getPlayerPresenceRef,
   getPlayerRef,
-  getPone,
-  getPresenceRef
+  getPone
 } from 'src/utils/helpers';
 import { INITIAL_GAME_STATE } from 'src/utils/constants';
-import { useInterval } from 'src/hooks/useInterval';
 
 export async function gameLoader({ params }: LoaderFunctionArgs) {
   try {
@@ -45,7 +41,6 @@ const GamePage = () => {
   const { userAuth } = useAuthContext();
   const uid = userAuth!.uid!;
   const { player, opponent } = getPlayerOpponent(gameState.players, uid);
-  const presenceRef = getPlayerPresenceRef(game.gameId, player);
   // useInterval(() => update(presenceRef, { presence: serverTimestamp() }), 5000); // TODO: uncomment to add updating timestamp
 
   const { Modal, isModal, modalHandler } = useModal();
@@ -135,98 +130,11 @@ const GamePage = () => {
   useEffect(() => {
     if (!gameState.tally) return;
     renderTally();
-  }, [gameState.tally]);
+  }, [gameState.tally, renderTally]);
 
-  // useEffect(() => {
-  //   console.log('rendering useEffect');
-
-  //   const presenceRef = getPresenceRef();
-  //   const statusRef = getUserStatusRef(uid);
-  //   // const disconnect = onDisconnect(statusRef);
-  //   // disconnect.set('disconnected');
-  //   // Write a string when this client loses connection
-  //   // set(statusRef, true).then(() => console.log('Online presence set'));
-
-  //   // Remove the node whenever the client disconnects
-  //   // onDisconnect(statusRef)
-  //   //   .remove()
-  //   //   .then(() => console.log('On disconnect function configured.'));
-
-  //   const connectionRef = getConnectionRef();
-  //   const unsubConnection = onValue(connectionRef, (snapshot) => {
-  //     if (snapshot.val() === true) {
-  //       console.log('connected');
-  //       onDisconnect(presenceRef)
-  //         .set('I disconnected!')
-  //         .then(() => console.log('disconnected'));
-  //       const status = push(statusRef);
-  //       // onDisconnect(presenceRef).set('I disconnected!');
-  //     } else {
-  //       console.log('not connected');
-  //     }
-  //   });
-  //   return unsubConnection;
-  // }, []);
-  // useEffect(() => {
-  //   console.log('rendering useEffect');
-  //   if (!uid) return;
-  //   const { player } = getPlayerOpponent(gameState.players, uid);
-  //   const playerRef = getPlayerRef(game.gameId, player);
-
-  //   if (!gameState.players[player].id)
-  //     update(playerRef, {
-  //       id: uid,
-  //       displayName: userAuth?.displayName,
-  //       activePlayer: IsActive.NOT_ACTIVE
-  //     }).then(() => console.log('readded player'));
-  //   const presenceRef = getPresenceRef();
-  //   const gameStatusRef = getUserStatusRef(uid);
-  //   set(presenceRef, true);
-  //   // const disconnect = onDisconnect(statusRef);
-  //   // disconnect.set('disconnected');
-  //   // Write a string when this client loses connection
-  //   // set(statusRef, true).then(() => console.log('Online presence set'));
-
-  //   // Remove the node whenever the client disconnects
-  //   // onDisconnect(statusRef)
-  //   //   .remove()
-  //   //   .then(() => console.log('On disconnect function configured.'));
-  //   // onDisconnect(presenceRef)
-  //   //   .set(false)
-  //   //   .then(() => console.log('disconnected'));
-
-  //   function disconnect() {
-  //     // update(playerRef, INITIAL_GAME_STATE.players[player]);
-  //     onDisconnect(presenceRef)
-  //       .set(false)
-  //       .then(() => console.log('disconnected'));
-  //   }
-  //   // const connectionRef = getConnectionRef();
-  //   // const unsubConnection = onValue(connectionRef, (snapshot) => {
-  //   //   if (snapshot.val() === true) {
-  //   //     console.log('connected');
-  //   //     onDisconnect(presenceRef)
-  //   //       .set('I disconnected!')
-  //   //       .then(() => console.log('disconnected'));
-  //   //     const status = push(statusRef);
-  //   //     // onDisconnect(presenceRef).set('I disconnected!');
-  //   //   } else {
-  //   //     console.log('not connected');
-  //   //   }
-  //   // });
-  //   // return unsubConnection;
-  //   return disconnect();
-  // }, []);
   function leaveGameHandler() {
     const playerRef = getPlayerRef(game.gameId, player);
     const gameListRef = getGameFromList(game.gameId);
-    const gameRef = getGameRef(game.gameId);
-
-    // if (gameState.players[opponent].displayName === '') {
-    //   set(gameRef, null);
-    //   set(gameListRef, null);
-    // }
-
     update(gameListRef, { [player]: { displayName: '', avatar: '', presence: '' } });
     update(playerRef, { id: '', displayName: '', activePlayer: IsActive.NOT_ACTIVE });
   }
@@ -242,12 +150,14 @@ const GamePage = () => {
             cut={gameState.deckCut.card!}
             player={{
               displayName: gameState.players[player].displayName,
+              avatar: gameState.players[player].avatar,
               playerPos: player,
               cards: gameState.playerCards[player].played,
               points: gameState?.tally[player]
             }}
             opponent={{
               displayName: gameState.players[opponent].displayName,
+              avatar: gameState.players[opponent].avatar,
               playerPos: opponent,
               cards: gameState.playerCards[opponent].played,
               points: gameState?.tally[opponent]

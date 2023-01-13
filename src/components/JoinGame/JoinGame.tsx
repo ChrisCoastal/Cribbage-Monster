@@ -11,7 +11,7 @@ import useSettingsContext from 'src/hooks/useSettingsContext';
 import { findPlayerPos, getGameFromList } from 'src/utils/helpers';
 
 import Button from 'src/components/UI/Button';
-import { GameId, Player } from 'src/@types';
+import { GameId, IsActive, Player } from 'src/@types';
 
 type JoinGameProps = {
   gameId: GameId;
@@ -37,16 +37,17 @@ const JoinGame: FC<JoinGameProps> = ({ gameId }) => {
         };
 
         // will check for a vacant spot or if the player is already in the game
-        const PlayerPos = findPlayerPos(players, uid);
+        const playerPos = findPlayerPos(players, uid);
 
-        if (!PlayerPos) throw new Error('Sorry that game already has 2 players');
-        update(gameFromListRef, { [PlayerPos]: { displayName, avatar: userSettingsState.avatar } });
+        if (!playerPos) throw new Error('Sorry that game already has 2 players');
+        update(gameFromListRef, { [playerPos]: { displayName, avatar: userSettingsState.avatar } });
         update(gamePlayersRef, {
           ...players,
-          [PlayerPos]: {
-            ...players[PlayerPos],
+          [playerPos]: {
+            avatar: userSettingsState.avatar,
             id: uid,
-            displayName: displayName!
+            displayName: displayName!,
+            activePlayer: IsActive.NOT_ACTIVE
           }
         }).then(() => {
           navigate(`/game/${gameId}`);

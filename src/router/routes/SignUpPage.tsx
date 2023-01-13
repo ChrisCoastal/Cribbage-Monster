@@ -6,12 +6,6 @@ import useFirebaseAuth from 'src/hooks/useFirebaseAuth';
 import useAuthContext from 'src/hooks/useAuthContext';
 import Button from 'src/components/UI/Button';
 
-export async function signUpAction() {
-  await new Promise((res) => {
-    res(() => console.log('here'));
-  });
-}
-
 const SignUpPage = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');

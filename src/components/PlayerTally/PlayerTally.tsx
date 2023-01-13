@@ -5,7 +5,8 @@ import {
   CardOverlap,
   CardsIndex,
   CardSize,
-  CardType
+  CardType,
+  AvatarSize
 } from 'src/@types';
 
 import Avatar from 'src/components/Avatar/Avatar';
@@ -15,6 +16,7 @@ import { getCardValues } from 'src/utils/helpers';
 
 type PlayerTallyProps = {
   displayName: string;
+  avatar: string;
   cards: CardsIndex;
   cut: CardType;
   scores: ReactNode;
@@ -22,7 +24,7 @@ type PlayerTallyProps = {
   children?: ReactNode;
 };
 
-const PlayerTally: FC<PlayerTallyProps> = ({ displayName, cards, cut, scores, total }) => {
+const PlayerTally: FC<PlayerTallyProps> = ({ displayName, avatar, cards, cut, scores, total }) => {
   const cardValues = getCardValues(cards) as CardType[];
 
   function renderCards(
@@ -58,7 +60,7 @@ const PlayerTally: FC<PlayerTallyProps> = ({ displayName, cards, cut, scores, to
     <>
       <div className="flex-col rounded-lg bg-gradient-to-br from-emerald-400 to-emerald-500 p-4 text-stone-800">
         <div className="flex items-center gap-2">
-          <Avatar />
+          <Avatar size={AvatarSize.SM} avatar={avatar} />
           <h3 className="text-lg font-bold">{displayName}</h3>
         </div>
         <div className="flex gap-4 py-4">

@@ -59,6 +59,7 @@ const HandTally: FC<HandTallyProps> = ({ dealer, cut, player, opponent, crib }) 
       <div className="flex flex-col gap-4 pt-2">
         <PlayerTally
           displayName={player.displayName}
+          avatar={player.avatar}
           cards={player.cards}
           cut={cut}
           scores={playerScores}
@@ -67,6 +68,7 @@ const HandTally: FC<HandTallyProps> = ({ dealer, cut, player, opponent, crib }) 
 
         <PlayerTally
           displayName={opponent.displayName}
+          avatar={opponent.avatar}
           cards={opponent.cards}
           cut={cut}
           scores={opponentScores}

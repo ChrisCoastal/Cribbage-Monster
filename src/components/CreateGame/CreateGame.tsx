@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { nanoid } from 'nanoid';
 
 import { rtdb } from 'src/firestore.config';
-import { ref, set } from 'firebase/database';
+import { ref, serverTimestamp, set } from 'firebase/database';
 
-import { GameBrief, GameReducerTypes } from 'src/@types';
+import { GameBrief, GameReducerTypes, IsActive } from 'src/@types';
 import { INITIAL_GAME_STATE } from 'src/utils/constants';
 import { getGameFromList, getGameRef } from 'src/utils/helpers';
 
@@ -35,9 +35,10 @@ const CreateGame = () => {
         players: {
           ...INITIAL_GAME_STATE.players,
           player1: {
-            ...INITIAL_GAME_STATE.players.player1,
             id: uid,
-            displayName: displayName!
+            displayName: displayName!,
+            avatar: userSettingsState.avatar,
+            activePlayer: IsActive.NOT_ACTIVE
           }
         }
       };

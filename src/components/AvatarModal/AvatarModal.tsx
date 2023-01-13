@@ -1,10 +1,9 @@
-import React, { FC, ReactNode, useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { update } from 'firebase/database';
 
 import { AvatarSize } from 'src/@types';
 
 import useSettingsContext from 'src/hooks/useSettingsContext';
-import useModal from 'src/hooks/useModal';
 
 import { HexColorPicker } from 'react-colorful';
 import Button from 'src/components/UI/Button';
@@ -24,7 +23,7 @@ const AvatarModal: FC<AvatarModalProps> = ({ Modal, isModal, modalHandler }) => 
   const [avatarSelection, setAvatarSelection] = useState<string | null>(null);
 
   const { userAuth } = useAuthContext();
-  const { userSettingsState, dispatchSettings } = useSettingsContext();
+  const { userSettingsState } = useSettingsContext();
   // const { isModal, Modal, modalHandler } = useModal();
 
   function saveAvatarHandler() {
@@ -45,7 +44,7 @@ const AvatarModal: FC<AvatarModalProps> = ({ Modal, isModal, modalHandler }) => 
     <>
       <div onClick={changeAvatar} className="group relative cursor-pointer">
         <Avatar size={AvatarSize.XL} avatar={userSettingsState.avatar} />
-        <p className="absolute left-1/2 bottom-2 -translate-x-1/2 cursor-pointer text-xs text-white opacity-60 transition-all duration-300 group-hover:opacity-90">
+        <p className="absolute left-1/2 bottom-2 -translate-x-1/2 cursor-pointer text-xs text-white opacity-50 transition-all duration-300 group-hover:opacity-90">
           edit
         </p>
       </div>

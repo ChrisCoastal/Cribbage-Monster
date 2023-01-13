@@ -7,14 +7,16 @@ import {
   CardSize,
   CardType,
   GameId,
+  GameStage,
   IsActive,
   PlayerPos,
   ScoreType,
   Status,
-  TallyPoints
+  TallyPoints,
+  UserStats
 } from 'src/@types';
 
-import { set, push, update, onDisconnect } from 'firebase/database';
+import { set, push, update, get } from 'firebase/database';
 
 import {
   expectGo,
@@ -42,12 +44,10 @@ import {
   getGameTalliesRef,
   getTallyRef,
   isWinner,
-  getGameFromList,
-  getPresenceRef,
-  getUserStatusRef
+  getUserStatsRef
 } from 'src/utils/helpers';
 
-import Avatar from 'src/components/Opponent/Opponent';
+import Opponent from 'src/components/Opponent/Opponent';
 import Board from 'src/components/Board/Board';
 import CardBox from 'src/components/CardBox/CardBox';
 import Crib from 'src/components/Crib/Crib';
@@ -57,7 +57,7 @@ import Score from 'src/components/Score/Score';
 
 import useAuthContext from 'src/hooks/useAuthContext';
 import useGameContext from 'src/hooks/useGameContext';
-import { useBeforeUnload } from 'react-router-dom';
+import { INITIAL_USER_STATS } from 'src/utils/constants';
 
 type PlayFieldProps = {
   gameId: GameId;
@@ -65,22 +65,10 @@ type PlayFieldProps = {
 
 const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   const [go, setGo] = useState<boolean>(false);
-  // useBeforeUnload(
-  //   useCallback(() => {
-  //     console.log('unload');
-  //   }, [])
-  // );
-  // useEffect(() => {
-  //   window.addEventListener('beforeunload', () => console.log('unload'));
-  //   return () => {
-  //     window.removeEventListener('beforeunload', () => console.log('unload'));
-  //   };
-  // }, []);
-
-  const { userAuth } = useAuthContext();
-  const uid = userAuth!.uid!;
 
   const { gameState } = useGameContext();
+  const { userAuth } = useAuthContext();
+  const uid = userAuth!.uid!;
 
   const { player, opponent } = getPlayerOpponent(gameState.players, uid);
   const gameRef = getGameRef(gameId);
@@ -103,17 +91,11 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     player === PlayerPos.P_ONE && tallyHand();
   }, [numCardsPlayed]);
 
-  // useEffect(() => {
-  //   const gameRef = getGameRef(gameState.gameId);
-  //   const gameBriefRef = getGameFromList(gameState.gameId);
-
-  //   function deleteGameFromDB() {
-  //     set(gameRef, null);
-  //     set(gameBriefRef, null);
-  //   }
-
-  //   return () => deleteGameFromDB();
-  // }, []);
+  useEffect(() => {
+    if (gameState.stage === GameStage.COMPLETE) return;
+    if (gameState.score[player].cur >= 20) player === PlayerPos.P_ONE && endGame(player);
+    if (gameState.score[opponent].cur >= 20) player === PlayerPos.P_ONE && endGame(opponent);
+  }, [gameState.score, opponent, player]);
 
   //TODO: should all refs be moved into an object?
 
@@ -122,7 +104,6 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     const cribRef = getCribRef(gameId);
     const cribKey = push(cribRef).key;
     const updatedCrib = { ...gameState.crib, [cribKey!]: card };
-    // const pushCribRef = push(cribRef);
     const updatedHand = filterCard(gameState.playerCards[player].inHand, card.id);
     set(playerHandRef, updatedHand)
       .then(() => {
@@ -220,7 +201,9 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     const scoreRef = getScoreRef(gameId);
     set(tallyRef, tally).then(() => {
       // if the pone has won, dealer's score is not recorded (pone counts first)
-      winner === pone ? update(scoreRef, updatedScore[pone]) : update(scoreRef, updatedScore);
+      winner === pone
+        ? update(scoreRef, { [pone]: updatedScore[pone] })
+        : update(scoreRef, updatedScore);
     });
   }
 
@@ -261,7 +244,6 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
 
   function playCard(card: CardType) {
     const gameRef = getGameRef(gameId);
-    const playerHandRef = getInHandRef(gameId, player);
     const playerCardsPlayedRef = getPlayerCardsPlayedRef(gameId, player);
     const cardsPlayedRef = getCardsPlayedRef(gameId);
     const addPlayerPlayedKey = push(playerCardsPlayedRef).key;
@@ -364,6 +346,48 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     }, 1000);
   }
 
+  async function endGame(winner: PlayerPos) {
+    const gameRef = getGameRef(gameId);
+    update(gameRef, {
+      ...gameState,
+      stage: GameStage.COMPLETE,
+      players: {
+        [player]: { ...gameState.players[player], activePlayer: IsActive.NOT_ACTIVE },
+        [opponent]: { ...gameState.players[opponent], activePlayer: IsActive.NOT_ACTIVE }
+      }
+    });
+
+    updatePlayerStats(winner === player, gameState.players[player].id);
+    updatePlayerStats(winner === opponent, gameState.players[opponent].id);
+    console.log(`${winner} won!`);
+  }
+
+  async function updatePlayerStats(isWinner: boolean, uid: string) {
+    const playerStatsRef = getUserStatsRef(uid);
+    const playerStats: UserStats = await get(playerStatsRef).then((snapshot) => snapshot.val());
+    const curDate = new Date(Date.now()).toDateString().replaceAll(' ', '_');
+    const { date, won, played } = playerStats.dailyGames.at(-1) ?? {
+      ...INITIAL_USER_STATS.dailyGames[0],
+      date: curDate
+    };
+
+    let dailyGames;
+    if (date === curDate)
+      dailyGames = playerStats.dailyGames.splice(-1, 1, {
+        date: curDate,
+        won: isWinner ? won + 1 : won,
+        played: played + 1
+      });
+    if (date !== curDate)
+      dailyGames = playerStats.dailyGames.push({ date: curDate, won: isWinner ? 1 : 0, played: 1 });
+
+    const gamesWon = isWinner ? (playerStats?.gamesWon || 0) + 1 : playerStats?.gamesWon || 0;
+    const gamesPlayed = playerStats.gamesPlayed + 1;
+    const updatedPlayerStats = { gamesPlayed, gamesWon, dailyGames };
+
+    set(playerStatsRef, updatedPlayerStats);
+  }
+
   function renderCards(
     cards: CardType[] = [],
     faceUp: boolean,
@@ -392,7 +416,10 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
           <div className="flex w-full justify-between">
             <div className="flex flex-col items-center justify-center gap-4">
               <div className="flex flex-col items-center justify-center">
-                <Avatar displayName={gameState.players[opponent].displayName} />
+                <Opponent
+                  displayName={gameState.players[opponent].displayName}
+                  avatar={gameState.players[opponent].avatar}
+                />
                 <CardBox
                   size={{ height: CardBoxHeight.SM, width: CardBoxWidth.SM_SIX }}
                   maxCards={6}

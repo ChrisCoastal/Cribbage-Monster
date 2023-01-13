@@ -1,4 +1,14 @@
-import { GameState, Go, IsActive, PlayerPos, UserSettingsState, Status } from 'src/@types';
+import {
+  GameState,
+  Go,
+  IsActive,
+  PlayerPos,
+  UserSettingsState,
+  Status,
+  GameStage
+} from 'src/@types';
+
+export const MILLISEC_PER_DAY = 86400000;
 
 export const HAND_SIZE = 6;
 
@@ -21,17 +31,20 @@ export const INITIAL_USER_SETTING: UserSettingsState = {
 
 export const INITIAL_GAME_STATE: GameState = {
   gameId: '',
+  stage: GameStage.NEW,
   dealer: PlayerPos.P_ONE,
   handNum: 0,
   players: {
     player1: {
       id: '',
       displayName: '',
+      avatar: '',
       activePlayer: IsActive.NOT_ACTIVE
     },
     player2: {
       id: '',
       displayName: '',
+      avatar: '',
       activePlayer: IsActive.NOT_ACTIVE
     }
   },
@@ -66,6 +79,13 @@ export const INITIAL_GAME_STATE: GameState = {
     cardsPlayed: {},
     cardTotal: 0
   }
+};
+
+export const INITIAL_USER_STATS = {
+  gamesPlayed: 0,
+  dailyGames: [{ date: '', played: 0, won: 0 }],
+  gamesWon: 0,
+  bestHand: null
 };
 
 export const AVATARS = [

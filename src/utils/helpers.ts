@@ -23,12 +23,14 @@ import { rtdb } from 'src/firestore.config';
 // presence
 export const getConnectionRef = () => ref(rtdb, `.info/connected`);
 
-export const getPresenceRef = () => ref(rtdb, `disconnectmessage`);
+// export const getPresenceRef = () => ref(rtdb, `disconnectmessage`);
 
 // export const getUserStatusRef = (uid: string) => ref(rtdb, `userStatus/${uid}`);
 
 // user settings
 export const getUserSettingsRef = (uid: string) => ref(rtdb, `userSettings/${uid}`);
+
+export const getUserStatsRef = (uid: string) => ref(rtdb, `userStats/${uid}`);
 
 export const getIsOnlineRef = (uid: string) => ref(rtdb, `userSettings/${uid}/online`);
 
@@ -435,7 +437,7 @@ export function scoreRuns(cards: CardsIndex, cutCard: CardType): number {
 
   if (!run.isRun) return 0;
   let points = run.values.length;
-  const pairedCards = run.values
+  run.values
     .map((runCardValue) => values.filter((value) => value === runCardValue))
     .forEach((numArr) => (numArr.length ? (points = points * numArr.length) : null));
 
