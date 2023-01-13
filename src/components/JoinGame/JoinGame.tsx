@@ -58,7 +58,7 @@ const JoinGame: FC<JoinGameProps> = ({ gameId }) => {
     }
   }
 
-  return <Button handler={joinGameHandler}>Join Game</Button>;
+  return <Button handler={joinGameHandler}>Join</Button>;
 };
 
 export default JoinGame;

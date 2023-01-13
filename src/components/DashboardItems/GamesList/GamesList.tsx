@@ -8,6 +8,7 @@ import JoinGame from 'src/components/JoinGame/JoinGame';
 import { getGamesList } from 'src/utils/helpers';
 import CreateGame from 'src/components/CreateGame/CreateGame';
 import Avatar from 'src/components/Avatar/Avatar';
+import Card from 'src/components/UI/Card';
 
 type GamesListProps = {
   //
@@ -59,15 +60,17 @@ const GamesList: FC<GamesListProps> = () => {
     });
 
   return (
-    <div className="w-full rounded-md bg-gradient-to-br from-stone-600 to-stone-700 p-4 text-white">
-      <div className="flex items-center justify-between pb-6">
-        <h2 className="text-lg font-bold">GAMES</h2>
-        <CreateGame />
+    <Card>
+      <div className="w-full text-white">
+        <div className="flex items-center justify-between pb-6">
+          <h2 className="text-lg font-bold">GAMES</h2>
+          <CreateGame />
+        </div>
+        <ul className="flex max-h-56 flex-col gap-2 overflow-scroll">
+          {gamesListItems.length ? gamesListItems : <li>no games available</li>}
+        </ul>
       </div>
-      <ul className="flex max-h-56 flex-col gap-2 overflow-scroll">
-        {gamesListItems.length ? gamesListItems : <li>no games available</li>}
-      </ul>
-    </div>
+    </Card>
   );
 };
 

@@ -19,7 +19,9 @@ module.exports = {
         'modal-slide-out': '0.8s ease-in-out slide-in reverse both',
         radiate: '0.8s radiate infinite',
         grow: '0.6s ease-in grow',
-        'text-grow': '0.6s ease-out text-grow'
+        'text-grow': '0.6s ease-out text-grow',
+        'fade-in': '0.3s ease-in-out fade-in forwards',
+        'fade-out': '0.3s ease-in-out fade-in forwards'
       },
       keyframes: {
         'slide-in': {
@@ -41,6 +43,14 @@ module.exports = {
           '70%': { 'font-size': '80%' },
           '80%': { 'font-size': '120%' },
           '90%': { 'font-size': '90%' }
+        },
+        'fade-in': {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' }
+        },
+        'fade-out': {
+          '0%': { opacity: '1' },
+          '100%': { opacity: '0' }
         }
       }
     }
