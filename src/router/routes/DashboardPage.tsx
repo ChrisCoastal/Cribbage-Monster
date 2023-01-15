@@ -35,6 +35,7 @@ import Card from 'src/components/UI/Card';
 import CardBox from 'src/components/CardBox/CardBox';
 import BarChart from 'src/components/UI/BarChart';
 import GamesPlayed from 'src/components/DashboardItems/GamesPlayed/GamesPlayed';
+import SubHeading from 'src/components/UI/SubHeading';
 
 export async function dashboardLoader({ params }: LoaderFunctionArgs) {
   try {
@@ -83,15 +84,6 @@ const DashboardPage = () => {
     return unsubscribe;
   }, []);
 
-  const barTestValues = [
-    { won: 16, totalValue: 18 },
-    { won: 0, totalValue: 7 },
-    { won: 1, totalValue: 3 },
-    { won: 3, totalValue: 10 },
-    { won: 0, totalValue: 0 },
-    { won: 1, totalValue: 3 },
-    { won: 3, totalValue: 9 }
-  ];
   const dailyValues = [
     { date: '', won: 16, played: 18 },
     { date: '', won: 0, played: 7 },
@@ -102,33 +94,26 @@ const DashboardPage = () => {
     { date: '', won: 3, played: 9 }
   ];
 
-  const barColLabels = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
-
   return (
     <>
       <div className="flex justify-center">
         <div className="grid w-full grid-cols-1 justify-items-center gap-4 rounded-lg p-2 md:w-3/4 md:grid-cols-3 md:grid-rows-2">
-          <div className="flex flex-col items-center">
-            {isUser ? (
-              // <div onClick={changeAvatar} className="group relative cursor-pointer">
-              //   <Avatar size={AvatarSize.XL} avatar={userSettings.avatar || ''} />
-              //   <p className="absolute left-1/2 bottom-2 -translate-x-1/2 cursor-pointer text-xs text-white opacity-60 transition-all duration-300 group-hover:opacity-90">
-              //     edit
-              //   </p>
-              // </div>
-              <AvatarModal isModal={isModal} Modal={Modal} modalHandler={modalHandler} />
-            ) : (
-              <Avatar size={AvatarSize.XL} avatar={userSettings.avatar || ''} />
-            )}
+          <Card>
+            <div className="flex flex-col items-center gap-4">
+              {isUser ? (
+                <AvatarModal isModal={isModal} Modal={Modal} modalHandler={modalHandler} />
+              ) : (
+                <Avatar size={AvatarSize.XL} avatar={userSettings.avatar || ''} />
+              )}
 
-            <Carousel customStyles="" />
-            <p className="text-lg text-white">{`${userSettings.displayName}`}</p>
-          </div>
-
-          <Badges />
-          <GamesList />
+              <SubHeading>{`${userSettings.displayName}`}</SubHeading>
+              <Badges />
+            </div>
+          </Card>
+          <Carousel />
           <GamesWon gamesPlayed={userStats.gamesPlayed} gamesWon={userStats.gamesWon} />
           <GamesPlayed dailyGames={dailyValues} />
+          <GamesList />
         </div>
       </div>
     </>

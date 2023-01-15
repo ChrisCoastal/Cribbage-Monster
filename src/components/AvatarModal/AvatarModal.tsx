@@ -57,8 +57,8 @@ const AvatarModal: FC<AvatarModalProps> = ({ Modal, isModal, modalHandler }) => 
               selection={avatarSelection}
             />
             <div className="flex justify-between">
-              <HexColorPicker className="w-full" />
-              <Avatar size={AvatarSize.LG} avatar={avatarSelection || userSettingsState.avatar} />
+              {/* <HexColorPicker className="w-full" /> */}
+              {/* <Avatar size={AvatarSize.LG} avatar={avatarSelection || userSettingsState.avatar} /> */}
               <Button handler={saveAvatarHandler} customStyles="self-baseline">
                 save
               </Button>

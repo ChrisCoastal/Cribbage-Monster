@@ -4,7 +4,7 @@ import ToolTip from './ToolTip';
 
 type BarChartProps = {
   barValues: { totalValue: number; [key: string]: number }[];
-  colLabels?: string[] | number[];
+  colLabels?: string[];
 };
 
 const BarChart: FC<BarChartProps> = ({ barValues, colLabels }) => {
@@ -42,27 +42,30 @@ const BarChart: FC<BarChartProps> = ({ barValues, colLabels }) => {
     const toolTip = `${won} wins | ${lost} losses`;
 
     return (
-      <ToolTip key={nanoid()} text={toolTip} customWrapperStyles="flex flex-col justify-end">
-        <div
-          className="relative flex flex-col justify-end rounded-t-sm bg-stone-900 transition-all duration-300 hover:shadow-[0_-0.1rem_0.25rem_0.25rem_#a855f755]"
-          style={{ height: totalHeight }}>
+      <div
+        key={nanoid()}
+        className="relative rounded-t-sm bg-stone-900 transition-all duration-300 hover:shadow-[0_-0.1rem_0.25rem_0.25rem_#a855f755]"
+        style={{ height: totalHeight }}>
+        <ToolTip text={toolTip} customWrapperStyles="flex flex-col justify-end">
           {segments}
-        </div>
-      </ToolTip>
+        </ToolTip>
+      </div>
     );
   });
 
   const columnLabels = colLabels?.map((label, i) => {
     return (
-      <span key={nanoid()} className={`row-start-2 justify-self-center text-sm`}>
-        {label}
+      <span
+        key={nanoid()}
+        className={`relative row-start-2 justify-self-center whitespace-nowrap text-xs font-light text-stone-300`}>
+        <p>{label.slice(0, 3)}</p>
       </span>
     );
   });
 
   return (
-    <div className="grid h-[90%] w-full grid-cols-8 grid-rows-[1fr,_min-content] items-end gap-1 md:gap-2">
-      <div className="flex h-full flex-col items-center justify-between text-white">
+    <div className="grid h-[90%] w-full grid-cols-[min-content,_repeat(7,1fr)] grid-rows-[1fr,_min-content] items-end gap-1 md:gap-2">
+      <div className="flex h-full flex-col items-center justify-between text-stone-300">
         <span className="text-sm font-light">{graphMax}</span>
         <span className="text-sm font-light">{graphMax / 2}</span>
         <span className="text-sm font-light">{0}</span>

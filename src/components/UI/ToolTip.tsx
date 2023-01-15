@@ -1,5 +1,6 @@
-import React, { MouseEvent, FC, ReactNode, useState } from 'react';
+import React, { MouseEvent, FC, ReactNode, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { useInterval } from 'src/hooks/useInterval';
 
 type ToolTipProps = {
   text: string;
@@ -18,8 +19,8 @@ const ToolTip: FC<ToolTipProps> = ({ text, customTipStyles, customWrapperStyles,
   } {
     const X_SCREEN_PAD = 160;
     const Y_SCREEN_PAD = 160;
-    const X_OFFSET = { left: -120, right: 30 };
-    const Y_OFFSET = { above: -30, below: 30 };
+    const X_OFFSET = { left: -120, right: 10 };
+    const Y_OFFSET = { above: -20, below: 20 };
 
     const yOffset =
       cursorY - Y_SCREEN_PAD < 0 && cursorY + Y_SCREEN_PAD > window.innerHeight
@@ -56,12 +57,12 @@ const ToolTip: FC<ToolTipProps> = ({ text, customTipStyles, customWrapperStyles,
           </div>,
           document.getElementById('overlay-root')!
         )}
-      <span
+      <div
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         className={`${customWrapperStyles} h-full w-full`}>
         {children}
-      </span>
+      </div>
     </>
   );
 };

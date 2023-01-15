@@ -66,7 +66,11 @@ const CreateGame = () => {
     }
   }
 
-  return <Button handler={createGameHandler}>Create Game</Button>;
+  return (
+    <Button handler={createGameHandler} customStyles="font-bold text-2xl">
+      +
+    </Button>
+  );
 };
 
 export default CreateGame;

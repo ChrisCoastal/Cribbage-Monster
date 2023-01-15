@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { BadgeName } from 'src/@types';
+import ToolTip from '../UI/ToolTip';
 
 type BadgeProps = {
   badge: BadgeName;
@@ -17,15 +18,19 @@ const Badge: FC<BadgeProps> = ({
   color = '#fff'
 }) => {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      height={height}
-      width={width}
-      viewBox={viewBox}
-      fill={color}
-      className="svg">
-      {badges[badge]}
-    </svg>
+    <div className="relative">
+      <ToolTip text={`${badge} badge`}>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          height={height}
+          width={width}
+          viewBox={viewBox}
+          fill={color}
+          className="svg duration-400 transition-all hover:fill-white">
+          {badges[badge]}
+        </svg>
+      </ToolTip>
+    </div>
   );
 };
 

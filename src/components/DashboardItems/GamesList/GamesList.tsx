@@ -9,6 +9,7 @@ import { getGamesList } from 'src/utils/helpers';
 import CreateGame from 'src/components/CreateGame/CreateGame';
 import Avatar from 'src/components/Avatar/Avatar';
 import Card from 'src/components/UI/Card';
+import SubHeading from 'src/components/UI/SubHeading';
 
 type GamesListProps = {
   //
@@ -45,7 +46,7 @@ const GamesList: FC<GamesListProps> = () => {
       return (
         <li
           key={game.gameId}
-          className="flex items-center justify-between gap-4 rounded-full bg-gradient-to-br from-stone-700 to-stone-800 p-2 text-xs">
+          className="flex items-center justify-between gap-4 rounded-sm bg-stone-900 p-4 text-sm font-light text-stone-300">
           <span className="flex items-center justify-between gap-4">
             <span className="flex items-center gap-1">
               <Avatar size={AvatarSize.SM} avatar={game.player1.avatar} />
@@ -61,12 +62,12 @@ const GamesList: FC<GamesListProps> = () => {
 
   return (
     <Card>
-      <div className="w-full text-white">
+      <div className="w-full">
         <div className="flex items-center justify-between pb-6">
-          <h2 className="text-lg font-bold">GAMES</h2>
+          <SubHeading>GAMES</SubHeading>
           <CreateGame />
         </div>
-        <ul className="flex max-h-56 flex-col gap-2 overflow-scroll">
+        <ul className="flex max-h-full flex-col gap-2 overflow-scroll">
           {gamesListItems.length ? gamesListItems : <li>no games available</li>}
         </ul>
       </div>

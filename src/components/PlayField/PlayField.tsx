@@ -427,7 +427,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
                   {renderOpponentHand}
                 </CardBox>
               </div>
-              <div className="rounded-full bg-gradient-to-br from-emerald-400 to-emerald-500 p-2">
+              <div className="rounded-full bg-gradient-to-br from-purple-500 to-purple-700 p-2">
                 <CardBox
                   size={{ height: CardBoxHeight.MD, width: CardBoxWidth.MD_FOUR_HALF }}
                   maxCards={4}

@@ -18,8 +18,9 @@ const GamesWon: FC<GamesWonProps> = ({ gamesPlayed, gamesWon }) => {
       <div>
         <SubHeading>WIN RATIO</SubHeading>
         <div className="relative">
-          <ToolTip text={`${gamesWon} / ${gamesPlayed}`} />
-          <Doughnut degFill={winRatio} centerText={centerText} />
+          <ToolTip text={`${gamesWon} wins | ${gamesPlayed} played`}>
+            <Doughnut degFill={winRatio} centerText={centerText} />
+          </ToolTip>
         </div>
       </div>
     </Card>

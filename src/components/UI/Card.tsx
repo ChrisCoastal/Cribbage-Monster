@@ -6,7 +6,11 @@ type CardProps = {
 };
 
 const Card: FC<CardProps> = ({ customStyles, children }) => {
-  return <div className={`${customStyles} rounded-md p-2 shadow-md`}>{children}</div>;
+  return (
+    <div className={`${customStyles} w-full rounded-md bg-stone-900/40 p-8 shadow-md`}>
+      {children}
+    </div>
+  );
 };
 
 export default Card;
