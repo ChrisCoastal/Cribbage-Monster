@@ -1,4 +1,4 @@
-import { AuthContextType } from 'src/@types';
+import { AuthContextType, UserSettingsState } from 'src/@types';
 
 import { useEffect, useState } from 'react';
 import {
@@ -11,8 +11,10 @@ import {
 } from 'firebase/auth';
 import { rtdb, firebaseAuth } from 'src/firestore.config';
 import { Timestamp } from 'firebase/firestore';
-import { update, ref, set } from 'firebase/database';
+import { update, ref, set, serverTimestamp } from 'firebase/database';
 import { User } from 'firebase/auth';
+import { AVATARS } from 'src/utils/constants';
+import { getUserSettingsRef } from 'src/utils/helpers';
 
 const useFirebaseAuth = (): AuthContextType => {
   // const auth = getAuth();
@@ -23,13 +25,17 @@ const useFirebaseAuth = (): AuthContextType => {
     await updateProfile(firebaseAuth.currentUser!, {
       displayName: newDisplayName
     })
-      .then(() => {
-        return userAuth;
-      })
+      // .then(() => {
+      //   return userAuth;
+      // })
       .catch((error) => console.log('update displayName error', error));
   };
 
-  const loginUser = (email: string | null, password: string | null, callback: VoidFunction) => {
+  const loginUser = (
+    email: string | null,
+    password: string | null,
+    callback: (displayName: string) => void
+  ) => {
     if (typeof email !== 'string' || typeof password !== 'string')
       return console.log('Error email or password is invalid!');
     signInWithEmailAndPassword(firebaseAuth, email, password)
@@ -38,7 +44,7 @@ const useFirebaseAuth = (): AuthContextType => {
 
         setUserAuth(() => userData.user);
 
-        callback();
+        callback(userData.user.uid!);
         console.log('user', userAuth);
 
         return userAuth;
@@ -52,7 +58,7 @@ const useFirebaseAuth = (): AuthContextType => {
     displayName: string,
     email: string,
     password: string,
-    callback: VoidFunction
+    callback: (displayName: string) => void
   ) => {
     // TODO: validation
     if (
@@ -66,13 +72,14 @@ const useFirebaseAuth = (): AuthContextType => {
       .then(async (userData: UserCredential) => {
         // automatically logged in after signup
         await updateDisplayName(displayName);
-        await updateUserDoc(userData);
+        // await updateUserDoc({...userData, avatar: AVATARS.at(-1)!});
 
-        setUserDoc(userData);
-        setUserAuth(() => userData.user);
-        localStorage.setItem('authToken', userData.user.refreshToken);
+        await setUserDoc(userData).then(() => {
+          setUserAuth(() => userData.user);
+          localStorage.setItem('authToken', userData.user.refreshToken);
+          callback(userData.user.uid!);
+        });
         // const usersRef = collection(db, 'users');
-        callback();
         // return userAuth;
       })
       .catch((err) => {
@@ -84,20 +91,24 @@ const useFirebaseAuth = (): AuthContextType => {
   };
 
   async function setUserDoc(userData: UserCredential) {
-    set(ref(rtdb, 'users/' + userData.user.uid), {
+    console.log('setting', userData.user.uid);
+    const userSettingsRef = getUserSettingsRef(userData.user.uid);
+    set(userSettingsRef, {
       uid: userData.user.uid,
-      username: userData.user.displayName,
+      displayName: userData.user.displayName,
       email: userData.user.email,
+      avatar: AVATARS.at(-1),
       online: true,
-      lastVisibleAt: Timestamp
+      lastVisibleAt: serverTimestamp()
     }).then((data) => console.log(data, 'updated user doc'));
   }
 
-  async function updateUserDoc(userData: UserCredential) {
-    update(ref(rtdb, 'users/' + userData.user.uid), {
-      uid: userData.user.uid,
-      username: userData.user.displayName,
-      email: userData.user.email,
+  function updateUserDoc(userData: UserSettingsState) {
+    update(getUserSettingsRef(userData.uid), {
+      uid: userData.uid,
+      displayName: userData.displayName,
+      email: userData.email,
+      avatar: userData.avatar,
       online: true,
       lastVisibleAt: Timestamp
     }).then((data) => console.log(data, 'updated user doc'));

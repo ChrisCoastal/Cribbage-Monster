@@ -1,11 +1,13 @@
 import React, { FC, ReactNode, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Button from 'src/components/UI/Button';
+import AddIcon from 'src/components/UI/icons/AddIcon/AddIcon';
+import SubHeading from 'src/components/UI/SubHeading';
 
 type ModalProps = {
   isVisible: boolean;
   title: string;
-  customStyles?: string;
+  className?: string;
   children?: ReactNode;
 };
 
@@ -16,7 +18,7 @@ const useModal = () => {
     setIsModal(isVisible);
   }
 
-  const Modal: FC<ModalProps> = ({ isVisible, title, customStyles = '', children }) => {
+  const Modal: FC<ModalProps> = ({ isVisible, title, className = '', children }) => {
     function keyDownHandler(event: React.KeyboardEvent<HTMLDivElement>) {
       if (event.key === 'escape') modalHandler(false);
     }
@@ -27,11 +29,13 @@ const useModal = () => {
           createPortal(
             <>
               <div
-                className={`${customStyles} absolute top-1/2 left-1/2 z-[1000] -translate-x-1/2 -translate-y-1/2 animate-modal-slide-in rounded-lg bg-white p-4`}>
+                className={`${className} absolute top-1/2 left-1/2 z-[1000] w-full -translate-x-1/2 -translate-y-1/2 animate-modal-bounce-in rounded-lg bg-white p-4 sm:w-fit`}>
                 <div>
-                  <div className="flex items-center justify-between gap-8">
-                    <h2 className=" text-xl font-extrabold">{title}</h2>
-                    <Button handler={() => modalHandler(false)}>X</Button>
+                  <div className="flex items-center justify-between gap-8 pb-2">
+                    <SubHeading className="pt-1">{title}</SubHeading>
+                    <Button handler={() => modalHandler(false)} buttonSize="circle">
+                      <AddIcon height="32" width="32" className="rotate-45" />
+                    </Button>
                   </div>
                   {children}
                 </div>
@@ -39,7 +43,7 @@ const useModal = () => {
               <div
                 onClick={() => modalHandler(false)}
                 onKeyDown={keyDownHandler}
-                className="absolute top-0 left-0 z-[900] h-full w-full bg-neutral-900 opacity-60"></div>
+                className="absolute top-0 left-0 z-[900] h-full w-full bg-stone-900 opacity-60"></div>
             </>,
             document.getElementById('overlay-root')!
           )}

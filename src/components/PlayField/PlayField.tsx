@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import {
   CardBoxHeight,
   CardBoxWidth,
@@ -7,14 +7,16 @@ import {
   CardSize,
   CardType,
   GameId,
+  GameStage,
   IsActive,
   PlayerPos,
   ScoreType,
   Status,
-  TallyPoints
+  TallyPoints,
+  UserStats
 } from 'src/@types';
 
-import { set, push, update } from 'firebase/database';
+import { set, push, update, get } from 'firebase/database';
 
 import {
   expectGo,
@@ -41,10 +43,12 @@ import {
   isPegJack,
   getGameTalliesRef,
   getTallyRef,
-  isWinner
+  isWinner,
+  getUserStatsRef,
+  getCardValues
 } from 'src/utils/helpers';
 
-import Avatar from 'src/components/Opponent/Opponent';
+import Opponent from 'src/components/Opponent/Opponent';
 import Board from 'src/components/Board/Board';
 import CardBox from 'src/components/CardBox/CardBox';
 import Crib from 'src/components/Crib/Crib';
@@ -54,6 +58,7 @@ import Score from 'src/components/Score/Score';
 
 import useAuthContext from 'src/hooks/useAuthContext';
 import useGameContext from 'src/hooks/useGameContext';
+import { INITIAL_USER_STATS } from 'src/utils/constants';
 
 type PlayFieldProps = {
   gameId: GameId;
@@ -62,12 +67,11 @@ type PlayFieldProps = {
 const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   const [go, setGo] = useState<boolean>(false);
 
-  const { userAuth } = useAuthContext();
-  const userId = userAuth!.uid!;
-
   const { gameState } = useGameContext();
+  const { userAuth } = useAuthContext();
+  const uid = userAuth!.uid!;
 
-  const { player, opponent } = getPlayerOpponent(gameState.players, userId);
+  const { player, opponent } = getPlayerOpponent(gameState.players, uid);
   const gameRef = getGameRef(gameId);
   const gameScore = getGameTalliesRef(gameId);
   const playerHand = Object.values(gameState.playerCards[player].inHand);
@@ -88,6 +92,12 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     player === PlayerPos.P_ONE && tallyHand();
   }, [numCardsPlayed]);
 
+  useEffect(() => {
+    if (gameState.stage === GameStage.COMPLETE) return;
+    if (gameState.score[player].cur >= 20) player === PlayerPos.P_ONE && endGame(player);
+    if (gameState.score[opponent].cur >= 20) player === PlayerPos.P_ONE && endGame(opponent);
+  }, [gameState.score, opponent, player]);
+
   //TODO: should all refs be moved into an object?
 
   function addCardToCrib(card: CardType, callback?: () => void): void {
@@ -95,7 +105,6 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     const cribRef = getCribRef(gameId);
     const cribKey = push(cribRef).key;
     const updatedCrib = { ...gameState.crib, [cribKey!]: card };
-    // const pushCribRef = push(cribRef);
     const updatedHand = filterCard(gameState.playerCards[player].inHand, card.id);
     set(playerHandRef, updatedHand)
       .then(() => {
@@ -193,7 +202,9 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     const scoreRef = getScoreRef(gameId);
     set(tallyRef, tally).then(() => {
       // if the pone has won, dealer's score is not recorded (pone counts first)
-      winner === pone ? update(scoreRef, updatedScore[pone]) : update(scoreRef, updatedScore);
+      winner === pone
+        ? update(scoreRef, { [pone]: updatedScore[pone] })
+        : update(scoreRef, updatedScore);
     });
   }
 
@@ -234,7 +245,6 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
 
   function playCard(card: CardType) {
     const gameRef = getGameRef(gameId);
-    const playerHandRef = getInHandRef(gameId, player);
     const playerCardsPlayedRef = getPlayerCardsPlayedRef(gameId, player);
     const cardsPlayedRef = getCardsPlayedRef(gameId);
     const addPlayerPlayedKey = push(playerCardsPlayedRef).key;
@@ -337,6 +347,48 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     }, 1000);
   }
 
+  async function endGame(winner: PlayerPos) {
+    const gameRef = getGameRef(gameId);
+    update(gameRef, {
+      ...gameState,
+      stage: GameStage.COMPLETE,
+      players: {
+        [player]: { ...gameState.players[player], activePlayer: IsActive.NOT_ACTIVE },
+        [opponent]: { ...gameState.players[opponent], activePlayer: IsActive.NOT_ACTIVE }
+      }
+    });
+
+    updatePlayerStats(winner === player, gameState.players[player].id);
+    updatePlayerStats(winner === opponent, gameState.players[opponent].id);
+    console.log(`${winner} won!`);
+  }
+
+  async function updatePlayerStats(isWinner: boolean, uid: string) {
+    const playerStatsRef = getUserStatsRef(uid);
+    const playerStats: UserStats = await get(playerStatsRef).then((snapshot) => snapshot.val());
+    const curDate = new Date(Date.now()).toDateString().replaceAll(' ', '_');
+    const { date, won, played } = playerStats.dailyGames.at(-1) ?? {
+      ...INITIAL_USER_STATS.dailyGames[0],
+      date: curDate
+    };
+
+    let dailyGames;
+    if (date === curDate)
+      dailyGames = playerStats.dailyGames.splice(-1, 1, {
+        date: curDate,
+        won: isWinner ? won + 1 : won,
+        played: played + 1
+      });
+    if (date !== curDate)
+      dailyGames = playerStats.dailyGames.push({ date: curDate, won: isWinner ? 1 : 0, played: 1 });
+
+    const gamesWon = isWinner ? (playerStats?.gamesWon || 0) + 1 : playerStats?.gamesWon || 0;
+    const gamesPlayed = playerStats.gamesPlayed + 1;
+    const updatedPlayerStats = { gamesPlayed, gamesWon, dailyGames };
+
+    set(playerStatsRef, updatedPlayerStats);
+  }
+
   function renderCards(
     cards: CardType[] = [],
     faceUp: boolean,
@@ -358,85 +410,100 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     ));
   }
 
-  return (
-    <>
-      <div className="relative grid h-full grid-cols-[1fr] items-center justify-items-center gap-2 py-12 px-4">
-        <div className="flex flex-col items-center justify-center gap-4">
-          <div className="flex w-full justify-between">
-            <div className="flex flex-col items-center justify-center gap-4">
-              <div className="flex flex-col items-center justify-center">
-                <Avatar displayName={gameState.players[opponent].displayName} />
-                <CardBox
-                  size={{ height: CardBoxHeight.SM, width: CardBoxWidth.SM_SIX }}
-                  maxCards={6}
-                  overlap={CardOverlap.TWO_THIRDS}>
-                  {renderOpponentHand}
-                </CardBox>
-              </div>
-              <div className="rounded-full bg-gradient-to-br from-emerald-400 to-emerald-500 p-2">
-                <CardBox
-                  size={{ height: CardBoxHeight.MD, width: CardBoxWidth.MD_FOUR_HALF }}
-                  maxCards={4}
-                  overlap={CardOverlap.HALF}
-                  placement="self-center place-self-center">
-                  {renderOpponentPlayed}
-                </CardBox>
+  useEffect(() => {
+    const playersRef = getPlayersRef(gameId);
+    if (
+      !getCardValues(gameState.playerCards.player1.inHand).length &&
+      getCardValues(gameState.playerCards.player2.inHand).length &&
+      gameState.players.player2.activePlayer === IsActive.NOT_ACTIVE &&
+      gameState.players.player1.activePlayer === IsActive.ACTIVE
+    )
+      update(playersRef, {
+        player1: { ...gameState.players.player1, activePlayer: IsActive.NOT_ACTIVE },
+        player2: { ...gameState.players.player2, activePlayer: IsActive.ACTIVE }
+      });
+    if (
+      getCardValues(gameState.playerCards.player1.inHand).length &&
+      !getCardValues(gameState.playerCards.player2.inHand).length &&
+      gameState.players.player1.activePlayer === IsActive.NOT_ACTIVE &&
+      gameState.players.player2.activePlayer === IsActive.ACTIVE
+    )
+      update(playersRef, {
+        player1: { ...gameState.players.player1, activePlayer: IsActive.ACTIVE },
+        player2: { ...gameState.players.player2, activePlayer: IsActive.NOT_ACTIVE }
+      });
+  }, [gameState.playerCards.player1.inHand, gameState.playerCards.player2.inHand]);
 
-                <div>
-                  <div className="flex flex-col items-center gap-1 py-4">
-                    <div className="grid grid-cols-2 gap-2">
-                      <Deck
-                        cutDeck={gameState.deckCut}
-                        isPone={player === pone}
-                        callback={cutDeckHandler}
-                      />
-                      <Crib cribCards={gameState.crib} />
-                    </div>
-                    <div>
-                      count: {gameState.turnTotals.cardTotal} {go && 'GO!!'}
-                    </div>
-                    <div>
-                      {gameState.players[player].activePlayer === IsActive.ACTIVE
-                        ? 'your turn'
-                        : `opponent's turn`}
-                    </div>
+  return (
+    <div className="relative grid h-full grid-cols-[1fr] items-center justify-items-center gap-2 px-4">
+      <div className="flex flex-col items-center justify-center gap-4">
+        <div className="flex w-full justify-between">
+          <div className="flex flex-col items-center justify-center gap-4">
+            <div className="flex flex-col items-center justify-center">
+              <Opponent
+                displayName={gameState.players[opponent].displayName}
+                avatar={gameState.players[opponent].avatar}
+              />
+              <CardBox
+                size={{ height: CardBoxHeight.SM, width: CardBoxWidth.SM_SIX }}
+                maxCards={6}
+                overlap={CardOverlap.TWO_THIRDS}>
+                {renderOpponentHand}
+              </CardBox>
+            </div>
+            <div className="rounded-full bg-gradient-to-br from-purple-500 to-purple-700 p-2">
+              <CardBox
+                size={{ height: CardBoxHeight.MD, width: CardBoxWidth.MD_FOUR_HALF }}
+                maxCards={4}
+                overlap={CardOverlap.HALF}
+                placement="self-center place-self-center">
+                {renderOpponentPlayed}
+              </CardBox>
+
+              <div>
+                <div className="flex flex-col items-center gap-1 py-4">
+                  <div className="grid grid-cols-2 gap-2">
+                    <Deck
+                      cutDeck={gameState.deckCut}
+                      isPone={player === pone}
+                      callback={cutDeckHandler}
+                    />
+                    <Crib cribCards={gameState.crib} />
+                  </div>
+                  <div>
+                    count: {gameState.turnTotals.cardTotal} {go && 'GO!!'}
+                  </div>
+                  <div>
+                    {gameState.players[player].activePlayer === IsActive.ACTIVE
+                      ? 'your turn'
+                      : `opponent's turn`}
                   </div>
                 </div>
-                <CardBox
-                  size={{ height: CardBoxHeight.MD, width: CardBoxWidth.MD_FOUR_HALF }}
-                  maxCards={4}
-                  overlap={CardOverlap.HALF}
-                  placement="self-center place-self-center">
-                  {renderPlayerPlayed}
-                </CardBox>
               </div>
-            </div>
-            <div className="flex flex-col items-center justify-center gap-4">
-              <Score
-                player={{
-                  displayName: gameState.players[player].displayName,
-                  curScore: gameState.score[player].cur
-                }}
-                opponent={{
-                  displayName: gameState.players[opponent].displayName,
-                  curScore: gameState.score[opponent].cur
-                }}
-              />
-              <Board />
+              <CardBox
+                size={{ height: CardBoxHeight.MD, width: CardBoxWidth.MD_FOUR_HALF }}
+                maxCards={4}
+                overlap={CardOverlap.HALF}
+                placement="self-center place-self-center">
+                {renderPlayerPlayed}
+              </CardBox>
             </div>
           </div>
-          <div>
-            <CardBox
-              size={{ height: CardBoxHeight.LG, width: CardBoxWidth.LG_SIX }}
-              maxCards={6}
-              overlap={CardOverlap.TWO_THIRDS}
-              placement="self-center place-self-center">
-              {renderPlayerHand}
-            </CardBox>
+          <div className="flex flex-col items-center justify-center gap-4">
+            <Board />
           </div>
         </div>
+        <div>
+          <CardBox
+            size={{ height: CardBoxHeight.LG, width: CardBoxWidth.LG_SIX }}
+            maxCards={6}
+            overlap={CardOverlap.TWO_THIRDS}
+            placement="self-center place-self-center">
+            {renderPlayerHand}
+          </CardBox>
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 

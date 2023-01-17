@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { CardOverlap, CardSize, CardType, IsActive, UserId } from 'src/@types';
+import { CardOverlap, CardSize, CardType, IsActive } from 'src/@types';
 import useAuthContext from 'src/hooks/useAuthContext';
 import useGameContext from 'src/hooks/useGameContext';
 import { getPlayerOpponent } from 'src/utils/helpers';
@@ -24,7 +24,6 @@ const PlayingCard: FC<PlayingCardProps> = ({
   valid,
   handler
 }) => {
-  // const style = { 'var(--color)': yourColor } as React.CSSProperties;
   const { userAuth } = useAuthContext();
   const { gameState } = useGameContext();
   const { player } = getPlayerOpponent(gameState.players, userAuth!.uid!);
@@ -96,7 +95,7 @@ const PlayingCard: FC<PlayingCardProps> = ({
   const iconSize = cardSize === CardSize.LG ? '1.8rem' : '1rem';
   const cardMarking = (
     <>
-      <span className="pointer-events-none font-bold">{card.name}</span>
+      <span className="pointer-events-none font-bold text-stone-900">{card.name}</span>
       <span className="pointer-events-none">
         <SuitIcon suit={card.suit} height={iconSize} width={iconSize} />
       </span>
@@ -109,9 +108,9 @@ const PlayingCard: FC<PlayingCardProps> = ({
   return isFaceUp ? (
     <div
       onClick={() => (handler ? handler(card) : null)}
-      className={`${conditionalStyles} ${sizeVars} ${corners} border border-solid border-neutral-100 bg-white transition-all duration-300`}>
+      className={`${conditionalStyles} ${sizeVars} ${corners} border border-solid border-stone-100 bg-white transition-all duration-300`}>
       <div
-        className={`${corners} grid-columns-3 shadow-[-4px_4px_8px_rgba(0,0,0,0.05) grid max-h-full max-w-full grid-rows-3 items-center border border-solid border-neutral-500 bg-white`}>
+        className={`${corners} grid-columns-3 shadow-[-4px_4px_8px_rgba(0,0,0,0.05) grid max-h-full max-w-full grid-rows-3 items-center border border-solid border-stone-500 bg-white`}>
         <div className="col-start-1 mt-2 flex-col gap-1 justify-self-center text-sm">
           {cardMarking}
         </div>
@@ -124,7 +123,7 @@ const PlayingCard: FC<PlayingCardProps> = ({
     </div>
   ) : (
     <div
-      className={`${cardSize} ${cardPos[cardIndex]} ${sizeVars} ${cardBackBorder} ${corners} border border-solid border-neutral-100 bg-white transition-all duration-300`}
+      className={`${cardSize} ${cardPos[cardIndex]} ${sizeVars} ${cardBackBorder} ${corners} border border-solid border-stone-100 bg-white transition-all duration-300`}
       onClick={() => (handler ? handler(card) : null)}>
       <div className={`${cardBack} h-full w-full bg-repeat`}></div>
     </div>

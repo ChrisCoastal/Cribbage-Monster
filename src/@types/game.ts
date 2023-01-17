@@ -17,7 +17,9 @@ export enum IsActive {
   NOT_ACTIVE = 'not active'
 }
 
-export type Player = { id: UserId; displayName: string; activePlayer: IsActive };
+export type Presence = { id: UserId; presentAt: string };
+
+export type Player = { id: UserId; displayName: string; avatar: string; activePlayer: IsActive };
 
 export type CardsIndex = { [key: number]: CardType };
 
@@ -57,6 +59,7 @@ export type ScoreType = {
 
 export type Tally = {
   displayName: string;
+  avatar: string;
   playerPos: PlayerPos;
   cards: CardsIndex;
   points: TallyPoints;
@@ -72,8 +75,18 @@ export type TallyPoints = {
   pegging?: number;
 };
 
+export enum GameStage {
+  NEW = 'new',
+  ADD_CRIB = 'crib',
+  CUT = 'cut',
+  CARD_PLAY = 'play',
+  TALLY = 'tally',
+  COMPLETE = 'complete'
+}
+
 export type GameState = {
   gameId: GameId;
+  stage: GameStage;
   dealer: PlayerPos;
   handNum: number;
   players: {
@@ -108,10 +121,16 @@ export type GameState = {
   turnTotals: TurnType;
 };
 
+export type PlayerBrief = {
+  displayName: string;
+  presence?: string;
+  avatar: string;
+};
+
 export type GameBrief = {
   gameId: GameId;
-  player1: string; // display name
-  player2: string; // display name
+  player1: PlayerBrief;
+  player2: PlayerBrief;
   scoreToWin: 121;
 };
 

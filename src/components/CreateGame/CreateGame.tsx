@@ -1,21 +1,26 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import { nanoid } from 'nanoid';
-import { db, rtdb } from 'src/firestore.config';
-import { addDoc, collection } from 'firebase/firestore';
-import { getDatabase, ref, set } from 'firebase/database';
+
+import { rtdb } from 'src/firestore.config';
+import { ref, serverTimestamp, set } from 'firebase/database';
+
+import { GameBrief, GameReducerTypes, IsActive } from 'src/@types';
+import { INITIAL_GAME_STATE } from 'src/utils/constants';
+import { getGameFromList, getGameRef } from 'src/utils/helpers';
 
 import useAuthContext from 'src/hooks/useAuthContext';
 import useGameContext from 'src/hooks/useGameContext';
-import { INITIAL_GAME_STATE } from 'src/utils/constants';
 
 import Button from 'src/components/UI/Button';
-import { GameBrief, GameReducerTypes, Player, PlayerPos } from 'src/@types';
+import useSettingsContext from 'src/hooks/useSettingsContext';
+import AddIcon from 'src/components/UI/icons/AddIcon/AddIcon';
 
 const CreateGame = () => {
   const { userAuth } = useAuthContext();
-  const { gameState, dispatchGame } = useGameContext();
+  const { userSettingsState } = useSettingsContext();
+
+  const { dispatchGame } = useGameContext();
   const navigate = useNavigate();
 
   async function createGameHandler() {
@@ -31,21 +36,28 @@ const CreateGame = () => {
         players: {
           ...INITIAL_GAME_STATE.players,
           player1: {
-            ...INITIAL_GAME_STATE.players.player1,
             id: uid,
-            displayName: displayName!
+            displayName: displayName!,
+            avatar: userSettingsState.avatar,
+            activePlayer: IsActive.NOT_ACTIVE
           }
         }
       };
       const gameBrief: GameBrief = {
         gameId,
-        player1: displayName!,
-        player2: '',
+        player1: {
+          displayName: displayName!,
+          avatar: userSettingsState.avatar
+        },
+        player2: {
+          displayName: '',
+          avatar: ''
+        },
         scoreToWin: 121
       };
-      const gameslistRef = ref(rtdb, `gamesList/${gameId}`);
-      const gameRef = ref(rtdb, `games/${gameId}`);
-      set(gameslistRef, gameBrief);
+      const gameFromListRef = getGameFromList(gameId);
+      const gameRef = getGameRef(gameId);
+      set(gameFromListRef, gameBrief);
       set(gameRef, newGame).then(() => {
         dispatchGame({ type: GameReducerTypes.CREATE_GAME, payload: newGame });
         navigate(`/game/${gameId}`);
@@ -55,7 +67,15 @@ const CreateGame = () => {
     }
   }
 
-  return <Button handler={createGameHandler}>Create Game</Button>;
+  return (
+    <Button
+      handler={createGameHandler}
+      className="text-2xl font-bold"
+      tooltip="create game"
+      buttonSize="circle">
+      <AddIcon height="36" width="36" />
+    </Button>
+  );
 };
 
 export default CreateGame;

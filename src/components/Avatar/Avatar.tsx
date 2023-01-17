@@ -1,12 +1,16 @@
 import React, { FC } from 'react';
 
 type AvatarProps = {
-  imageUrl?: string;
+  avatar?: string;
+  className?: string;
 };
 
-const Avatar: FC<AvatarProps> = ({ imageUrl }) => {
+const Avatar: FC<AvatarProps> = ({ avatar, className }) => {
   return (
-    <div className=" mb-2 h-10 w-10 overflow-hidden rounded-full border border-white bg-slate-400"></div>
+    <div
+      className={`${className} flex items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-purple-500 to-stone-900`}>
+      <p className={`pt-2`}>{avatar}</p>
+    </div>
   );
 };
 

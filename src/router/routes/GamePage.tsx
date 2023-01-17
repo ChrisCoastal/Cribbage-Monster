@@ -1,23 +1,31 @@
 import { useCallback, useEffect } from 'react';
-import { LoaderFunctionArgs, useLoaderData } from 'react-router-dom';
+import { LoaderFunctionArgs, useLoaderData, useBeforeUnload } from 'react-router-dom';
 
-import { rtdb } from 'src/firestore.config';
-import { ref, get, onValue, set, update } from 'firebase/database';
+import { get, onValue, set, update } from 'firebase/database';
 
-import Button from 'src/components/UI/Button';
-import HandTally from 'src/components/HandTally/HandTally';
-import PlayFieldFlex from 'src/components/PlayField/PlayFieldFlex';
+import { GameReducerTypes, GameState, IsActive, Status, PlayerPos } from 'src/@types';
 
 import useAuthContext from 'src/hooks/useAuthContext';
 import useGameContext from 'src/hooks/useGameContext';
-import { GameReducerTypes, GameState, IsActive, Status, PlayerPos } from 'src/@types';
-import { dealHands, getGameRef, getPlayerOpponent, getPone } from 'src/utils/helpers';
-import { INITIAL_GAME_STATE } from 'src/utils/constants';
 import useModal from 'src/hooks/useModal';
+
+import Button from 'src/components/UI/Button';
+import HandTally from 'src/components/HandTally/HandTally';
+import PlayField from 'src/components/PlayField/PlayField';
+
+import {
+  dealHands,
+  getGameFromList,
+  getGameRef,
+  getPlayerOpponent,
+  getPlayerRef,
+  getPone
+} from 'src/utils/helpers';
+import { INITIAL_GAME_STATE } from 'src/utils/constants';
 
 export async function gameLoader({ params }: LoaderFunctionArgs) {
   try {
-    const game = await get(ref(rtdb, `games/${params.gameId}`));
+    const game = await get(getGameRef(params.gameId!));
     return game.val();
   } catch (err) {
     console.log(err);
@@ -26,17 +34,19 @@ export async function gameLoader({ params }: LoaderFunctionArgs) {
 
 const GamePage = () => {
   const game = useLoaderData() as GameState;
+  const gameRef = getGameRef(game.gameId);
 
   const { gameState, dispatchGame } = useGameContext();
+
   const { userAuth } = useAuthContext();
-  const userId = userAuth!.uid!;
+  const uid = userAuth!.uid!;
+  const { player, opponent } = getPlayerOpponent(gameState.players, uid);
+  // useInterval(() => update(presenceRef, { presence: serverTimestamp() }), 5000); // TODO: uncomment to add updating timestamp
 
   const { Modal, isModal, modalHandler } = useModal();
-  const { player, opponent } = getPlayerOpponent(gameState.players, userId);
 
   async function dealHandler() {
     if (player !== PlayerPos.P_ONE) return;
-    const gameRef = getGameRef(game.gameId);
     const deal = dealHands();
     const update: GameState = {
       ...gameState,
@@ -83,29 +93,6 @@ const GamePage = () => {
     });
   }, [game.gameId, gameState]);
 
-  // function resetHand(callback?: () => void) {
-  //   const newDealer = getPone(gameState.dealer);
-  //   const gameRef = getGameRef(game.gameId);
-  //   const deal = dealHands();
-  //   update(gameRef, {
-  //     ...gameState,
-  //     dealer: newDealer,
-  //     handNum: gameState.handNum + 1,
-  //     players: {
-  //       player1: { ...gameState.players.player1, activePlayer: IsActive.ACTIVE },
-  //       player2: { ...gameState.players.player2, activePlayer: IsActive.ACTIVE }
-  //     },
-  //     playerCards: {
-  //       player1: { inHand: deal.hands.player1, played: {} },
-  //       player2: { inHand: deal.hands.player2, played: {} }
-  //     },
-  //     crib: INITIAL_GAME_STATE.crib,
-  //     deckCut: { status: Status.INVALID, card: deal.cut },
-  //     turnTotals: INITIAL_GAME_STATE.turnTotals,
-  //     tally: INITIAL_GAME_STATE.tally
-  //   }).then(() => callback && callback());
-  // }
-
   function canStartGame() {
     return (
       Boolean(gameState.players.player1.displayName.length) &&
@@ -143,23 +130,34 @@ const GamePage = () => {
   useEffect(() => {
     if (!gameState.tally) return;
     renderTally();
-  }, [gameState.tally]);
+  }, [gameState.tally, renderTally]);
+
+  function leaveGameHandler() {
+    const playerRef = getPlayerRef(game.gameId, player);
+    const gameListRef = getGameFromList(game.gameId);
+    update(gameListRef, { [player]: { displayName: '', avatar: '', presence: '' } });
+    update(playerRef, { id: '', displayName: '', activePlayer: IsActive.NOT_ACTIVE });
+  }
+
+  window.onpopstate = () => leaveGameHandler();
 
   return (
     <>
       {isModal && gameState.tally && (
-        <Modal isVisible={true} title={'Hand Tally'} customStyles={'bg-neutral-800 text-white'}>
+        <Modal isVisible={isModal} title={'Hand Tally'} className={'bg-stone-800 text-white'}>
           <HandTally
             dealer={gameState.dealer}
             cut={gameState.deckCut.card!}
             player={{
               displayName: gameState.players[player].displayName,
+              avatar: gameState.players[player].avatar,
               playerPos: player,
               cards: gameState.playerCards[player].played,
               points: gameState?.tally[player]
             }}
             opponent={{
               displayName: gameState.players[opponent].displayName,
+              avatar: gameState.players[opponent].avatar,
               playerPos: opponent,
               cards: gameState.playerCards[opponent].played,
               points: gameState?.tally[opponent]
@@ -168,14 +166,14 @@ const GamePage = () => {
           />
         </Modal>
       )}
-      <div className="relative h-screen bg-neutral-800">
-        <div>
-          <PlayFieldFlex gameId={game.gameId} />
+      <div className="relative">
+        <div className="flex h-[90vh] flex-col justify-center">
+          <PlayField gameId={game.gameId} />
         </div>
         {canStartGame() && player === PlayerPos.P_ONE && (
           <Button
             handler={dealHandler}
-            customStyles="absolute top-1/2 left-1/2  -translate-x-1/2 -translate-y-1/2">
+            className="absolute top-1/2 left-1/2  -translate-x-1/2 -translate-y-1/2">
             START
           </Button>
         )}

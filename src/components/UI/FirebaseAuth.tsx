@@ -58,7 +58,7 @@ const FirebaseAuth: FC<FirebaseAuthProps> = ({ className, uiCallback }) => {
       unregisterAuthObserver();
       firebaseUIWidget.reset();
     };
-  }, [firebaseui, uiConfig]);
+  }, [uiCallback, userSignedIn]);
 
   return <div className={className} ref={elementRef} />;
 };

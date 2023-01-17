@@ -1,4 +1,14 @@
-import { GameState, Go, IsActive, PlayerPos, Status } from 'src/@types';
+import {
+  GameState,
+  Go,
+  IsActive,
+  PlayerPos,
+  UserSettingsState,
+  Status,
+  GameStage
+} from 'src/@types';
+
+export const MILLISEC_PER_DAY = 86400000;
 
 export const HAND_SIZE = 6;
 
@@ -10,19 +20,31 @@ export const CARDS_PER_SUIT = 13;
 
 export const PAIR_POINTS = [0, 2, 6, 12];
 
+export const INITIAL_USER_SETTING: UserSettingsState = {
+  uid: '',
+  displayName: '',
+  email: '',
+  avatar: '',
+  online: false,
+  lastVisibleAt: ''
+};
+
 export const INITIAL_GAME_STATE: GameState = {
   gameId: '',
+  stage: GameStage.NEW,
   dealer: PlayerPos.P_ONE,
   handNum: 0,
   players: {
     player1: {
       id: '',
       displayName: '',
+      avatar: '',
       activePlayer: IsActive.NOT_ACTIVE
     },
     player2: {
       id: '',
       displayName: '',
+      avatar: '',
       activePlayer: IsActive.NOT_ACTIVE
     }
   },
@@ -58,3 +80,51 @@ export const INITIAL_GAME_STATE: GameState = {
     cardTotal: 0
   }
 };
+
+export const INITIAL_USER_STATS = {
+  gamesPlayed: 0,
+  dailyGames: [{ date: '', played: 0, won: 0 }],
+  gamesWon: 0,
+  bestHand: null
+};
+
+export const AVATARS = [
+  '👩🏽‍🦱',
+  '👩🏻‍🦱',
+  '👩🏿‍🦱',
+  '👩🏼‍🦱',
+  '👧🏾',
+  '👧🏻',
+  '👧🏿',
+  '👧🏼',
+  '👦🏾',
+  '👦🏻',
+  '👦🏿',
+  '👦🏼',
+  '👩‍🎤',
+  '👨‍🎤',
+  '🧙‍♀️',
+  '🧙‍♂️',
+  '🐶',
+  '🐱',
+  '🦊',
+  '🐻',
+  '🦁',
+  '🐼',
+  '🐵',
+  '🐷',
+  '🐔',
+  '🐮',
+  '🦑',
+  '🐬',
+  '🦄',
+  '🐠',
+  '🐧',
+  '🐝',
+  '🌈',
+  '🌺',
+  '🍄',
+  '👤'
+];
+
+export const EMOTES = ['😊', '🥳', '😎', '🤓', '😂', '🙃', '😴', '🙄', '😫', '🤬', '🤯', '💀'];

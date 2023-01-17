@@ -6,12 +6,6 @@ import useFirebaseAuth from 'src/hooks/useFirebaseAuth';
 import useAuthContext from 'src/hooks/useAuthContext';
 import Button from 'src/components/UI/Button';
 
-export async function signUpAction() {
-  await new Promise((res) => {
-    res(() => console.log('here'));
-  });
-}
-
 const SignUpPage = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -22,12 +16,12 @@ const SignUpPage = () => {
   const navigate = useNavigate();
   // const { setAuth } = useFirebaseAuth();
 
-  function redirectAuthUser() {
-    navigate('/dashboard');
+  function redirectAuthUser(uid: string) {
+    navigate(`/dashboard/${uid}`);
   }
 
   useEffect(() => {
-    if (userAuth) navigate('/dashboard');
+    if (userAuth) navigate(`/dashboard/${userAuth.uid}`);
   }, [userAuth, navigate]);
 
   async function submitHandler(event: React.FormEvent<HTMLFormElement>) {

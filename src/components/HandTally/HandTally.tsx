@@ -15,7 +15,6 @@ type HandTallyProps = {
 const HandTally: FC<HandTallyProps> = ({ dealer, cut, player, opponent, crib }) => {
   const [count, setCount] = useState<number>(0);
   useInterval(() => setCount((prev) => prev + 1), 1000);
-  const pone = getPone;
 
   function renderScoreItems(playerPos: PlayerPos, score: TallyPoints) {
     const scores = Object.entries(score).filter((score) => score[1] !== 0);
@@ -60,6 +59,7 @@ const HandTally: FC<HandTallyProps> = ({ dealer, cut, player, opponent, crib }) 
       <div className="flex flex-col gap-4 pt-2">
         <PlayerTally
           displayName={player.displayName}
+          avatar={player.avatar}
           cards={player.cards}
           cut={cut}
           scores={playerScores}
@@ -68,6 +68,7 @@ const HandTally: FC<HandTallyProps> = ({ dealer, cut, player, opponent, crib }) 
 
         <PlayerTally
           displayName={opponent.displayName}
+          avatar={opponent.avatar}
           cards={opponent.cards}
           cut={cut}
           scores={opponentScores}

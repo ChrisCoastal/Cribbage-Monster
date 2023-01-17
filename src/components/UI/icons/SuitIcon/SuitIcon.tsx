@@ -87,8 +87,8 @@ c-0.404-0.543-0.849-1.057-1.327-1.536C109.956,15.018,105.133,13.019,100,13.019L1
 const SuitIcon: FC<SuitIconProps> = ({ suit, height, width, color = '#000' }) => {
   function getSuitColor(suit: Suit) {
     if (suit === Suit.Hearts || suit === Suit.Diamonds) return 'fill-red-600';
-    if (suit === Suit.Clubs || suit === Suit.Spades) return 'fill-black';
-    return 'fill-black';
+    if (suit === Suit.Clubs || suit === Suit.Spades) return 'fill-stone-900';
+    return 'fill-stone-900';
   }
 
   return (

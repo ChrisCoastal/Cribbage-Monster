@@ -1,44 +1,124 @@
 import { useEffect, useState } from 'react';
 
-import { onValue } from 'firebase/database';
+import { LoaderFunctionArgs, useNavigate, useLoaderData } from 'react-router-dom';
 
-import { GameBrief } from 'src/@types';
+import { get, onValue } from 'firebase/database';
+import { HexColorPicker } from 'react-colorful';
+
+import {
+  AvatarSize,
+  GameBrief,
+  SettingsReducerTypes,
+  UserSettingsState,
+  UserStats
+} from 'src/@types';
+
+import useAuthContext from 'src/hooks/useAuthContext';
+import useSettingsContext from 'src/hooks/useSettingsContext';
+import useGameContext from 'src/hooks/useGameContext';
+import useModal from 'src/hooks/useModal';
 
 import CreateGame from 'src/components/CreateGame/CreateGame';
-import useAuthContext from 'src/hooks/useAuthContext';
+import GamesList from 'src/components/DashboardItems/GamesList/GamesList';
+import DashCarousel from 'src/components/DashboardItems/DashCarousel/DashCarousel';
+import Badges from 'src/components/Badges/Badges';
+import Avatar from 'src/components/Avatar/Avatar';
+import { getGamesList, getUserStatsRef } from 'src/utils/helpers';
+import AvatarPicker from 'src/components/AvatarPicker/AvatarPicker';
+
+import { getUserSettingsRef } from 'src/utils/helpers';
 import Button from 'src/components/UI/Button';
-import GamesList from 'src/components/GamesList/GamesList';
-import { getGamesList } from 'src/utils/helpers';
+import AvatarModal from 'src/components/AvatarModal/AvatarModal';
+import Doughnut from 'src/components/UI/Doughnut';
+import GamesWon from 'src/components/DashboardItems/GamesWon/GamesWon';
+import Card from 'src/components/UI/Card';
+import CardBox from 'src/components/CardBox/CardBox';
+import BarChart from 'src/components/UI/BarChart';
+import GamesPlayed from 'src/components/DashboardItems/GamesPlayed/GamesPlayed';
+import SubHeading from 'src/components/UI/SubHeading';
+
+export async function dashboardLoader({ params }: LoaderFunctionArgs) {
+  try {
+    const userSettingsRef = getUserSettingsRef(params.uid!);
+    const userStatsRef = getUserStatsRef(params.uid!);
+    const userSettings = await get(userSettingsRef).then((snapshot) => snapshot.val());
+    const userStats = await get(userStatsRef).then((snapshot) => snapshot.val());
+    const dashData = {
+      userSettings,
+      userStats
+    };
+    return dashData;
+  } catch (err) {
+    console.log(err);
+  }
+}
 
 const DashboardPage = () => {
-  const [games, setGames] = useState<GameBrief[]>([]);
   const { userAuth } = useAuthContext();
+  const { userSettingsState, dispatchSettings } = useSettingsContext();
+  // const [gameState, dispatchGame] = useGameContext();
+  const { userSettings, userStats } = useLoaderData() as {
+    userSettings: UserSettingsState;
+    userStats: UserStats;
+  };
+  const { Modal, isModal, modalHandler } = useModal();
+  const isUser = userSettings.uid === userAuth?.uid;
+  const navigate = useNavigate();
+
+  function changeAvatar() {
+    modalHandler(true);
+  }
 
   useEffect(() => {
-    const games: GameBrief[] = [];
-    const gamesListRef = getGamesList();
-    const unsubscribe = onValue(gamesListRef, (snapshot) => {
-      const gameBriefs = (snapshot.val() as { [key: string]: GameBrief }) || {};
-      const keys = Object.keys(gameBriefs);
-      keys.forEach((key) => {
-        games.push(gameBriefs[key]);
-      });
-      setGames(() => games);
+    if (userSettings.uid !== userAuth?.uid) console.log('no match');
 
-      // dispatchGame({ type: GameReducerTypes.UPDATE, payload: snapshot.val() });
-    });
+    const userSettingsRef = getUserSettingsRef(userAuth!.uid!);
+    const unsubscribe = onValue(
+      userSettingsRef,
+      (snapshot) => {
+        dispatchSettings({ type: SettingsReducerTypes.UPDATE_SETTINGS, payload: snapshot.val() });
+      },
+      (error) => console.log(error)
+    );
     return unsubscribe;
   }, []);
 
+  const dailyValues = [
+    { date: '', won: 16, played: 18 },
+    { date: '', won: 0, played: 7 },
+    { date: '', won: 1, played: 3 },
+    { date: '', won: 3, played: 10 },
+    { date: '', won: 0, played: 0 },
+    { date: '', won: 1, played: 3 },
+    { date: '', won: 3, played: 9 }
+  ];
+
   return (
-    <div className="grid">
-      <div className="">
-        <p>{`Hey ${userAuth?.displayName}`}</p>
-        <Button handler={() => console.log(userAuth)}>USER?</Button>
-        <GamesList games={games} />
-        <CreateGame />
+    <>
+      <div className="flex justify-center pb-12">
+        <div className="mt-4 grid w-full auto-rows-fr justify-items-center gap-4 rounded-lg p-2 sm:grid-cols-2 md:w-5/6 md:max-w-[80rem] md:grid-cols-2 lg:grid-rows-2 xl:w-3/4 xl:grid-cols-3">
+          <Card>
+            <div className="flex flex-col items-center gap-4">
+              {isUser ? (
+                <AvatarModal isModal={isModal} Modal={Modal} modalHandler={modalHandler} />
+              ) : (
+                <Avatar
+                  className={`${AvatarSize.LG} lg:h-48 lg:w-48 lg:text-[8.8rem]`}
+                  avatar={userSettings.avatar || ''}
+                />
+              )}
+
+              <SubHeading>{`${userSettings.displayName}`}</SubHeading>
+              <Badges />
+            </div>
+          </Card>
+          <GamesList />
+          <DashCarousel className="sm:col-span-2 sm:row-start-2 sm:aspect-video" />
+          <GamesWon gamesPlayed={userStats.gamesPlayed} gamesWon={userStats.gamesWon} />
+          <GamesPlayed dailyGames={dailyValues} />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -6,11 +6,12 @@ import { rtdb } from 'src/firestore.config';
 import { update, ref, get } from 'firebase/database';
 
 import useAuthContext from 'src/hooks/useAuthContext';
+import useSettingsContext from 'src/hooks/useSettingsContext';
 
-import { findPlayerPos } from 'src/utils/helpers';
+import { findPlayerPos, getGameFromList } from 'src/utils/helpers';
 
 import Button from 'src/components/UI/Button';
-import { GameId, Player } from 'src/@types';
+import { GameId, IsActive, Player } from 'src/@types';
 
 type JoinGameProps = {
   gameId: GameId;
@@ -18,6 +19,7 @@ type JoinGameProps = {
 
 const JoinGame: FC<JoinGameProps> = ({ gameId }) => {
   const { userAuth } = useAuthContext();
+  const { userSettingsState } = useSettingsContext();
   const navigate = useNavigate();
 
   async function joinGameHandler() {
@@ -25,7 +27,7 @@ const JoinGame: FC<JoinGameProps> = ({ gameId }) => {
     const { uid, displayName } = userAuth;
     try {
       const gamePlayersRef = ref(rtdb, `games/${gameId}/players`);
-      const gamelistRef = ref(rtdb, `gameslist/${gameId}`);
+      const gameFromListRef = getGameFromList(gameId);
 
       get(gamePlayersRef).then((snapshot) => {
         if (!snapshot.exists()) throw new Error('Sorry that game is not available');
@@ -35,16 +37,17 @@ const JoinGame: FC<JoinGameProps> = ({ gameId }) => {
         };
 
         // will check for a vacant spot or if the player is already in the game
-        const PlayerPos = findPlayerPos(players, uid);
+        const playerPos = findPlayerPos(players, uid);
 
-        if (!PlayerPos) throw new Error('Sorry that game already has 2 players');
-        update(gamelistRef, { [PlayerPos]: displayName! });
+        if (!playerPos) throw new Error('Sorry that game already has 2 players');
+        update(gameFromListRef, { [playerPos]: { displayName, avatar: userSettingsState.avatar } });
         update(gamePlayersRef, {
           ...players,
-          [PlayerPos]: {
-            ...players[PlayerPos],
+          [playerPos]: {
+            avatar: userSettingsState.avatar,
             id: uid,
-            displayName: displayName!
+            displayName: displayName!,
+            activePlayer: IsActive.NOT_ACTIVE
           }
         }).then(() => {
           navigate(`/game/${gameId}`);
@@ -55,7 +58,7 @@ const JoinGame: FC<JoinGameProps> = ({ gameId }) => {
     }
   }
 
-  return <Button handler={joinGameHandler}>Join Game</Button>;
+  return <Button handler={joinGameHandler}>Join</Button>;
 };
 
 export default JoinGame;

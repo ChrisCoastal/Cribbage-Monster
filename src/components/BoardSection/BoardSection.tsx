@@ -10,7 +10,7 @@ type BoardSectionProps = {
   };
   rotate?: boolean;
   numPegHoles?: number;
-  customStyles?: string;
+  className?: string;
 };
 
 const BoardSection: FC<BoardSectionProps> = ({
@@ -18,7 +18,7 @@ const BoardSection: FC<BoardSectionProps> = ({
   score,
   rotate = false,
   numPegHoles = 5,
-  customStyles
+  className
 }) => {
   function renderPegHoles(playerTrack: PlayerPos) {
     const pegHoles = [];
@@ -32,7 +32,7 @@ const BoardSection: FC<BoardSectionProps> = ({
   }
 
   return (
-    <div className={`${customStyles} ${rotate && 'rotate-180'} flex justify-around border-t-[1px]`}>
+    <div className={`${className} ${rotate && 'rotate-180'} flex justify-around border-t-[1px]`}>
       <ul className="grid grid-cols-1 grid-rows-5 gap-1 py-1">{renderPegHoles(PlayerPos.P_ONE)}</ul>
       <ul className="grid grid-cols-1 grid-rows-5 gap-1 py-1">{renderPegHoles(PlayerPos.P_TWO)}</ul>
     </div>

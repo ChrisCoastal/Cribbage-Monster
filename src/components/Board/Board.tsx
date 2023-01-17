@@ -32,7 +32,7 @@ const Board = () => {
           sectionIndex={i + colIndex}
           score={gameState.score}
           rotate={colIndex === 1}
-          customStyles={`${col} ${row} ${bendBorder} index-${i + colIndex}`}
+          className={`${col} ${row} ${bendBorder} index-${i + colIndex}`}
         />
       );
     }
