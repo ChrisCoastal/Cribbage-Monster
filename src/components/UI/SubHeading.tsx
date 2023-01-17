@@ -1,14 +1,14 @@
 import React, { FC, ReactNode } from 'react';
 
 type SubHeadingProps = {
-  customStyles?: string;
+  className?: string;
   children?: ReactNode;
 };
 
-const SubHeading: FC<SubHeadingProps> = ({ customStyles, children }) => {
+const SubHeading: FC<SubHeadingProps> = ({ className, children }) => {
   return (
     <h2
-      className={`${customStyles} pb-2 text-xl font-bold tracking-wider text-stone-800 dark:text-stone-100`}>
+      className={`${className} pb-2 font-bold tracking-wider text-stone-800 dark:text-stone-100 lg:text-lg xl:text-2xl`}>
       {children}
     </h2>
   );

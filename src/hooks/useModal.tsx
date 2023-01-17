@@ -1,12 +1,13 @@
 import React, { FC, ReactNode, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Button from 'src/components/UI/Button';
+import AddIcon from 'src/components/UI/icons/AddIcon/AddIcon';
 import SubHeading from 'src/components/UI/SubHeading';
 
 type ModalProps = {
   isVisible: boolean;
   title: string;
-  customStyles?: string;
+  className?: string;
   children?: ReactNode;
 };
 
@@ -17,7 +18,7 @@ const useModal = () => {
     setIsModal(isVisible);
   }
 
-  const Modal: FC<ModalProps> = ({ isVisible, title, customStyles = '', children }) => {
+  const Modal: FC<ModalProps> = ({ isVisible, title, className = '', children }) => {
     function keyDownHandler(event: React.KeyboardEvent<HTMLDivElement>) {
       if (event.key === 'escape') modalHandler(false);
     }
@@ -28,11 +29,13 @@ const useModal = () => {
           createPortal(
             <>
               <div
-                className={`${customStyles} animate-modal-bounce-in absolute top-1/2 left-1/2 z-[1000] -translate-x-1/2 -translate-y-1/2 rounded-lg bg-white p-4`}>
-                <div className="">
-                  <div className="flex items-center justify-between gap-8">
-                    <SubHeading>{title.toUpperCase()}</SubHeading>
-                    <Button handler={() => modalHandler(false)}>X</Button>
+                className={`${className} absolute top-1/2 left-1/2 z-[1000] w-full -translate-x-1/2 -translate-y-1/2 animate-modal-bounce-in rounded-lg bg-white p-4 sm:w-fit`}>
+                <div>
+                  <div className="flex items-center justify-between gap-8 pb-2">
+                    <SubHeading className="pt-1">{title}</SubHeading>
+                    <Button handler={() => modalHandler(false)} buttonSize="circle">
+                      <AddIcon height="32" width="32" className="rotate-45" />
+                    </Button>
                   </div>
                   {children}
                 </div>

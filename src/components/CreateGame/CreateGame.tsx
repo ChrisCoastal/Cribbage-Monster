@@ -14,6 +14,7 @@ import useGameContext from 'src/hooks/useGameContext';
 
 import Button from 'src/components/UI/Button';
 import useSettingsContext from 'src/hooks/useSettingsContext';
+import AddIcon from 'src/components/UI/icons/AddIcon/AddIcon';
 
 const CreateGame = () => {
   const { userAuth } = useAuthContext();
@@ -67,8 +68,12 @@ const CreateGame = () => {
   }
 
   return (
-    <Button handler={createGameHandler} customStyles="font-bold text-2xl">
-      +
+    <Button
+      handler={createGameHandler}
+      className="text-2xl font-bold"
+      tooltip="create game"
+      buttonSize="circle">
+      <AddIcon height="36" width="36" />
     </Button>
   );
 };

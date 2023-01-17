@@ -10,24 +10,28 @@ module.exports = {
         '4px': '4px',
         '6px': '6px'
       },
+      fontFamily: {
+        molle: ['Molle']
+      },
       backgroundImage: {
         'cardback-md': `url('src/assets/cardback-md.svg')`,
         'cardback-sm': `url('src/assets/cardback-sm.svg')`
       },
       animation: {
-        'fade-up-delay-sm': '1.2s ease-out 0.8s fade-up-in forwards',
-        'fade-up-delay-md': '1.5s ease-out 1.6s fade-up-in forwards',
-        'fade-up-delay-lg': '1.5s ease-out 2s fade-up-in forwards',
+        'fade-up-delay-sm': '1.2s ease-out 0.8s fade-up-in both',
+        'fade-up-delay-md': '1.5s ease-out 1.6s fade-up-in both',
+        'fade-up-delay-lg': '1.5s ease-out 2s fade-up-in both',
         'modal-bounce-in': '0.6s ease-in-out bounce-in forwards',
         radiate: '0.8s radiate infinite',
         grow: '0.6s ease-in grow',
         'text-grow': '0.6s ease-out text-grow',
         'fade-in': '0.3s ease-in-out fade-in forwards',
-        'fade-out': '0.3s ease-in-out fade-in forwards'
+        'fade-out': '0.3s ease-in-out fade-out forwards',
+        'tooltip-in-out': '4s ease-in-out 0.3s fade-in-out'
       },
       keyframes: {
         'fade-up-in': {
-          '0%': { opacity: '0', transform: 'translateY(10rem)' },
+          '0%': { opacity: '0', transform: 'translateY(8rem)' },
           '100%': { opacity: '1', transform: 'translateY(0rem)' }
         },
         'bounce-in': {
@@ -56,6 +60,12 @@ module.exports = {
         },
         'fade-out': {
           '0%': { opacity: '1' },
+          '100%': { opacity: '0' }
+        },
+        'fade-in-out': {
+          '0%': { opacity: '0' },
+          '8%': { opacity: '1' },
+          '92%': { opacity: '1' },
           '100%': { opacity: '0' }
         }
       }

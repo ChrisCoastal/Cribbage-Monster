@@ -1,13 +1,13 @@
 import React, { FC, ReactNode } from 'react';
 
 type CardProps = {
-  customStyles?: string;
+  className?: string;
   children?: ReactNode;
 };
 
-const Card: FC<CardProps> = ({ customStyles, children }) => {
+const Card: FC<CardProps> = ({ className, children }) => {
   return (
-    <div className={`${customStyles} w-full rounded-md bg-stone-900/40 p-8 shadow-md`}>
+    <div className={`${className} w-full rounded-md bg-stone-900/40 p-4 shadow-md lg:p-8`}>
       {children}
     </div>
   );

@@ -1,12 +1,14 @@
 import React, { FC, MouseEventHandler, ReactNode } from 'react';
+import ToolTip from './ToolTip';
 
 type ButtonProps = {
   // size: string;
   handler?: MouseEventHandler<HTMLButtonElement>;
   type?: 'button' | 'submit' | 'reset';
   color?: string;
-  buttonSize?: 'sm' | 'md' | 'lg';
-  customStyles?: string;
+  buttonSize?: 'sm' | 'md' | 'lg' | 'circle';
+  tooltip?: string;
+  className?: string;
   children?: ReactNode;
 };
 
@@ -15,7 +17,8 @@ const Button: FC<ButtonProps> = ({
   type = 'button',
   color = 'primary',
   buttonSize = 'sm',
-  customStyles,
+  tooltip,
+  className,
   children
 }) => {
   const buttonColor =
@@ -24,16 +27,32 @@ const Button: FC<ButtonProps> = ({
   const size = {
     sm: 'py-1 px-4',
     md: 'py-2 px-6 text-xl font-bold tracking-wider',
-    lg: ''
+    lg: '',
+    circle: 'p-0'
   };
 
   return (
-    <button
-      type={type}
-      onClick={handler}
-      className={`${customStyles} ${size[buttonSize]} cursor-pointer rounded-full bg-black py-1 px-4 text-white shadow-sm transition-all duration-300 hover:bg-slate-100 hover:shadow-md dark:bg-gradient-to-br dark:from-purple-400/90 dark:to-purple-700/90`}>
-      {children}
-    </button>
+    <>
+      {tooltip ? (
+        <div className="relative">
+          <ToolTip text={tooltip}>
+            <button
+              type={type}
+              onClick={handler}
+              className={`${className} ${size[buttonSize]} cursor-pointer rounded-full bg-black text-white shadow-sm transition-all duration-300 hover:bg-slate-100 hover:shadow-md dark:bg-gradient-to-br dark:from-purple-400/90 dark:to-purple-700/90`}>
+              {children}
+            </button>
+          </ToolTip>
+        </div>
+      ) : (
+        <button
+          type={type}
+          onClick={handler}
+          className={`${className} ${size[buttonSize]} cursor-pointer rounded-full bg-black text-white shadow-sm transition-all duration-300 hover:bg-slate-100 hover:shadow-md dark:bg-gradient-to-br dark:from-purple-400/90 dark:to-purple-700/90`}>
+          {children}
+        </button>
+      )}
+    </>
   );
 };
 

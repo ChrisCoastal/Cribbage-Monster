@@ -16,21 +16,6 @@ type CardBoxProps = {
 
 const CardBox: FC<CardBoxProps> = ({ maxCards, size, overlap, placement, children }) => {
   const { gameState, dispatchGame } = useGameContext();
-  // const { isOver, setNodeRef } = useDroppable({
-  //   id: nanoid(),
-  //   disabled: !gameState.activePlayer
-  // });
-
-  // const style = isOver ? 'bg-stone-800' : undefined;
-
-  // const cardPos = [
-  //   'bg-red-200 col-start-1 col-end-4 row-start-1',
-  //   'bg-blue-200 col-start-2 col-end-5 row-start-1',
-  //   'bg-green-200 col-start-3 col-end-6 row-start-1',
-  //   'bg-orange-200 col-start-4 col-end-7 row-start-1',
-  //   'bg-purple-200 col-start-5 col-end-8 row-start-1',
-  //   'bg-yellow-200 col-start-6 col-end-9 row-start-1'
-  // ];
 
   const cardCols = [
     'grid-cols-3',

@@ -44,7 +44,8 @@ import {
   getGameTalliesRef,
   getTallyRef,
   isWinner,
-  getUserStatsRef
+  getUserStatsRef,
+  getCardValues
 } from 'src/utils/helpers';
 
 import Opponent from 'src/components/Opponent/Opponent';
@@ -409,88 +410,100 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     ));
   }
 
-  return (
-    <>
-      <div className="relative grid h-full grid-cols-[1fr] items-center justify-items-center gap-2 py-12 px-4">
-        <div className="flex flex-col items-center justify-center gap-4">
-          <div className="flex w-full justify-between">
-            <div className="flex flex-col items-center justify-center gap-4">
-              <div className="flex flex-col items-center justify-center">
-                <Opponent
-                  displayName={gameState.players[opponent].displayName}
-                  avatar={gameState.players[opponent].avatar}
-                />
-                <CardBox
-                  size={{ height: CardBoxHeight.SM, width: CardBoxWidth.SM_SIX }}
-                  maxCards={6}
-                  overlap={CardOverlap.TWO_THIRDS}>
-                  {renderOpponentHand}
-                </CardBox>
-              </div>
-              <div className="rounded-full bg-gradient-to-br from-purple-500 to-purple-700 p-2">
-                <CardBox
-                  size={{ height: CardBoxHeight.MD, width: CardBoxWidth.MD_FOUR_HALF }}
-                  maxCards={4}
-                  overlap={CardOverlap.HALF}
-                  placement="self-center place-self-center">
-                  {renderOpponentPlayed}
-                </CardBox>
+  useEffect(() => {
+    const playersRef = getPlayersRef(gameId);
+    if (
+      !getCardValues(gameState.playerCards.player1.inHand).length &&
+      getCardValues(gameState.playerCards.player2.inHand).length &&
+      gameState.players.player2.activePlayer === IsActive.NOT_ACTIVE &&
+      gameState.players.player1.activePlayer === IsActive.ACTIVE
+    )
+      update(playersRef, {
+        player1: { ...gameState.players.player1, activePlayer: IsActive.NOT_ACTIVE },
+        player2: { ...gameState.players.player2, activePlayer: IsActive.ACTIVE }
+      });
+    if (
+      getCardValues(gameState.playerCards.player1.inHand).length &&
+      !getCardValues(gameState.playerCards.player2.inHand).length &&
+      gameState.players.player1.activePlayer === IsActive.NOT_ACTIVE &&
+      gameState.players.player2.activePlayer === IsActive.ACTIVE
+    )
+      update(playersRef, {
+        player1: { ...gameState.players.player1, activePlayer: IsActive.ACTIVE },
+        player2: { ...gameState.players.player2, activePlayer: IsActive.NOT_ACTIVE }
+      });
+  }, [gameState.playerCards.player1.inHand, gameState.playerCards.player2.inHand]);
 
-                <div>
-                  <div className="flex flex-col items-center gap-1 py-4">
-                    <div className="grid grid-cols-2 gap-2">
-                      <Deck
-                        cutDeck={gameState.deckCut}
-                        isPone={player === pone}
-                        callback={cutDeckHandler}
-                      />
-                      <Crib cribCards={gameState.crib} />
-                    </div>
-                    <div>
-                      count: {gameState.turnTotals.cardTotal} {go && 'GO!!'}
-                    </div>
-                    <div>
-                      {gameState.players[player].activePlayer === IsActive.ACTIVE
-                        ? 'your turn'
-                        : `opponent's turn`}
-                    </div>
+  return (
+    <div className="relative grid h-full grid-cols-[1fr] items-center justify-items-center gap-2 px-4">
+      <div className="flex flex-col items-center justify-center gap-4">
+        <div className="flex w-full justify-between">
+          <div className="flex flex-col items-center justify-center gap-4">
+            <div className="flex flex-col items-center justify-center">
+              <Opponent
+                displayName={gameState.players[opponent].displayName}
+                avatar={gameState.players[opponent].avatar}
+              />
+              <CardBox
+                size={{ height: CardBoxHeight.SM, width: CardBoxWidth.SM_SIX }}
+                maxCards={6}
+                overlap={CardOverlap.TWO_THIRDS}>
+                {renderOpponentHand}
+              </CardBox>
+            </div>
+            <div className="rounded-full bg-gradient-to-br from-purple-500 to-purple-700 p-2">
+              <CardBox
+                size={{ height: CardBoxHeight.MD, width: CardBoxWidth.MD_FOUR_HALF }}
+                maxCards={4}
+                overlap={CardOverlap.HALF}
+                placement="self-center place-self-center">
+                {renderOpponentPlayed}
+              </CardBox>
+
+              <div>
+                <div className="flex flex-col items-center gap-1 py-4">
+                  <div className="grid grid-cols-2 gap-2">
+                    <Deck
+                      cutDeck={gameState.deckCut}
+                      isPone={player === pone}
+                      callback={cutDeckHandler}
+                    />
+                    <Crib cribCards={gameState.crib} />
+                  </div>
+                  <div>
+                    count: {gameState.turnTotals.cardTotal} {go && 'GO!!'}
+                  </div>
+                  <div>
+                    {gameState.players[player].activePlayer === IsActive.ACTIVE
+                      ? 'your turn'
+                      : `opponent's turn`}
                   </div>
                 </div>
-                <CardBox
-                  size={{ height: CardBoxHeight.MD, width: CardBoxWidth.MD_FOUR_HALF }}
-                  maxCards={4}
-                  overlap={CardOverlap.HALF}
-                  placement="self-center place-self-center">
-                  {renderPlayerPlayed}
-                </CardBox>
               </div>
-            </div>
-            <div className="flex flex-col items-center justify-center gap-4">
-              <Score
-                player={{
-                  displayName: gameState.players[player].displayName,
-                  curScore: gameState.score[player].cur
-                }}
-                opponent={{
-                  displayName: gameState.players[opponent].displayName,
-                  curScore: gameState.score[opponent].cur
-                }}
-              />
-              <Board />
+              <CardBox
+                size={{ height: CardBoxHeight.MD, width: CardBoxWidth.MD_FOUR_HALF }}
+                maxCards={4}
+                overlap={CardOverlap.HALF}
+                placement="self-center place-self-center">
+                {renderPlayerPlayed}
+              </CardBox>
             </div>
           </div>
-          <div>
-            <CardBox
-              size={{ height: CardBoxHeight.LG, width: CardBoxWidth.LG_SIX }}
-              maxCards={6}
-              overlap={CardOverlap.TWO_THIRDS}
-              placement="self-center place-self-center">
-              {renderPlayerHand}
-            </CardBox>
+          <div className="flex flex-col items-center justify-center gap-4">
+            <Board />
           </div>
         </div>
+        <div>
+          <CardBox
+            size={{ height: CardBoxHeight.LG, width: CardBoxWidth.LG_SIX }}
+            maxCards={6}
+            overlap={CardOverlap.TWO_THIRDS}
+            placement="self-center place-self-center">
+            {renderPlayerHand}
+          </CardBox>
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 

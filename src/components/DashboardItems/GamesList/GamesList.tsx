@@ -48,11 +48,18 @@ const GamesList: FC<GamesListProps> = () => {
           key={game.gameId}
           className="flex items-center justify-between gap-4 rounded-sm bg-stone-900 p-4 text-sm font-light text-stone-300">
           <span className="flex items-center justify-between gap-4">
-            <span className="flex items-center gap-1">
-              <Avatar size={AvatarSize.SM} avatar={game.player1.avatar} />
-              <p>{game.player1.displayName}</p>
+            <span className="flex items-center gap-2">
+              <Avatar
+                className={AvatarSize.SM}
+                avatar={game.player1.avatar.length ? game.player1.avatar : game.player2.avatar}
+              />
+              <p className="font-medium">
+                {game.player1.displayName.length
+                  ? game.player1.displayName
+                  : game.player2.displayName}
+              </p>
             </span>
-            <p>{game.scoreToWin}</p>
+            <p className="font-medium">🏆 {game.scoreToWin}</p>
           </span>
           {inProgress ? <p>In Progress</p> : <JoinGame gameId={game.gameId} />}
           {/* {!vacantPlayer && <JoinGame gameId={game.gameId} />} */}
@@ -62,15 +69,13 @@ const GamesList: FC<GamesListProps> = () => {
 
   return (
     <Card>
-      <div className="w-full">
-        <div className="flex items-center justify-between pb-6">
-          <SubHeading>GAMES</SubHeading>
-          <CreateGame />
-        </div>
-        <ul className="flex max-h-full flex-col gap-2 overflow-scroll">
-          {gamesListItems.length ? gamesListItems : <li>no games available</li>}
-        </ul>
+      <div className="flex items-center justify-between pb-6">
+        <SubHeading>GAMES</SubHeading>
+        <CreateGame />
       </div>
+      <ul className="flex max-h-full flex-col gap-2 overflow-scroll">
+        {gamesListItems.length ? gamesListItems : <li>no games available</li>}
+      </ul>
     </Card>
   );
 };

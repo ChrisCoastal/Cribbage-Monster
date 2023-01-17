@@ -4,15 +4,19 @@ import { useInterval } from 'src/hooks/useInterval';
 import carouselImg1 from 'src/assets/carousel-1.jpg';
 import carouselImg2 from 'src/assets/carousel-2.jpg';
 import carouselImg3 from 'src/assets/carousel-3.jpg';
-import Heading from './Heading';
-import Button from './Button';
+import carouselImgMobile1 from 'src/assets/carousel-1-mobile.jpg';
+import carouselImgMobile2 from 'src/assets/carousel-2-mobile.jpg';
+import carouselImgMobile3 from 'src/assets/carousel-3-mobile.jpg';
+import Heading from 'src/components/UI/Heading';
+import Button from 'src/components/UI/Button';
+import Card from 'src/components/UI/Card';
 
-type CarouselProps = {
+type DashCarouselProps = {
   className?: string;
   auto?: null | number;
 };
 
-const Carousel: FC<CarouselProps> = ({ className, auto = 10000 }) => {
+const DashCarousel: FC<DashCarouselProps> = ({ className, auto = 10000 }) => {
   const [carouselIndex, setCarouselIndex] = useState<number>(0);
   useInterval(() => incrementCarousel(), auto);
   const carouselPos = ['left-[0%]', 'left-[-100%]', 'left-[-200%]', 'left-[-300%]', 'left-[-400%]'];
@@ -24,7 +28,12 @@ const Carousel: FC<CarouselProps> = ({ className, auto = 10000 }) => {
     'right-[-400%]'
   ];
 
-  const slides = [carouselImg1, carouselImg2, carouselImg3];
+  const slides = [
+    { mobile: carouselImgMobile1, lg: carouselImg1 },
+    { mobile: carouselImgMobile2, lg: carouselImg2 },
+    { mobile: carouselImgMobile3, lg: carouselImg3 }
+  ];
+
   // const slides = [
   //   <li key={0} className={`absolute w-full`}>
   //     <p className="absolute left-10 top-10 z-10 animate-fade-up-in">bob</p>
@@ -41,22 +50,25 @@ const Carousel: FC<CarouselProps> = ({ className, auto = 10000 }) => {
   // ];
 
   const renderSlides = slides.map((slide, i) => {
-    const animateTitle = i === carouselIndex ? 'motion-safe:animate-fade-up-delay-sm' : '';
-    const animateText = i === carouselIndex ? 'motion-safe:animate-fade-up-delay-md' : '';
+    const animateTitle = i === carouselIndex ? 'animate-fade-up-delay-sm' : '';
+    const animateText = i === carouselIndex ? 'animate-fade-up-delay-md' : '';
     return (
-      <li key={i} className={`absolute w-full ${slidePos[i]} object-cover`}>
-        <Heading className={`absolute left-10 top-10 z-10 text-3xl ${animateTitle}`}>
+      <li key={i} className={`relative w-full`}>
+        <Heading className={`absolute left-6 top-10 z-10 opacity-0 lg:left-10 ${animateTitle}`}>
           $250K Prize
         </Heading>
         <p
-          className={`absolute left-10 top-[14rem] z-10 text-4xl font-medium text-white ${animateText}`}>
+          className={`absolute left-6 top-[40%] z-10 w-[90%] text-lg font-medium text-white opacity-0 sm:text-3xl lg:left-10 lg:text-4xl ${animateText}`}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi consequat ligula justo, sed
           pretium ligula tincidunt ac.
         </p>
-        <Button className="absolute left-10 bottom-[8rem]" buttonSize="md">
+        <Button className="absolute left-6 bottom-[2rem] lg:left-10" buttonSize="md">
           Register Now
         </Button>
-        <img src={slide}></img>
+        {/* <picture> */}
+        {/* <source srcSet={slide.lg} type="image/webp" media="@media screen and (min-width: 900px" /> */}
+        <img src={slide.lg} className="h-full w-full object-cover"></img>
+        {/* </picture> */}
       </li>
     );
   });
@@ -90,9 +102,9 @@ const Carousel: FC<CarouselProps> = ({ className, auto = 10000 }) => {
   const buttons = renderCarouselButtons();
 
   return (
-    <div className={`${className} relative col-span-2 h-full w-full overflow-hidden rounded-md`}>
+    <div className={`${className} relative h-full w-full overflow-hidden rounded-md`}>
       <ul
-        className={`${carouselPos[carouselIndex]} relative top-0 bottom-0 flex transition-all duration-700 ease-out`}>
+        className={`${carouselPos[carouselIndex]} relative flex h-full w-[300%] transition-all duration-700 ease-out `}>
         {renderSlides}
       </ul>
       <div className="absolute bottom-3 left-1/2 z-30 flex -translate-x-1/2 gap-4">{buttons}</div>
@@ -100,4 +112,4 @@ const Carousel: FC<CarouselProps> = ({ className, auto = 10000 }) => {
   );
 };
 
-export default Carousel;
+export default DashCarousel;

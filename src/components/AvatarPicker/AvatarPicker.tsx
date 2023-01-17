@@ -29,17 +29,15 @@ const AvatarPicker: FC<AvatarPickerProps> = ({ selection, setSelection, userAvat
         onClick={() => changeAvatarHandler(avatar)}
         className={`${
           curAvatar ? 'outline-3 animate-pulse rounded-full outline outline-emerald-300' : ''
-        } cursor-pointer`}>
-        <Avatar size={AvatarSize.MD} avatar={avatar} />
+        } ${AvatarSize.MD} cursor-pointer`}>
+        <Avatar className={AvatarSize.MD} avatar={avatar} />
       </div>
     );
   });
 
   return (
     <div>
-      <div className="grid max-w-3xl grid-cols-[repeat(auto-fill,_minmax(60px,_1fr))] gap-3 rounded-md bg-stone-900 p-8">
-        {avatars}
-      </div>
+      <div className="grid grid-cols-6 gap-3 rounded-md bg-stone-900 p-8">{avatars}</div>
     </div>
   );
 };

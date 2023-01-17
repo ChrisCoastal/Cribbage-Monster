@@ -4,12 +4,12 @@ import { useInterval } from 'src/hooks/useInterval';
 
 type ToolTipProps = {
   text: string;
-  customTipStyles?: string;
   customWrapperStyles?: string;
+  className?: string;
   children?: ReactNode;
 };
 
-const ToolTip: FC<ToolTipProps> = ({ text, customTipStyles, customWrapperStyles, children }) => {
+const ToolTip: FC<ToolTipProps> = ({ text, className, customWrapperStyles, children }) => {
   const [showTip, setShowTip] = useState<boolean>(false);
   const [tipPos, setTipPos] = useState({ x: 0, y: 0 });
 
@@ -51,7 +51,7 @@ const ToolTip: FC<ToolTipProps> = ({ text, customTipStyles, customWrapperStyles,
       {showTip &&
         createPortal(
           <div
-            className={`${customTipStyles} pointer-events-none z-[1000] animate-fade-in rounded-sm bg-white/80 px-2 text-sm opacity-0`}
+            className={`${className} pointer-events-none z-[1000] animate-tooltip-in-out rounded-sm bg-white/80 px-2 text-sm opacity-0`}
             style={{ position: 'absolute', left: tipPos.x, top: tipPos.y }}>
             {text}
           </div>,

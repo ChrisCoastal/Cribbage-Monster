@@ -24,7 +24,6 @@ const PlayingCard: FC<PlayingCardProps> = ({
   valid,
   handler
 }) => {
-  // const style = { 'var(--color)': yourColor } as React.CSSProperties;
   const { userAuth } = useAuthContext();
   const { gameState } = useGameContext();
   const { player } = getPlayerOpponent(gameState.players, userAuth!.uid!);
@@ -96,7 +95,7 @@ const PlayingCard: FC<PlayingCardProps> = ({
   const iconSize = cardSize === CardSize.LG ? '1.8rem' : '1rem';
   const cardMarking = (
     <>
-      <span className="pointer-events-none font-bold">{card.name}</span>
+      <span className="pointer-events-none font-bold text-stone-900">{card.name}</span>
       <span className="pointer-events-none">
         <SuitIcon suit={card.suit} height={iconSize} width={iconSize} />
       </span>

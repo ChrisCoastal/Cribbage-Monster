@@ -20,7 +20,7 @@ import useModal from 'src/hooks/useModal';
 
 import CreateGame from 'src/components/CreateGame/CreateGame';
 import GamesList from 'src/components/DashboardItems/GamesList/GamesList';
-import Carousel from 'src/components/UI/Carousel';
+import DashCarousel from 'src/components/DashboardItems/DashCarousel/DashCarousel';
 import Badges from 'src/components/Badges/Badges';
 import Avatar from 'src/components/Avatar/Avatar';
 import { getGamesList, getUserStatsRef } from 'src/utils/helpers';
@@ -70,7 +70,6 @@ const DashboardPage = () => {
   }
 
   useEffect(() => {
-    if (!userSettings) navigate('/');
     if (userSettings.uid !== userAuth?.uid) console.log('no match');
 
     const userSettingsRef = getUserSettingsRef(userAuth!.uid!);
@@ -96,24 +95,27 @@ const DashboardPage = () => {
 
   return (
     <>
-      <div className="flex justify-center">
-        <div className="grid w-full grid-cols-1 justify-items-center gap-4 rounded-lg p-2 md:w-3/4 md:grid-cols-3 md:grid-rows-2">
+      <div className="flex justify-center pb-12">
+        <div className="mt-4 grid w-full auto-rows-fr justify-items-center gap-4 rounded-lg p-2 sm:grid-cols-2 md:w-5/6 md:max-w-[80rem] md:grid-cols-2 lg:grid-rows-2 xl:w-3/4 xl:grid-cols-3">
           <Card>
             <div className="flex flex-col items-center gap-4">
               {isUser ? (
                 <AvatarModal isModal={isModal} Modal={Modal} modalHandler={modalHandler} />
               ) : (
-                <Avatar size={AvatarSize.XL} avatar={userSettings.avatar || ''} />
+                <Avatar
+                  className={`${AvatarSize.LG} lg:h-48 lg:w-48 lg:text-[8.8rem]`}
+                  avatar={userSettings.avatar || ''}
+                />
               )}
 
               <SubHeading>{`${userSettings.displayName}`}</SubHeading>
               <Badges />
             </div>
           </Card>
-          <Carousel />
+          <GamesList />
+          <DashCarousel className="sm:col-span-2 sm:row-start-2 sm:aspect-video" />
           <GamesWon gamesPlayed={userStats.gamesPlayed} gamesWon={userStats.gamesWon} />
           <GamesPlayed dailyGames={dailyValues} />
-          <GamesList />
         </div>
       </div>
     </>

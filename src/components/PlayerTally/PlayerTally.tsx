@@ -13,6 +13,7 @@ import Avatar from 'src/components/Avatar/Avatar';
 import CardBox from 'src/components/CardBox/CardBox';
 import PlayingCard from 'src/components/PlayingCard/PlayingCard';
 import { getCardValues } from 'src/utils/helpers';
+import Card from 'src/components/UI/Card';
 
 type PlayerTallyProps = {
   displayName: string;
@@ -58,9 +59,9 @@ const PlayerTally: FC<PlayerTallyProps> = ({ displayName, avatar, cards, cut, sc
 
   return (
     <>
-      <div className="flex-col rounded-lg bg-gradient-to-br from-emerald-400 to-emerald-500 p-4 text-stone-800">
+      <Card>
         <div className="flex items-center gap-2">
-          <Avatar size={AvatarSize.SM} avatar={avatar} />
+          <Avatar className={AvatarSize.SM} avatar={avatar} />
           <h3 className="text-lg font-bold">{displayName}</h3>
         </div>
         <div className="flex gap-4 py-4">
@@ -81,7 +82,7 @@ const PlayerTally: FC<PlayerTallyProps> = ({ displayName, avatar, cards, cut, sc
           <ul className="grid grid-cols-2 justify-items-start gap-x-8 py-2 text-sm">{scores}</ul>
           <ul className="flex items-center text-3xl font-bold">{total}</ul>
         </div>
-      </div>
+      </Card>
     </>
   );
 };

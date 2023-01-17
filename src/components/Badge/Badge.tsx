@@ -26,7 +26,7 @@ const Badge: FC<BadgeProps> = ({
           width={width}
           viewBox={viewBox}
           fill={color}
-          className="svg duration-400 transition-all hover:fill-white">
+          className="svg duration-400 w-16 transition-all hover:fill-white lg:w-20">
           {badges[badge]}
         </svg>
       </ToolTip>

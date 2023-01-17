@@ -11,7 +11,7 @@ import useModal from 'src/hooks/useModal';
 
 import Button from 'src/components/UI/Button';
 import HandTally from 'src/components/HandTally/HandTally';
-import PlayFieldFlex from 'src/components/PlayField/PlayField';
+import PlayField from 'src/components/PlayField/PlayField';
 
 import {
   dealHands,
@@ -144,7 +144,7 @@ const GamePage = () => {
   return (
     <>
       {isModal && gameState.tally && (
-        <Modal isVisible={isModal} title={'Hand Tally'} customStyles={'bg-stone-800 text-white'}>
+        <Modal isVisible={isModal} title={'Hand Tally'} className={'bg-stone-800 text-white'}>
           <HandTally
             dealer={gameState.dealer}
             cut={gameState.deckCut.card!}
@@ -167,13 +167,13 @@ const GamePage = () => {
         </Modal>
       )}
       <div className="relative">
-        <div>
-          <PlayFieldFlex gameId={game.gameId} />
+        <div className="flex h-[90vh] flex-col justify-center">
+          <PlayField gameId={game.gameId} />
         </div>
         {canStartGame() && player === PlayerPos.P_ONE && (
           <Button
             handler={dealHandler}
-            customStyles="absolute top-1/2 left-1/2  -translate-x-1/2 -translate-y-1/2">
+            className="absolute top-1/2 left-1/2  -translate-x-1/2 -translate-y-1/2">
             START
           </Button>
         )}

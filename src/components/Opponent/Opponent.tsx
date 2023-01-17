@@ -10,9 +10,9 @@ type OpponentProps = {
 
 const Opponent: FC<OpponentProps> = ({ displayName, avatar = '' }) => {
   return (
-    <div className="col-start-3 flex flex-col items-center justify-center pb-1">
-      <p className="h-5 text-sm text-white">{displayName}</p>
-      <Avatar size={AvatarSize.SM} avatar={avatar} />
+    <div className="col-start-3 flex flex-col items-center justify-center pb-1 md:pb-3">
+      <p className="h-5 text-sm font-medium text-white">{displayName}</p>
+      <Avatar className={`${AvatarSize.SM} md:h-20 md:w-20 md:text-[4.2rem]`} avatar={avatar} />
     </div>
   );
 };

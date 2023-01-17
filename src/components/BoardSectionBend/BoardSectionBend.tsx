@@ -12,7 +12,7 @@ type BoardSectionProps = {
   moveDirection?: 'up' | 'down';
   numPegHoles?: number;
   rotate?: boolean;
-  customStyles?: string;
+  className?: string;
 };
 
 const BoardSectionTopBend: FC<BoardSectionProps> = ({
@@ -20,7 +20,7 @@ const BoardSectionTopBend: FC<BoardSectionProps> = ({
   score,
   rotate = false,
   numPegHoles = 5,
-  customStyles
+  className
 }) => {
   const track1Bend = [
     'absolute left-[10%] bottom-[8%]',
@@ -51,14 +51,14 @@ const BoardSectionTopBend: FC<BoardSectionProps> = ({
       const peg = score[playerTrack].cur === holeIndex || score[playerTrack].prev === holeIndex;
       const position = getPosition(playerTrack, i);
       pegHoles.push(
-        <BoardPegHole key={holeIndex} track={playerTrack} isPeg={peg} customStyles={position} />
+        <BoardPegHole key={holeIndex} track={playerTrack} isPeg={peg} className={position} />
       );
     }
     return pegHoles;
   }
 
   return (
-    <div className={`${customStyles} ${rotate && 'rotate-180'} relative`}>
+    <div className={`${className} ${rotate && 'rotate-180'} relative`}>
       <ul>{renderPegHoles(rotate ? PlayerPos.P_ONE : PlayerPos.P_TWO)}</ul>
       <ul>{renderPegHoles(rotate ? PlayerPos.P_TWO : PlayerPos.P_ONE)}</ul>
       {/* <ul>
