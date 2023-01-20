@@ -435,7 +435,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   }, [gameState.playerCards.player1.inHand, gameState.playerCards.player2.inHand]);
 
   return (
-    <div className="relative grid h-full grid-cols-[1fr] items-center justify-items-center gap-2 px-4">
+    <div className="relative grid h-full grid-cols-[1fr] items-center justify-items-center gap-2 px-4 md:scale-100">
       <div className="flex flex-col items-center justify-center gap-4">
         <div className="flex w-full justify-between">
           <div className="flex flex-col items-center justify-center gap-4">

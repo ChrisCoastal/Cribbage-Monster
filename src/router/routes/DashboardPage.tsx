@@ -95,8 +95,9 @@ const DashboardPage = () => {
 
   return (
     <>
-      <div className="flex justify-center pb-12">
-        <div className="mt-4 grid w-full auto-rows-fr justify-items-center gap-4 rounded-lg p-2 sm:grid-cols-2 md:w-5/6 md:max-w-[80rem] md:grid-cols-2 lg:grid-rows-2 xl:w-3/4 xl:grid-cols-3">
+      <div className="relative flex justify-center pb-12">
+        <div className="absolute h-full w-full bg-cardbacks bg-cover opacity-5"></div>
+        <div className="mt-4 grid w-full auto-rows-fr justify-items-center gap-4 rounded-lg p-2 md:w-[50rem] md:grid-cols-2 xl:w-[75rem] xl:grid-cols-3">
           <Card>
             <div className="flex flex-col items-center gap-4">
               {isUser ? (

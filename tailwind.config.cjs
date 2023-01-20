@@ -15,19 +15,24 @@ module.exports = {
       },
       backgroundImage: {
         'cardback-md': `url('src/assets/cardback-md.svg')`,
-        'cardback-sm': `url('src/assets/cardback-sm.svg')`
+        'cardback-sm': `url('src/assets/cardback-sm.svg')`,
+        hero: `url('src/assets/hero.jpg')`,
+        'hero-2': `url('src/assets/hero-2.jpg')`,
+        cardbacks: `url('src/assets/cardbacks.jpg')`,
+        card: `url('src/assets/card.png')`
       },
       animation: {
         'fade-up-delay-sm': '1.2s ease-out 0.8s fade-up-in both',
         'fade-up-delay-md': '1.5s ease-out 1.6s fade-up-in both',
         'fade-up-delay-lg': '1.5s ease-out 2s fade-up-in both',
         'modal-bounce-in': '0.6s ease-in-out bounce-in forwards',
-        radiate: '0.8s radiate infinite',
+        radiate: '0.6s ease-in radiate infinite alternate',
         grow: '0.6s ease-in grow',
         'text-grow': '0.6s ease-out text-grow',
         'fade-in': '0.3s ease-in-out fade-in forwards',
         'fade-out': '0.3s ease-in-out fade-out forwards',
-        'tooltip-in-out': '4s ease-in-out 0.3s fade-in-out'
+        'tooltip-in-out': '4s ease-in-out 0.3s fade-in-out',
+        'move-peg': '0.3s ease-in-out move-peg forwards'
       },
       keyframes: {
         'fade-up-in': {
@@ -41,8 +46,8 @@ module.exports = {
           '100%': { top: '50%' }
         },
         radiate: {
-          '0%': { outline: 'solid 0.2rem rgba(160,44,44,1)' },
-          '100%': { outline: 'solid 0.8rem rgba(160,44,44,0)' }
+          '0%': { boxShadow: '0 0 0 0.25rem rgba(232,121,249,0)' },
+          '100%': { boxShadow: '0 0 0.6rem 0.4rem rgba(232,121,249,1)' }
         },
         grow: {
           '0%, 100%': { transform: 'scale(1)' },
@@ -67,6 +72,10 @@ module.exports = {
           '8%': { opacity: '1' },
           '92%': { opacity: '1' },
           '100%': { opacity: '0' }
+        },
+        'move-peg': {
+          '0%': { transform: 'scale(1.4)' },
+          '100%': { transform: 'scale(1)' }
         }
       }
     }

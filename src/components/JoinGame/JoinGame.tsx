@@ -58,7 +58,11 @@ const JoinGame: FC<JoinGameProps> = ({ gameId }) => {
     }
   }
 
-  return <Button handler={joinGameHandler}>Join</Button>;
+  return (
+    <Button handler={joinGameHandler} className="text-sm font-medium">
+      Join
+    </Button>
+  );
 };
 
 export default JoinGame;

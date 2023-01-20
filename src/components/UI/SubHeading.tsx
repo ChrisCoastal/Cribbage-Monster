@@ -8,7 +8,7 @@ type SubHeadingProps = {
 const SubHeading: FC<SubHeadingProps> = ({ className, children }) => {
   return (
     <h2
-      className={`${className} pb-2 font-bold tracking-wider text-stone-800 dark:text-stone-100 lg:text-lg xl:text-2xl`}>
+      className={`${className} pb-2 font-bold tracking-wider text-stone-100 lg:text-lg xl:text-2xl`}>
       {children}
     </h2>
   );

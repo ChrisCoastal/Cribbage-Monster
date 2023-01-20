@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import Button from 'src/components/UI/Button';
 import Avatar from 'src/components/Avatar/Avatar';
 import CreateGame from '../CreateGame/CreateGame';
+import DropDown from '../UI/DropDown';
 
 const Nav = () => {
   const { userAuth } = useAuthContext();
@@ -19,10 +20,12 @@ const Nav = () => {
   console.log(userSettingsState);
 
   return (
-    <div className="sticky z-50 flex h-16 w-full items-center justify-between bg-stone-900/40 px-4 md:px-8">
-      <h1 className="cursor-pointer font-molle text-xl text-white md:text-2xl lg:text-3xl">
-        Cribbage Monster
-      </h1>
+    <div className="fixed top-0 z-50 flex h-16 w-full items-center justify-between bg-stone-900/80 px-4 backdrop-blur-sm md:px-8">
+      <Link to={'/'}>
+        <h1 className="cursor-pointer font-molle text-xl text-white md:text-2xl lg:text-3xl">
+          Cribbage Monster
+        </h1>
+      </Link>
       <ul className="flex items-center gap-3">
         {/* <li>
           <div className="h-6 w-6 rounded-full bg-white"></div>
@@ -34,6 +37,7 @@ const Nav = () => {
           <>
             <li>
               <Avatar className={`${AvatarSize.SM}`} avatar={userSettingsState.avatar}></Avatar>
+              <DropDown menuItems={['candy']} />
             </li>
             <li>
               <Button handler={() => logoutUser(() => navigate('/login'))}>LOGOUT</Button>
