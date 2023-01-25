@@ -435,7 +435,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   }, [gameState.playerCards.player1.inHand, gameState.playerCards.player2.inHand]);
 
   return (
-    <div className="relative grid h-full grid-cols-[1fr] items-center justify-items-center gap-2 px-4 md:scale-100">
+    <div className="relative mt-32 grid h-full grid-cols-[1fr] items-center justify-items-center gap-2 px-4 md:scale-100">
       <div className="flex flex-col items-center justify-center gap-4">
         <div className="flex w-full justify-between">
           <div className="flex flex-col items-center justify-center gap-4">
@@ -451,7 +451,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
                 {renderOpponentHand}
               </CardBox>
             </div>
-            <div className="rounded-full bg-gradient-to-br from-purple-500 to-purple-700 p-2">
+            <div className="rounded-full bg-gradient-to-br from-purple-500 to-purple-700 p-2 py-4">
               <CardBox
                 size={{ height: CardBoxHeight.MD, width: CardBoxWidth.MD_FOUR_HALF }}
                 maxCards={4}
@@ -470,14 +470,6 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
                     />
                     <Crib cribCards={gameState.crib} />
                   </div>
-                  <div>
-                    count: {gameState.turnTotals.cardTotal} {go && 'GO!!'}
-                  </div>
-                  <div>
-                    {gameState.players[player].activePlayer === IsActive.ACTIVE
-                      ? 'your turn'
-                      : `opponent's turn`}
-                  </div>
                 </div>
               </div>
               <CardBox
@@ -489,8 +481,18 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
               </CardBox>
             </div>
           </div>
-          <div className="flex flex-col items-center justify-center gap-4">
+          <div className="flex flex-col items-center justify-center gap-1">
             <Board />
+            <div className="border-1 rounded-md border border-stone-400 p-2 text-center text-stone-100">
+              <p className="font-bold">
+                COUNT: {gameState.turnTotals.cardTotal} {go && 'GO!!'}
+              </p>
+              <div className="w-36 rounded-md bg-stone-800 text-xs font-medium text-stone-100">
+                {gameState.players[player].activePlayer === IsActive.ACTIVE
+                  ? 'your turn'
+                  : `wait for opponent`.toUpperCase()}
+              </div>
+            </div>
           </div>
         </div>
         <div>

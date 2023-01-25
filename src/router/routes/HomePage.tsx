@@ -5,14 +5,21 @@ import { dealHands, getCardValues } from 'src/utils/helpers';
 import Card from 'src/components/UI/Card';
 import PlayingCard from 'src/components/PlayingCard/PlayingCard';
 import SuitIcon from 'src/components/UI/icons/SuitIcon/SuitIcon';
-import Tail from 'src/components/UI/icons/Tail/Tail';
+import HeroText from 'src/components/HeroText/HeroText';
 import Button from 'src/components/UI/Button';
 import Board from 'src/components/Board/Board';
 import BoardSection from 'src/components/BoardSection/BoardSection';
 import hero2 from 'src/assets/hero-2.jpg';
 import cardImg from 'src/assets/card.png';
+import Dot from 'src/components/UI/icons/Dot/Dot';
+
+import useAuthContext from 'src/hooks/useAuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const HomePage = () => {
+  const { userAuth } = useAuthContext();
+  const navigate = useNavigate();
+
   const cards: CardType[] = [
     // write an object literal for 6 cards using a CardType
     {
@@ -94,23 +101,35 @@ const HomePage = () => {
 
   const questionMark = <span className="text-9xl font-bold tracking-wide text-stone-200">?</span>;
 
+  const playHandler = () => {
+    if (userAuth?.uid) navigate(`/dashboard/${userAuth?.uid}`);
+    if (!userAuth?.uid) navigate(`/signup`);
+  };
+
   return (
     <div>
-      <div className="flex h-screen w-full flex-col justify-center overflow-hidden bg-cardbacks object-scale-down">
+      <div className="relative flex h-screen w-full flex-col justify-center overflow-hidden bg-cardbacks object-scale-down">
+        <div className="pointer-events-none absolute h-full w-full bg-gradient-to-br from-stone-900/30 to-stone-900/70"></div>
         {/* <img src={cardImg} alt="card" className=" animate-fade-up-delay-sm" /> */}
-        <section className="mx-20 flex justify-around">
-          <div>
-            <h2 className="relative whitespace-pre-line text-9xl font-bold tracking-wide text-stone-200">
-              {`Are you a
-              Monster?
-              `}
-              <span className="absolute right-0">
-                <Tail height="400" width="400" color="rgb(231 229 228)"></Tail>
-              </span>
-            </h2>
+        <section className="relative z-10 mx-8 flex flex-col gap-20 sm:mx-24 sm:gap-28 lg:mx-20 lg:flex-row lg:justify-center">
+          <div className="h-[120px] w-[324px] lg:h-[200px] lg:w-[540px]">
+            <HeroText
+              height="200"
+              width="540"
+              color="rgb(231 229 228)"
+              className={`-translate-x-20 scale-[.6] sm:-translate-x-9 sm:scale-90 lg:scale-100`}
+              aria-role="h1"
+              aria-label="Are you a Monster?"
+            />
+            <h2></h2>
           </div>
-
-          <Button className="self-end justify-self-center">Play now!</Button>
+          <Button
+            className="self-start justify-self-center lg:self-end"
+            buttonSize="md"
+            buttonColor="secondary"
+            handler={playHandler}>
+            PLAY NOW
+          </Button>
         </section>
       </div>
       <div>

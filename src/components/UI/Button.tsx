@@ -5,7 +5,7 @@ type ButtonProps = {
   // size: string;
   handler?: MouseEventHandler<HTMLButtonElement>;
   type?: 'button' | 'submit' | 'reset';
-  color?: string;
+  buttonColor?: string;
   buttonSize?: 'sm' | 'md' | 'lg' | 'circle';
   tooltip?: string;
   className?: string;
@@ -15,7 +15,7 @@ type ButtonProps = {
 const Button: FC<ButtonProps> = ({
   handler,
   type = 'button',
-  color = 'primary',
+  buttonColor = 'primary',
   buttonSize = 'sm',
   tooltip,
   className,
@@ -28,6 +28,11 @@ const Button: FC<ButtonProps> = ({
     circle: 'p-0'
   };
 
+  const color =
+    buttonColor === 'primary'
+      ? 'from-purple-400/90 to-purple-700/90'
+      : 'from-emerald-400/90 to-emerald-700/90';
+
   return (
     <>
       {tooltip ? (
@@ -36,7 +41,7 @@ const Button: FC<ButtonProps> = ({
             <button
               type={type}
               onClick={handler}
-              className={`${className} ${size[buttonSize]} cursor-pointer rounded-full bg-black bg-gradient-to-br from-purple-400/90 to-purple-700/90 text-white shadow-sm transition-all duration-300 hover:bg-slate-100 hover:shadow-md`}>
+              className={`${className} ${color} ${size[buttonSize]} cursor-pointer rounded-full bg-black bg-gradient-to-br text-white shadow-sm transition-all duration-300 hover:bg-slate-100 hover:shadow-md`}>
               {children}
             </button>
           </ToolTip>
@@ -45,7 +50,7 @@ const Button: FC<ButtonProps> = ({
         <button
           type={type}
           onClick={handler}
-          className={`${className} ${size[buttonSize]} cursor-pointer rounded-full bg-black bg-gradient-to-br from-purple-400/90 to-purple-700/90 text-white shadow-sm transition-all duration-300 hover:bg-slate-100 hover:shadow-md`}>
+          className={`${className} ${color} ${size[buttonSize]} cursor-pointer rounded-full bg-black bg-gradient-to-br text-white shadow-sm transition-all duration-300 hover:bg-slate-100 hover:shadow-md`}>
           {children}
         </button>
       )}

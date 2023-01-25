@@ -20,7 +20,7 @@ const Nav = () => {
   console.log(userSettingsState);
 
   return (
-    <div className="fixed top-0 z-50 flex h-16 w-full items-center justify-between bg-stone-900/80 px-4 backdrop-blur-sm md:px-8">
+    <div className="fixed top-0 z-50 flex h-12 w-full items-center justify-between bg-stone-900/80 px-4 backdrop-blur-sm md:px-8">
       <Link to={'/'}>
         <h1 className="cursor-pointer font-molle text-xl text-white md:text-2xl lg:text-3xl">
           Cribbage Monster

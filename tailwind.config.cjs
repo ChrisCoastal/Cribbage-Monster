@@ -3,6 +3,9 @@ module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
+      screens: {
+        xs: '380px'
+      },
       width: {
         'w-15': '3.75rem'
       },
@@ -32,7 +35,8 @@ module.exports = {
         'fade-in': '0.3s ease-in-out fade-in forwards',
         'fade-out': '0.3s ease-in-out fade-out forwards',
         'tooltip-in-out': '4s ease-in-out 0.3s fade-in-out',
-        'move-peg': '0.3s ease-in-out move-peg forwards'
+        'move-peg': '0.3s ease-in-out move-peg forwards',
+        tailpath: '3s ease-in-out tail-path infinte'
       },
       keyframes: {
         'fade-up-in': {
@@ -76,6 +80,10 @@ module.exports = {
         'move-peg': {
           '0%': { transform: 'scale(1.4)' },
           '100%': { transform: 'scale(1)' }
+        },
+        'tail-path': {
+          from: { strokeDashoffset: '0' },
+          to: { strokeDashoffset: '2000' }
         }
       }
     }

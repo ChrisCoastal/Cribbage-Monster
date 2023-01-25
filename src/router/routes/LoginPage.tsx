@@ -15,13 +15,9 @@ const LoginPage = () => {
   const { userAuth } = useAuthContext();
   const navigate = useNavigate();
 
-  // const redirectAuthUser = useCallback(
-  //   (uid: string) =>
   function redirectAuthUser(uid: string) {
     navigate(`/dashboard/${uid}`);
   }
-  //   [navigate]
-  // );
 
   async function submitHandler(event: React.FormEvent<HTMLFormElement>) {
     try {
@@ -36,10 +32,10 @@ const LoginPage = () => {
     }
   }
 
-  // useEffect(() => {
-  //   if (!userAuth?.uid) return;
-  //   get(getUserSettingsRef(userAuth.uid)).then(() => redirectAuthUser(userAuth.uid));
-  // }, [userAuth?.uid, redirectAuthUser]);
+  useEffect(() => {
+    if (!userAuth?.uid) return;
+    redirectAuthUser(userAuth.uid);
+  }, [userAuth?.uid]);
 
   return (
     <div className="flex justify-center">

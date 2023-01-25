@@ -40,13 +40,13 @@ const GamesList: FC<GamesListProps> = () => {
   }, []);
 
   const gamesListItems = games
-    .filter((game) => game.player1.displayName.length || game.player2.displayName.length)
+    .filter((game) => game.player1?.displayName.length || game.player2?.displayName.length)
     .map((game) => {
       const inProgress = game.player1.displayName.length && game.player2.displayName.length;
       return (
         <li
           key={game.gameId}
-          className="flex items-center justify-between gap-4 rounded-md bg-stone-900 p-4 font-light text-stone-300">
+          className="flex items-center justify-between gap-4 rounded-md bg-stone-900 py-2 px-4 font-light text-stone-50">
           <span className="flex items-center justify-between gap-4">
             <span className="flex items-center gap-2">
               <Avatar
@@ -68,14 +68,16 @@ const GamesList: FC<GamesListProps> = () => {
     });
 
   return (
-    <Card className="relative overflow-hidden">
-      <div className="flex items-center justify-between pb-6">
-        <SubHeading>GAMES</SubHeading>
-        <CreateGame />
+    <Card>
+      <div className="h-full w-full overflow-hidden">
+        <div className="flex items-center justify-between pb-6">
+          <SubHeading>GAMES</SubHeading>
+          <CreateGame />
+        </div>
+        <ul className="flex max-h-80 flex-col gap-2 overflow-scroll">
+          {gamesListItems.length ? gamesListItems : <li>no games available</li>}
+        </ul>
       </div>
-      <ul className="absolute left-1/2 flex max-h-[70%] w-5/6 -translate-x-1/2 flex-col gap-2 overflow-scroll">
-        {gamesListItems.length ? gamesListItems : <li>no games available</li>}
-      </ul>
     </Card>
   );
 };
