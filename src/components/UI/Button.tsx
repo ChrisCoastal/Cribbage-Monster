@@ -5,7 +5,7 @@ type ButtonProps = {
   // size: string;
   handler?: MouseEventHandler<HTMLButtonElement>;
   type?: 'button' | 'submit' | 'reset';
-  color?: string;
+  buttonColor?: string;
   buttonSize?: 'sm' | 'md' | 'lg' | 'circle';
   tooltip?: string;
   className?: string;
@@ -15,21 +15,23 @@ type ButtonProps = {
 const Button: FC<ButtonProps> = ({
   handler,
   type = 'button',
-  color = 'primary',
+  buttonColor = 'primary',
   buttonSize = 'sm',
   tooltip,
   className,
   children
 }) => {
-  const buttonColor =
-    color === 'primary' ? 'bg-emerald-600 dark:bg-purple-200' : 'bg-blue-600 dark:bg-blue-200';
-
   const size = {
     sm: 'py-1 px-4',
     md: 'py-2 px-6 text-xl font-bold tracking-wider',
     lg: '',
     circle: 'p-0'
   };
+
+  const color =
+    buttonColor === 'primary'
+      ? 'from-purple-400/90 to-purple-700/90'
+      : 'from-emerald-400/90 to-emerald-700/90';
 
   return (
     <>
@@ -39,7 +41,7 @@ const Button: FC<ButtonProps> = ({
             <button
               type={type}
               onClick={handler}
-              className={`${className} ${size[buttonSize]} cursor-pointer rounded-full bg-black text-white shadow-sm transition-all duration-300 hover:bg-slate-100 hover:shadow-md dark:bg-gradient-to-br dark:from-purple-400/90 dark:to-purple-700/90`}>
+              className={`${className} ${color} ${size[buttonSize]} cursor-pointer rounded-full bg-black bg-gradient-to-br text-white shadow-sm transition-all duration-300 hover:bg-slate-100 hover:shadow-md`}>
               {children}
             </button>
           </ToolTip>
@@ -48,7 +50,7 @@ const Button: FC<ButtonProps> = ({
         <button
           type={type}
           onClick={handler}
-          className={`${className} ${size[buttonSize]} cursor-pointer rounded-full bg-black text-white shadow-sm transition-all duration-300 hover:bg-slate-100 hover:shadow-md dark:bg-gradient-to-br dark:from-purple-400/90 dark:to-purple-700/90`}>
+          className={`${className} ${color} ${size[buttonSize]} cursor-pointer rounded-full bg-black bg-gradient-to-br text-white shadow-sm transition-all duration-300 hover:bg-slate-100 hover:shadow-md`}>
           {children}
         </button>
       )}

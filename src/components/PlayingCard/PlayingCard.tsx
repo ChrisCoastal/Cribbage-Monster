@@ -12,6 +12,7 @@ type PlayingCardProps = {
   cardIndex: number;
   overlap: CardOverlap;
   valid?: boolean;
+  className?: string;
   handler?: (card: CardType) => void;
 };
 
@@ -22,6 +23,7 @@ const PlayingCard: FC<PlayingCardProps> = ({
   cardIndex,
   overlap,
   valid,
+  className,
   handler
 }) => {
   const { userAuth } = useAuthContext();
@@ -108,7 +110,7 @@ const PlayingCard: FC<PlayingCardProps> = ({
   return isFaceUp ? (
     <div
       onClick={() => (handler ? handler(card) : null)}
-      className={`${conditionalStyles} ${sizeVars} ${corners} border border-solid border-stone-100 bg-white transition-all duration-300`}>
+      className={`${className} ${conditionalStyles} ${sizeVars} ${corners} border border-solid border-stone-100 bg-white transition-all duration-300`}>
       <div
         className={`${corners} grid-columns-3 shadow-[-4px_4px_8px_rgba(0,0,0,0.05) grid max-h-full max-w-full grid-rows-3 items-center border border-solid border-stone-500 bg-white`}>
         <div className="col-start-1 mt-2 flex-col gap-1 justify-self-center text-sm">

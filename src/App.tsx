@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import AppLayout from 'src/router/layouts/AppLayout';
 import ErrorPage from 'src/router/routes/ErrorPage';
 import GamePage from 'src/router/routes/GamePage';
+import RulesPage from 'src/router/routes/RulesPage';
 import SignUpPage from 'src/router/routes/SignUpPage';
 import LoginPage from 'src/router/routes/LoginPage';
 import ProtectedRoutes from 'src/router/routes/ProtectedRoutes';
@@ -31,17 +32,19 @@ const router = createBrowserRouter([
         path: '/signup',
         element: <SignUpPage />
       },
-
       {
         path: '/login',
         element: <LoginPage />
+      },
+      {
+        path: '/rules',
+        element: <RulesPage />
       },
       {
         element: <ProtectedRoutes />,
         children: [
           {
             path: '/dashboard/:uid',
-            // path: '/dashboard',
             loader: dashboardLoader,
             element: <DashboardPage />
           },

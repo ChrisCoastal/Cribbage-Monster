@@ -14,7 +14,7 @@ const GamesWon: FC<GamesWonProps> = ({ gamesPlayed, gamesWon }) => {
   const centerText = `${Math.round((gamesWon / gamesPlayed) * 100)}%`;
 
   return (
-    <Card className="w-full h-full">
+    <Card padding="md">
       <div>
         <SubHeading>WIN RATIO</SubHeading>
         <div className="relative">

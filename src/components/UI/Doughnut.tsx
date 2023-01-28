@@ -28,7 +28,9 @@ const Doughnut: FC<DoughnutProps> = ({ degFill, centerText, chartColor = '#a5d' 
         className={`${
           hover && innerGlow
         } absolute left-1/2 top-1/2 flex h-1/2 w-1/2 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-stone-800 text-4xl font-extrabold transition-all duration-300`}>
-        <p className={`text-[${chartColor}]`} style={{ color: `${chartColor}` }}>
+        <p
+          className={`text-[${chartColor}] text-5xl md:text-6xl`}
+          style={{ color: `${chartColor}` }}>
           {centerText}
         </p>
       </div>

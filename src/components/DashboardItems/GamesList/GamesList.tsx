@@ -40,42 +40,44 @@ const GamesList: FC<GamesListProps> = () => {
   }, []);
 
   const gamesListItems = games
-    .filter((game) => game.player1.displayName.length || game.player2.displayName.length)
+    .filter((game) => game.player1?.displayName.length || game.player2?.displayName.length)
     .map((game) => {
       const inProgress = game.player1.displayName.length && game.player2.displayName.length;
       return (
         <li
           key={game.gameId}
-          className="flex items-center justify-between gap-4 rounded-sm bg-stone-900 p-4 text-sm font-light text-stone-300">
+          className="flex items-center justify-between gap-4 rounded-md bg-stone-900 py-2 px-4 font-light text-stone-50">
           <span className="flex items-center justify-between gap-4">
             <span className="flex items-center gap-2">
               <Avatar
                 className={AvatarSize.SM}
                 avatar={game.player1.avatar.length ? game.player1.avatar : game.player2.avatar}
               />
-              <p className="font-medium">
+              <p className="text-sm font-medium">
                 {game.player1.displayName.length
                   ? game.player1.displayName
                   : game.player2.displayName}
               </p>
             </span>
-            <p className="font-medium">🏆 {game.scoreToWin}</p>
+            <p className="text-xs font-medium">🏆 {game.scoreToWin}</p>
           </span>
-          {inProgress ? <p>In Progress</p> : <JoinGame gameId={game.gameId} />}
+          {inProgress ? <p className="text-xs">In Progress</p> : <JoinGame gameId={game.gameId} />}
           {/* {!vacantPlayer && <JoinGame gameId={game.gameId} />} */}
         </li>
       );
     });
 
   return (
-    <Card>
-      <div className="flex items-center justify-between pb-6">
-        <SubHeading>GAMES</SubHeading>
-        <CreateGame />
+    <Card padding="md">
+      <div className="h-full w-full overflow-hidden">
+        <div className="flex items-center justify-between pb-6">
+          <SubHeading>GAMES</SubHeading>
+          <CreateGame />
+        </div>
+        <ul className="flex max-h-80 flex-col gap-2 overflow-scroll">
+          {gamesListItems.length ? gamesListItems : <li>no games available</li>}
+        </ul>
       </div>
-      <ul className="flex max-h-full flex-col gap-2 overflow-scroll">
-        {gamesListItems.length ? gamesListItems : <li>no games available</li>}
-      </ul>
     </Card>
   );
 };

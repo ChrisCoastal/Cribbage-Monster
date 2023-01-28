@@ -59,7 +59,7 @@ const PlayerTally: FC<PlayerTallyProps> = ({ displayName, avatar, cards, cut, sc
 
   return (
     <>
-      <Card>
+      <Card padding="md">
         <div className="flex items-center gap-2">
           <Avatar className={AvatarSize.SM} avatar={avatar} />
           <h3 className="text-lg font-bold">{displayName}</h3>
