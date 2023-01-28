@@ -26,7 +26,7 @@ const GamesPlayed: FC<GamesPlayedProps> = ({ dailyGames }) => {
   }
 
   return (
-    <Card className="w-full">
+    <Card padding="md">
       <div className="relative h-full">
         <SubHeading>GAMES PLAYED</SubHeading>
 

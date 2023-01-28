@@ -14,26 +14,24 @@ const Tail: FC<TailProps> = ({ height, width, color = '#fff', className }) => {
   const [delayTop, setDelayTop] = useState<number>(4000);
   const pathRef = useRef<SVGGeometryElement>(null);
 
-  const clickHandler = () => {
-    console.log('lcick');
-
-    const timeline = anime.timeline({
-      duration: 2000,
-      loop: true,
-      easing: 'easeOutExpo'
-    });
-    timeline.add({
-      targets: '.topOpen',
-      d: [
-        {
-          value: topBlinkPathD
-        },
-        {
-          value: topOpenPathD
-        }
-      ]
-    });
-  };
+  // const clickHandler = () => {
+  //   const timeline = anime.timeline({
+  //     duration: 2000,
+  //     loop: true,
+  //     easing: 'easeOutExpo'
+  //   });
+  //   timeline.add({
+  //     targets: '.topOpen',
+  //     d: [
+  //       {
+  //         value: topBlinkPathD
+  //       },
+  //       {
+  //         value: topOpenPathD
+  //       }
+  //     ]
+  //   });
+  // };
 
   const headerText = (
     <g>
@@ -138,31 +136,31 @@ const Tail: FC<TailProps> = ({ height, width, color = '#fff', className }) => {
 	s3.13,14.71,8.19,19.77c5.06,5.06,12.05,8.19,19.77,8.19c7.72,0,14.71-3.13,19.77-8.19c5.06-5.06,8.19-12.05,8.19-19.77
 	S173.36,150.04,168.3,144.98z M156.63,165.86c-4.16,0.52-4.94,0.36-8.1,0.36s-4.31,0.21-8.1-0.36c-2.9-0.43-3.36-1.1-3.36-1.1
 	s0.46,1.34,3.36,0.9c3.64-0.55,4.94-0.36,8.1-0.36s4.1-0.18,8.1,0.36c2.91,0.39,3.36-0.9,3.36-0.9S159.54,165.49,156.63,165.86z`;
-  const bottomBlink = <path className="bottomBlink origin-[27.5%_82.375%]" d={bottomBlinkPathD} />;
+  // const bottomBlink = <path className="bottomBlink origin-[27.5%_82.375%]" d={bottomBlinkPathD} />;
 
   const bottomLookPathD = `M168.3,144.98c-5.06-5.06-12.05-8.19-19.77-8.19c-7.72,0-14.71,3.13-19.77,8.19c-5.06,5.06-8.19,12.05-8.19,19.77
 	s3.13,14.71,8.19,19.77c5.06,5.06,12.05,8.19,19.77,8.19c7.72,0,14.71-3.13,19.77-8.19c5.06-5.06,8.19-12.05,8.19-19.77
 	S173.36,150.04,168.3,144.98z M156.63,184.31c-2.07,2.07-4.94,3.36-8.1,3.36s-6.03-1.28-8.1-3.36c-2.07-2.07-3.36-4.94-3.36-8.1
 	s1.28-6.03,3.36-8.1c2.07-2.07,4.94-3.36,8.1-3.36s6.03,1.28,8.1,3.36c2.07,2.07,3.36,4.94,3.36,8.1S158.7,182.24,156.63,184.31z`;
-  const bottomLook = <path className="bottomLook origin-[27.5%_82.375%]" d={bottomLookPathD} />;
+  // const bottomLook = <path className="bottomLook origin-[27.5%_82.375%]" d={bottomLookPathD} />;
 
   const topOpenPathD = `M352.2,38.23c-5.06-5.06-12.05-8.19-19.77-8.19c-7.72,0-14.71,3.13-19.77,8.19c-5.06,5.06-8.19,12.05-8.19,19.77
 	s3.13,14.71,8.19,19.77c5.06,5.06,12.05,8.19,19.77,8.19c7.72,0,14.71-3.13,19.77-8.19c5.06-5.06,8.19-12.05,8.19-19.77
 	S357.26,43.29,352.2,38.23z M340.54,66.1c-2.07,2.07-4.94,3.36-8.1,3.36s-6.03-1.28-8.1-3.36c-2.07-2.07-3.36-4.94-3.36-8.1
 	s1.28-6.03,3.36-8.1c2.07-2.07,4.94-3.36,8.1-3.36s6.03,1.28,8.1,3.36c2.07,2.07,3.36,4.94,3.36,8.1S342.61,64.03,340.54,66.1z`;
-  const topOpen = <path className="topOpen" d={topOpenPathD} onClick={clickHandler} />;
+  const topOpen = <path className="topOpen" d={topOpenPathD} />;
 
   const topLookPathD = `M352.2,38.23c-5.06-5.06-12.05-8.19-19.77-8.19c-7.72,0-14.71,3.13-19.77,8.19c-5.06,5.06-8.19,12.05-8.19,19.77
 	s3.13,14.71,8.19,19.77c5.06,5.06,12.05,8.19,19.77,8.19c7.72,0,14.71-3.13,19.77-8.19c5.06-5.06,8.19-12.05,8.19-19.77
 	S357.26,43.29,352.2,38.23z M340.53,54.64c-2.07,2.07-4.94,3.36-8.1,3.36s-6.03-1.28-8.1-3.36c-2.07-2.07-3.36-4.94-3.36-8.1
 	s1.28-6.03,3.36-8.1c2.07-2.07,4.94-3.36,8.1-3.36s6.03,1.28,8.1,3.36c2.07,2.07,3.36,4.94,3.36,8.1S342.61,52.57,340.53,54.64z`;
-  const topLook = <path className="topLook" d={topLookPathD} />;
+  // const topLook = <path className="topLook" d={topLookPathD} />;
 
   const topBlinkPathD = `M352.2,38.23c-5.06-5.06-12.05-8.19-19.77-8.19c-7.72,0-14.71,3.13-19.77,8.19c-5.06,5.06-8.19,12.05-8.19,19.77
 	s3.13,14.71,8.19,19.77c5.06,5.06,12.05,8.19,19.77,8.19c7.72,0,14.71-3.13,19.77-8.19c5.06-5.06,8.19-12.05,8.19-19.77
 	S357.26,43.29,352.2,38.23z M340.54,59.1c-4.16,0.52-4.94,0.36-8.1,0.36s-4.31,0.21-8.1-0.36c-2.9-0.43-3.36-1.1-3.36-1.1
 	s0.46,1.34,3.36,0.9c3.64-0.55,4.94-0.36,8.1-0.36s4.1-0.18,8.1,0.36c2.91,0.39,3.36-0.9,3.36-0.9S343.45,58.74,340.54,59.1z`;
-  const topBlink = <path className="topBlink" d={topBlinkPathD} />;
+  // const topBlink = <path className="topBlink" d={topBlinkPathD} />;
 
   // const tailLength = document.querySelector('.tailsvg') as SVGGeometryElement;
 
@@ -238,23 +236,44 @@ const Tail: FC<TailProps> = ({ height, width, color = '#fff', className }) => {
     timeline.add(
       {
         targets: '.bottomOpen',
-        duration: 3500,
-        // direction: 'alternate',
-        // rotate: 360,
+        duration: 5200,
         d: [
           {
             value: bottomLookPathD,
-            duration: 1800
+            duration: 200
+          },
+          {
+            value: bottomLookPathD,
+            duration: 3000
           },
           {
             value: bottomOpenPathD,
-            duration: 1700
+            duration: 1400
+          },
+          {
+            value: bottomBlinkPathD,
+            duration: 125
+          },
+          {
+            value: bottomOpenPathD,
+            duration: 125
+          },
+          {
+            value: bottomBlinkPathD,
+            duration: 125
+          },
+          {
+            value: bottomOpenPathD,
+            duration: 125
           }
         ],
         rotate: [
-          { value: -90, duration: 400 },
-          { value: 90, duration: 200 },
-          { value: -90, duration: 700 }
+          { value: -75, duration: 50 },
+          { value: -75, duration: 600 },
+          { value: -35, duration: 800 },
+          { value: 50, duration: 1000 },
+          { value: 0, delay: 1200 }
+          // { value: -90, duration: 700 }
         ]
       },
       '+=9000'

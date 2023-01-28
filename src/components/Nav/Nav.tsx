@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { AvatarSize } from 'src/@types';
@@ -15,12 +16,31 @@ const Nav = () => {
   const { userAuth } = useAuthContext();
   const { userSettingsState } = useSettingsContext();
   const { logoutUser } = useFirebaseAuth();
+  const [scrollY, setScrollY] = useState({ pos: 0, isDown: false });
   const navigate = useNavigate();
 
   console.log(userSettingsState);
 
+  //FIXME:
+  function isScroll() {
+    console.log(window.scrollY);
+
+    if (window.scrollY > scrollY.pos) setScrollY({ pos: window.scrollY, isDown: true });
+    if (window.scrollY < scrollY.pos || window.scrollY === 0)
+      setScrollY({ pos: window.scrollY, isDown: false });
+  }
+
+  const navPos = scrollY.isDown ? '-top-12' : 'top-0 ';
+
+  useEffect(() => {
+    console.log('useEffect');
+    window.addEventListener('scroll', isScroll, { passive: true });
+    return () => window.removeEventListener('scroll', isScroll);
+  }, [scrollY.pos]);
+
   return (
-    <div className="fixed top-0 z-50 flex h-12 w-full items-center justify-between bg-stone-900/80 px-4 backdrop-blur-sm md:px-8">
+    <div
+      className={`${navPos} fixed z-50 flex h-12 w-full items-center justify-between bg-stone-900/80 px-4 backdrop-blur-sm transition-all md:px-12`}>
       <Link to={'/'}>
         <h1 className="cursor-pointer font-molle text-xl text-white md:text-2xl lg:text-3xl">
           Cribbage Monster
@@ -40,7 +60,9 @@ const Nav = () => {
               <DropDown menuItems={['candy']} />
             </li>
             <li>
-              <Button handler={() => logoutUser(() => navigate('/login'))}>LOGOUT</Button>
+              <Button buttonColor="secondary" handler={() => logoutUser(() => navigate('/'))}>
+                LOGOUT
+              </Button>
             </li>
           </>
         ) : (

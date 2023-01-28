@@ -68,7 +68,7 @@ const GamesList: FC<GamesListProps> = () => {
     });
 
   return (
-    <Card>
+    <Card padding="md">
       <div className="h-full w-full overflow-hidden">
         <div className="flex items-center justify-between pb-6">
           <SubHeading>GAMES</SubHeading>

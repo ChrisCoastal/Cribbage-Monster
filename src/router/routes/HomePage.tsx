@@ -9,12 +9,15 @@ import HeroText from 'src/components/HeroText/HeroText';
 import Button from 'src/components/UI/Button';
 import Board from 'src/components/Board/Board';
 import BoardSection from 'src/components/BoardSection/BoardSection';
-import hero2 from 'src/assets/hero-2.jpg';
 import cardImg from 'src/assets/card.png';
+import githubLogo from 'src/assets/logo/github-mark-white.png';
 import Dot from 'src/components/UI/icons/Dot/Dot';
 
 import useAuthContext from 'src/hooks/useAuthContext';
 import { useNavigate } from 'react-router-dom';
+import ZSection from 'src/components/HomeItems/ZSection/ZSection';
+import Carousel from 'src/components/UI/Carousel';
+import DashCarousel from 'src/components/DashboardItems/DashCarousel/DashCarousel';
 
 const HomePage = () => {
   const { userAuth } = useAuthContext();
@@ -103,15 +106,15 @@ const HomePage = () => {
 
   const playHandler = () => {
     if (userAuth?.uid) navigate(`/dashboard/${userAuth?.uid}`);
-    if (!userAuth?.uid) navigate(`/signup`);
+    if (!userAuth?.uid) navigate(`/login`);
   };
 
   return (
-    <div>
-      <div className="relative flex h-screen w-full flex-col justify-center overflow-hidden bg-cardbacks object-scale-down">
-        <div className="pointer-events-none absolute h-full w-full bg-gradient-to-br from-stone-900/30 to-stone-900/70"></div>
+    <div className="bg-stone-900">
+      <div className="relative mb-16 flex h-screen w-full flex-col justify-center overflow-hidden bg-cardbacks object-scale-down lg:mb-24">
+        <div className="pointer-events-none absolute h-full w-full bg-gradient-to-br from-stone-900/20 to-stone-900/70"></div>
         {/* <img src={cardImg} alt="card" className=" animate-fade-up-delay-sm" /> */}
-        <section className="relative z-10 mx-8 flex flex-col gap-20 sm:mx-24 sm:gap-28 lg:mx-20 lg:flex-row lg:justify-center">
+        <section className="relative z-10 mx-[10%] flex flex-col gap-20 sm:mx-24 sm:gap-28 lg:mx-20 lg:flex-row lg:justify-center">
           <div className="h-[120px] w-[324px] lg:h-[200px] lg:w-[540px]">
             <HeroText
               height="200"
@@ -121,7 +124,6 @@ const HomePage = () => {
               aria-role="h1"
               aria-label="Are you a Monster?"
             />
-            <h2></h2>
           </div>
           <Button
             className="self-start justify-self-center lg:self-end"
@@ -132,11 +134,21 @@ const HomePage = () => {
           </Button>
         </section>
       </div>
-      <div>
-        <div>collect badges</div>
-        <div>climb the leaderboard</div>
-        <div>watch out!</div>
-      </div>
+      <ZSection />
+      <section className="min-h-24 flex items-center justify-between bg-black/20 px-4 py-4 text-xs text-stone-100 sm:px-8 sm:text-sm">
+        <div className="w-36 sm:w-auto">
+          <p className="mb-1">Inspired by generations of ♥︎♥︎♥︎ for cribbage.</p>
+          <p>Thanks for the games dad.</p>
+        </div>
+        <a
+          className="flex items-center gap-2"
+          href="https://github.com/ChrisCoastal"
+          target="_blank"
+          rel="noreferrer">
+          <img src={githubLogo} alt="GitHub logo" className="h-6 w-6" />
+          <p>ChrisCoastal</p>
+        </a>
+      </section>
     </div>
   );
 };

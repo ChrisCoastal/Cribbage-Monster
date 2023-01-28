@@ -435,10 +435,10 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   }, [gameState.playerCards.player1.inHand, gameState.playerCards.player2.inHand]);
 
   return (
-    <div className="relative mt-32 grid h-full grid-cols-[1fr] items-center justify-items-center gap-2 px-4 md:scale-100">
+    <div className=" relative mt-24 scale-[0.85] items-center justify-items-center gap-11 px-4 sm:mt-32 sm:scale-100">
       <div className="flex flex-col items-center justify-center gap-4">
-        <div className="flex w-full justify-between">
-          <div className="flex flex-col items-center justify-center gap-4">
+        <div className="flex justify-between gap-8">
+          <div className="flex flex-col items-center justify-start gap-4">
             <div className="flex flex-col items-center justify-center">
               <Opponent
                 displayName={gameState.players[opponent].displayName}

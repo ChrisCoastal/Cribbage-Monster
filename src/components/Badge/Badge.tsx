@@ -8,6 +8,7 @@ type BadgeProps = {
   width: string;
   viewBox?: string;
   color?: string;
+  className?: string;
 };
 
 const Badge: FC<BadgeProps> = ({
@@ -15,10 +16,11 @@ const Badge: FC<BadgeProps> = ({
   height,
   width,
   viewBox = '0 0 100 100',
-  color = '#fff'
+  color = '#fff',
+  className
 }) => {
   return (
-    <div className="relative">
+    <div className={`${className}`}>
       <ToolTip text={`${badge} badge`}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
