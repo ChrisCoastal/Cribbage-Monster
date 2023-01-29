@@ -164,10 +164,10 @@ const Tail: FC<TailProps> = ({ height, width, color = '#fff', className }) => {
 
   // const tailLength = document.querySelector('.tailsvg') as SVGGeometryElement;
 
-  useEffect(() => {
-    if (!pathRef.current) return;
-    console.log(pathRef.current.getTotalLength());
-  }, [pathRef]);
+  // useEffect(() => {
+  //   if (!pathRef.current) return;
+  //   console.log(pathRef.current.getTotalLength());
+  // }, [pathRef]);
 
   useEffect(() => {
     const timeline = anime.timeline({

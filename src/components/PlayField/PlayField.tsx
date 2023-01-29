@@ -483,11 +483,11 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
           </div>
           <div className="flex flex-col items-center justify-center gap-1">
             <Board />
-            <div className="border-1 rounded-md border border-stone-400 p-2 text-center text-stone-100">
+            <div className="border-1 rounded-md border border-stone-400 p-2 text-center text-stone-50">
               <p className="font-bold">
                 COUNT: {gameState.turnTotals.cardTotal} {go && 'GO!!'}
               </p>
-              <div className="w-36 rounded-md bg-stone-800 text-xs font-medium text-stone-100">
+              <div className="w-36 rounded-md bg-stone-800 text-xs font-medium text-stone-50">
                 {gameState.players[player].activePlayer === IsActive.ACTIVE
                   ? 'your turn'
                   : `wait for opponent`.toUpperCase()}

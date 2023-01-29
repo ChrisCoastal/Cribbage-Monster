@@ -70,9 +70,7 @@ function App() {
     const isOnlineRef = getIsOnlineRef(uid);
     set(isOnlineRef, true);
 
-    onDisconnect(isOnlineRef)
-      .set(false)
-      .then(() => console.log('disconnected'));
+    onDisconnect(isOnlineRef).set(false);
   }, [uid]);
 
   useEffect(() => {

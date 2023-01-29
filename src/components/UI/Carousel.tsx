@@ -49,7 +49,7 @@ const Carousel: FC<CarouselProps> = ({ className, auto = 10000 }) => {
           $250K Prize
         </Heading>
         <p
-          className={`absolute left-10 top-[14rem] z-10 text-4xl font-medium text-white ${animateText}`}>
+          className={`absolute left-10 top-[14rem] z-10 text-4xl font-medium text-stone-50 ${animateText}`}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi consequat ligula justo, sed
           pretium ligula tincidunt ac.
         </p>

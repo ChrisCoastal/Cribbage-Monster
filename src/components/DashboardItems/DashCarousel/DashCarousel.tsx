@@ -58,7 +58,7 @@ const DashCarousel: FC<DashCarouselProps> = ({ className, auto = 10000 }) => {
           $250K Prize
         </Heading>
         <p
-          className={`absolute left-6 top-[40%] z-10 w-[90%] text-lg font-medium text-white opacity-0 sm:text-3xl lg:left-10 lg:text-4xl ${animateText}`}>
+          className={`absolute left-6 top-[40%] z-10 w-[90%] text-lg font-medium text-stone-50 opacity-0 sm:text-3xl lg:left-10 lg:text-4xl ${animateText}`}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi consequat ligula justo, sed
           pretium ligula tincidunt ac.
         </p>

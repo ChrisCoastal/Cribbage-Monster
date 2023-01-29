@@ -26,7 +26,6 @@ const BarChart: FC<BarChartProps> = ({ barValues, colLabels }) => {
     for (const key in segmentValues) {
       won = segmentValues[key];
       lost = Math.abs(segmentValues[key] - bar.totalValue);
-      console.log(won, lost);
 
       const segment = (
         <div

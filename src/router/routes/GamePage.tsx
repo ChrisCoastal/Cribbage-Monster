@@ -144,7 +144,7 @@ const GamePage = () => {
   return (
     <>
       {isModal && gameState.tally && (
-        <Modal isVisible={isModal} title={'Hand Tally'} className={'bg-stone-800 text-white'}>
+        <Modal isVisible={isModal} title={'Hand Tally'} className={'bg-stone-800 text-stone-50'}>
           <HandTally
             dealer={gameState.dealer}
             cut={gameState.deckCut.card!}

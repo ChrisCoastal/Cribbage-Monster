@@ -16,8 +16,6 @@ const Dot: FC<DotProps> = ({ height, width, color = '#fff', className }) => {
 	c-7.28,0-13.19-1.19-13.19-1.19s5.9-1.19,13.19-1.19s13.19,1.19,13.19,1.19S107.28,90.25,100,90.25z`;
 
   const clickHandler = () => {
-    console.log('lcick');
-
     anime({
       targets: '.svgtest path',
       d: [

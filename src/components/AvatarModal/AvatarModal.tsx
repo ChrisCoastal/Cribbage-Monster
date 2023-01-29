@@ -46,7 +46,7 @@ const AvatarModal: FC<AvatarModalProps> = ({ Modal, isModal, modalHandler }) => 
           avatar={userSettingsState.avatar}
           className={`${AvatarSize.XL} lg:h-48 lg:w-48 lg:text-[8.8rem]`}
         />
-        <p className="absolute left-1/2 bottom-2 -translate-x-1/2 cursor-pointer text-xs text-white opacity-50 transition-all duration-300 group-hover:opacity-90">
+        <p className="absolute left-1/2 bottom-2 -translate-x-1/2 cursor-pointer text-xs text-stone-50 opacity-50 transition-all duration-300 group-hover:opacity-90">
           edit
         </p>
       </div>
@@ -54,7 +54,7 @@ const AvatarModal: FC<AvatarModalProps> = ({ Modal, isModal, modalHandler }) => 
         <Modal
           isVisible={isModal}
           title={'Choose a character'}
-          className={'bg-stone-800 text-white'}>
+          className={'bg-stone-800 text-stone-50'}>
           <div className="flex flex-col gap-4">
             <AvatarPicker
               userAvatar={userSettingsState.avatar}

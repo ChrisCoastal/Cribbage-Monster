@@ -8,8 +8,19 @@ import {
   GameStage
 } from 'src/@types';
 
+// Dates
 export const MILLISEC_PER_DAY = 86400000;
 
+// Media Queries
+export const MEDIA_SIZE = {
+  sm: '(min-width: 576px)',
+  md: '(min-width: 768px)',
+  lg: '(min-width: 1024px)',
+  xl: '(min-width: 1280px)',
+  '2xl': '(min-width: 1536px)'
+};
+
+// Game
 export const HAND_SIZE = 6;
 
 export const NUM_SUITS = 4;
