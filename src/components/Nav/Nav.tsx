@@ -23,19 +23,14 @@ const Nav = () => {
   const { logoutUser } = useFirebaseAuth();
 
   const [scrollY, setScrollY] = useState({ pos: 0, isDown: false });
-  const [mobile, setMobile] = useState(false);
 
   const minMediaSm = useMediaQuery(MEDIA_SIZE.sm);
-  const {
-    menuIsVisible: appMenuVisible,
-    toggleMenuHandler: toggleAppMenu,
-    Menu: AppMenu
-  } = useMenu();
 
+  const { toggleMenuHandler: toggleAppMenu, Menu: AppMenu } = useMenu();
   const {
-    menuIsVisible: userMenuVisible,
     toggleMenuHandler: toggleUserMenu,
-    Menu: UserMenu
+    Menu: UserMenu,
+    MenuButton: UserMenuButton
   } = useMenu();
 
   const menuItems = [{ text: 'Rules', path: '/rules' }];
@@ -51,7 +46,12 @@ const Nav = () => {
     .concat(
       userAuth && userSettingsState ? (
         <li>
-          <Avatar className={`${AvatarSize.SM}`} avatar={userSettingsState.avatar}></Avatar>
+          <UserMenuButton>
+            <Avatar
+              className={`${AvatarSize.SM} user-menu`}
+              avatar={userSettingsState.avatar}></Avatar>
+          </UserMenuButton>
+          <UserMenu menuItems={[]} buttonClass="user-menu" />
         </li>
       ) : (
         <>
@@ -83,9 +83,9 @@ const Nav = () => {
   }, [scrollY.pos]);
 
   const mobileMenu = (
-    <button onClick={toggleAppMenu}>
+    <button onClick={toggleAppMenu} className="app-menu">
       <MenuIcon height="30" width="30" />
-      <AppMenu menuItems={renderedMenuItems} />
+      <AppMenu menuItems={renderedMenuItems} buttonClass="app-menu" />
     </button>
   );
 

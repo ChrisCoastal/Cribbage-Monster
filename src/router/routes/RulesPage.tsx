@@ -85,13 +85,13 @@ const RulesPage = () => {
         </p>
         <p className="mb-2">
           It is important to keep track of the order in which cards are played to determine whether
-          what looks like a sequence or a run has been interrupted by a "foreign card." Example:
-          Cards are played in this order: 8, 7, 7, 6. The dealer pegs 2 for 15, and the opponent
-          pegs 2 for pair, but the dealer cannot peg for run because of the extra seven (foreign
-          card) that has been played. Example: Cards are played in this order: 9, 6, 8, 7. The
-          dealer pegs 2 for fifteen when he or she plays the six and pegs 4 for run when he plays
-          the seven (the 6, 7, 8, 9 sequence). The cards were not played in sequential order, but
-          they form a true run with no foreign card.
+          what looks like a sequence or a run has been interrupted Example: Cards are played in this
+          order: 8, 7, 7, 6. The dealer pegs 2 for 15, and the opponent pegs 2 for pair, but the
+          dealer cannot peg for run because of the extra seven (foreign card) that has been played.
+          Example: Cards are played in this order: 9, 6, 8, 7. The dealer pegs 2 for fifteen when he
+          or she plays the six and pegs 4 for run when he plays the seven (the 6, 7, 8, 9 sequence).
+          The cards were not played in sequential order, but they form a true run with no foreign
+          card.
         </p>
         <SubHeading className="mt-8">Counting Order</SubHeading>
         <p className="mb-2">
