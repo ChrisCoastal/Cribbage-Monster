@@ -121,7 +121,6 @@ const useFirebaseAuth = (): AuthContextType => {
         console.log(userAuth, 'User signed out');
         setUserAuth(() => null);
 
-        console.log(userAuth, 'User signed out');
         callback();
         return Promise.resolve(userAuth);
       })
