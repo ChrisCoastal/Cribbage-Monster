@@ -33,9 +33,9 @@ const useModal = () => {
                 <div>
                   <div className="flex items-center justify-between gap-8 pb-2">
                     <SubHeading className="pt-1">{title}</SubHeading>
-                    <Button handler={() => modalHandler(false)} buttonSize="circle">
+                    <button onClick={() => modalHandler(false)}>
                       <AddIcon height="32" width="32" className="rotate-45" />
-                    </Button>
+                    </button>
                   </div>
                   {children}
                 </div>

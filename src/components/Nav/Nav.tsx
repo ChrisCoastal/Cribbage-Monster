@@ -124,7 +124,7 @@ const Nav = () => {
       <Button
         className="mt-4"
         buttonColor="secondary"
-        handler={() => logoutUser(() => navigate('/login'))}>
+        handler={() => logoutUser(() => navigate('/'))}>
         LOGOUT
       </Button>
     </li>
@@ -155,6 +155,7 @@ const Nav = () => {
         </h1>
       </Link>
       <div>
+        {/* <ul className="flex">{navItems}</ul> */}
         <Menu menuItems={navItems}>
           <MenuIcon height="30" width="30" />
         </Menu>

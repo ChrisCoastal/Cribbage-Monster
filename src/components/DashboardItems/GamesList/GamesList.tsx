@@ -10,6 +10,8 @@ import CreateGame from 'src/components/CreateGame/CreateGame';
 import Avatar from 'src/components/Avatar/Avatar';
 import Card from 'src/components/UI/Card';
 import SubHeading from 'src/components/UI/SubHeading';
+import AddIcon from 'src/components/UI/icons/AddIcon/AddIcon';
+import ToolTip from 'src/components/UI/ToolTip';
 
 type GamesListProps = {
   //
@@ -69,10 +71,14 @@ const GamesList: FC<GamesListProps> = () => {
 
   return (
     <Card padding="md">
-      <div className="h-full w-full overflow-hidden">
+      <div className="h-full overflow-hidden">
         <div className="flex items-center justify-between pb-6">
           <SubHeading>GAMES</SubHeading>
-          <CreateGame />
+          <CreateGame className="cursor-pointer rounded-full bg-black bg-gradient-to-br from-purple-400/90 to-purple-700/90 tracking-wide text-stone-50 shadow-sm transition-all duration-300 hover:bg-slate-100 hover:shadow-md">
+            <ToolTip text="create game">
+              <AddIcon height="32" width="32" />
+            </ToolTip>
+          </CreateGame>
         </div>
         <ul className="flex max-h-80 flex-col gap-2 overflow-scroll">
           {gamesListItems.length ? gamesListItems : <li>no games available</li>}

@@ -13,6 +13,7 @@ import useAuthContext from 'src/hooks/useAuthContext';
 import useGameContext from 'src/hooks/useGameContext';
 
 import Button from 'src/components/UI/Button';
+import ToolTip from 'src/components/UI/ToolTip';
 import useSettingsContext from 'src/hooks/useSettingsContext';
 import AddIcon from 'src/components/UI/icons/AddIcon/AddIcon';
 
@@ -72,7 +73,11 @@ const CreateGame: FC<CreateGameProps> = ({ className, children }) => {
     }
   }
 
-  return <button className={`${className}`}>{children}</button>;
+  return (
+    <button className={`${className}`} onClick={createGameHandler}>
+      {children}
+    </button>
+  );
 };
 
 export default CreateGame;

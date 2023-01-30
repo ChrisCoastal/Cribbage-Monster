@@ -55,32 +55,34 @@ const Menu: FC<MenuProps> = ({ menuItems, className, children }) => {
 
   return (
     <>
-      <ListenClickOutside callback={() => setMenuIsVisible(false)}>
+      <ListenClickOutside
+        outCallback={() => setMenuIsVisible(false)}
+        inCallback={() => setMenuIsVisible(false)}>
         <button className={`${className}`} onClick={() => setMenuIsVisible(!menuIsVisible)}>
           {children}
         </button>
-      </ListenClickOutside>
 
-      {overlay && menuIsVisible && !minMediaSm
-        ? createPortal(
-            <div className="animate-menu absolute right-0 flex h-screen w-screen flex-col items-center overflow-hidden bg-stone-800 p-8 text-stone-50">
-              <div className="flex h-16 items-center self-end">
-                <button onClick={() => toggleMenuHandler}>
-                  <CloseIcon height="30" width="30" className=" fill-stone-100" />
-                </button>
+        {overlay && menuIsVisible && !minMediaSm
+          ? createPortal(
+              <div className="animate-menu absolute right-0 flex h-screen w-screen flex-col items-center overflow-hidden bg-stone-800 p-8 text-stone-50">
+                <div className="flex h-16 items-center self-end">
+                  <button onClick={() => toggleMenuHandler}>
+                    <CloseIcon height="30" width="30" className=" fill-stone-100" />
+                  </button>
+                </div>
+                <ul className="flex flex-col items-center gap-8">{menuItems}</ul>
+              </div>,
+              document.getElementById('overlay-root')!
+            )
+          : menuIsVisible && (
+              <div className="relative">
+                <div className="animate-menu absolute right-2 top-0 h-4 w-4 rotate-45 bg-stone-900 shadow-md"></div>
+                <div className="animate-menu absolute right-0 mt-1 flex flex-col items-end overflow-hidden rounded-lg bg-stone-900 p-8 text-stone-50 shadow-md">
+                  <ul className="flex flex-col gap-6 py-2 px-2">{animatedMenuItems}</ul>
+                </div>
               </div>
-              <ul className="flex flex-col items-center gap-8">{menuItems}</ul>
-            </div>,
-            document.getElementById('overlay-root')!
-          )
-        : menuIsVisible && (
-            <div className="relative">
-              <div className="animate-menu absolute right-2 top-0 h-4 w-4 rotate-45 bg-stone-900 shadow-md"></div>
-              <div className="animate-menu absolute right-0 mt-1 flex flex-col items-end overflow-hidden rounded-lg bg-stone-900 p-8 text-stone-50 shadow-md">
-                <ul className="flex flex-col gap-6 py-2 px-2">{animatedMenuItems}</ul>
-              </div>
-            </div>
-          )}
+            )}
+      </ListenClickOutside>
     </>
   );
 };

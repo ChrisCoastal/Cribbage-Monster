@@ -28,7 +28,7 @@ const IntersectCard: FC<IntersectCardProps> = ({ image, title, text, layout = 'l
     <>
       <li
         ref={cardRef}
-        className={`${animate} ${direction} flex gap-6 transition-all duration-1000 sm:gap-10`}>
+        className={`${animate} ${direction} flex gap-6 transition-all duration-700 sm:gap-10`}>
         <div className="relative aspect-square overflow-hidden rounded-md sm:w-[50%]">
           <img src={image} alt="card" />
         </div>
