@@ -36,6 +36,7 @@ import CardBox from 'src/components/CardBox/CardBox';
 import BarChart from 'src/components/UI/BarChart';
 import GamesPlayed from 'src/components/DashboardItems/GamesPlayed/GamesPlayed';
 import SubHeading from 'src/components/UI/SubHeading';
+import Footer from 'src/components/Footer/Footer';
 
 export async function dashboardLoader({ params }: LoaderFunctionArgs) {
   try {
@@ -94,32 +95,31 @@ const DashboardPage = () => {
   ];
 
   return (
-    <>
-      <div className="relative flex justify-center pb-12">
-        <div className="absolute h-full w-full bg-cardbacks bg-cover opacity-[0.03]"></div>
-        <div className="relative z-10 mt-20 grid w-full auto-rows-fr justify-items-center gap-4 rounded-lg p-2 md:w-[50rem] md:grid-cols-2 xl:w-[75rem] xl:grid-cols-3">
-          <Card padding="md">
-            <div className="flex flex-col items-center gap-4">
-              {isUser ? (
-                <AvatarModal isModal={isModal} Modal={Modal} modalHandler={modalHandler} />
-              ) : (
-                <Avatar
-                  className={`${AvatarSize.LG} lg:h-48 lg:w-48 lg:text-[8.8rem]`}
-                  avatar={userSettings.avatar || ''}
-                />
-              )}
+    <div className="relative">
+      <div className="absolute h-full w-full bg-cardbacks bg-cover opacity-[0.03]"></div>
+      <div className="relative mx-auto grid w-full auto-rows-fr justify-items-center gap-4 rounded-lg p-2 py-24 md:w-[50rem] md:grid-cols-2 xl:w-[75rem] xl:grid-cols-3">
+        <Card padding="md">
+          <div className="flex flex-col items-center gap-4">
+            {isUser ? (
+              <AvatarModal isModal={isModal} Modal={Modal} modalHandler={modalHandler} />
+            ) : (
+              <Avatar
+                className={`${AvatarSize.LG} lg:h-48 lg:w-48 lg:text-[8.8rem]`}
+                avatar={userSettings.avatar || ''}
+              />
+            )}
 
-              <SubHeading>{`${userSettings.displayName}`}</SubHeading>
-              <Badges />
-            </div>
-          </Card>
-          <GamesList />
-          <DashCarousel className="sm:col-span-2 sm:row-start-2 sm:aspect-video" />
-          <GamesWon gamesPlayed={userStats.gamesPlayed} gamesWon={userStats.gamesWon} />
-          <GamesPlayed dailyGames={dailyValues} />
-        </div>
+            <SubHeading>{`${userSettings.displayName}`}</SubHeading>
+            <Badges />
+          </div>
+        </Card>
+        <GamesList />
+        <DashCarousel className="sm:col-span-2 sm:row-start-2 sm:aspect-video" />
+        <GamesWon gamesPlayed={userStats.gamesPlayed} gamesWon={userStats.gamesWon} />
+        <GamesPlayed dailyGames={dailyValues} />
       </div>
-    </>
+      <Footer />
+    </div>
   );
 };
 

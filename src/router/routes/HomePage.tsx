@@ -18,6 +18,7 @@ import { useNavigate } from 'react-router-dom';
 import ZSection from 'src/components/HomeItems/ZSection/ZSection';
 import Carousel from 'src/components/UI/Carousel';
 import DashCarousel from 'src/components/DashboardItems/DashCarousel/DashCarousel';
+import Footer from 'src/components/Footer/Footer';
 
 const HomePage = () => {
   const { userAuth } = useAuthContext();
@@ -111,7 +112,7 @@ const HomePage = () => {
 
   return (
     <div className="bg-stone-900">
-      <div className="relative mb-16 flex h-screen max-h-[56rem] w-full flex-col justify-center overflow-hidden bg-cardbacks object-scale-down lg:mb-24">
+      <div className="relative mb-16 flex h-screen max-h-[50rem] w-full flex-col justify-center overflow-hidden bg-cardbacks object-scale-down lg:mb-24">
         <div className="pointer-events-none absolute h-full w-full bg-gradient-to-br from-stone-900/20 to-stone-900/70"></div>
         {/* <img src={cardImg} alt="card" className=" animate-fade-up-delay-sm" /> */}
         <section className="relative z-10 mx-[10%] flex flex-col gap-20 sm:mx-24 sm:gap-28 lg:mx-20 lg:flex-row lg:justify-center">
@@ -135,19 +136,7 @@ const HomePage = () => {
         </section>
       </div>
       <ZSection />
-      <section className="min-h-24 flex items-center justify-between bg-black/20 px-4 py-8 text-xs text-stone-50 sm:px-8 sm:text-sm">
-        <div className=" w-40 sm:w-auto">
-          <p className="mb-1">Inspired by generations of ♥︎♥︎♥︎ for cribbage.</p>
-        </div>
-        <a
-          className="flex items-center gap-2"
-          href="https://github.com/ChrisCoastal"
-          target="_blank"
-          rel="noreferrer">
-          <img src={githubLogo} alt="GitHub logo" className="h-6 w-6" />
-          <p>ChrisCoastal</p>
-        </a>
-      </section>
+      <Footer />
     </div>
   );
 };

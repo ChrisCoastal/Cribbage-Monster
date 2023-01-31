@@ -1,5 +1,6 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 import {
+  AvatarSize,
   CardBoxHeight,
   CardBoxWidth,
   CardOverlap,
@@ -59,6 +60,7 @@ import Score from 'src/components/Score/Score';
 import useAuthContext from 'src/hooks/useAuthContext';
 import useGameContext from 'src/hooks/useGameContext';
 import { INITIAL_USER_STATS } from 'src/utils/constants';
+import Avatar from '../Avatar/Avatar';
 
 type PlayFieldProps = {
   gameId: GameId;
@@ -347,6 +349,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     }, 1000);
   }
 
+  // FIXME:
   async function endGame(winner: PlayerPos) {
     const gameRef = getGameRef(gameId);
     update(gameRef, {
@@ -358,8 +361,8 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
       }
     });
 
-    updatePlayerStats(winner === player, gameState.players[player].id);
-    updatePlayerStats(winner === opponent, gameState.players[opponent].id);
+    // updatePlayerStats(winner === player, gameState.players[player].id);
+    // updatePlayerStats(winner === opponent, gameState.players[opponent].id);
     console.log(`${winner} won!`);
   }
 
@@ -435,7 +438,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   }, [gameState.playerCards.player1.inHand, gameState.playerCards.player2.inHand]);
 
   return (
-    <div className=" relative mt-24 scale-[0.85] items-center justify-items-center gap-11 px-4 sm:mt-32 sm:scale-100">
+    <div className="relative h-screen scale-[0.85] items-center justify-items-center gap-11 px-4 pt-8 sm:scale-100 sm:pt-20">
       <div className="flex flex-col items-center justify-center gap-4">
         <div className="flex justify-between gap-8">
           <div className="flex flex-col items-center justify-start gap-4">
@@ -462,7 +465,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
 
               <div>
                 <div className="flex flex-col items-center gap-1 py-4">
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="my-2 grid grid-cols-2 gap-2">
                     <Deck
                       cutDeck={gameState.deckCut}
                       isPone={player === pone}
@@ -470,6 +473,9 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
                     />
                     <Crib cribCards={gameState.crib} />
                   </div>
+                  <p className="max-w-[150px] rounded-md bg-stone-800 px-2 text-sm font-light text-stone-50">
+                    {dealer ? `${gameState.players[dealer].displayName}'s crib` : 'no dealer'}
+                  </p>
                 </div>
               </div>
               <CardBox
@@ -487,13 +493,19 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
               <p className="font-bold">
                 COUNT: {gameState.turnTotals.cardTotal} {go && 'GO!!'}
               </p>
-              <div className="w-36 rounded-md bg-stone-800 text-xs font-medium text-stone-50">
+              <p className="w-40 animate-pulse rounded-md bg-stone-800 text-xs font-medium text-stone-50">
                 {gameState.players[player].activePlayer === IsActive.ACTIVE
-                  ? 'your turn'
-                  : `wait for opponent`.toUpperCase()}
-              </div>
+                  ? `YOUR TURN`
+                  : `WAITING FOR OPPONENT...`}
+              </p>
             </div>
           </div>
+        </div>
+        <div className="flex h-24 w-[376px] items-center rounded-md border border-stone-400 px-12 sm:px-10">
+          <Avatar
+            avatar={gameState.players[player].avatar}
+            className={`${AvatarSize.MD} md:h-20 md:w-20 md:text-[4.2rem]`}
+          />
         </div>
         <div>
           <CardBox

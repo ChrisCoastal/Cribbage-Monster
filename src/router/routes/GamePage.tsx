@@ -107,7 +107,7 @@ const GamePage = () => {
     const timer = setTimeout(() => {
       modalHandler(false);
       player === PlayerPos.P_ONE && resetHand();
-    }, 16000);
+    }, 18000);
   }, [player, modalHandler, resetHand]);
 
   useEffect(() => {
@@ -144,7 +144,11 @@ const GamePage = () => {
   return (
     <>
       {isModal && gameState.tally && (
-        <Modal isVisible={isModal} title={'Hand Tally'} className={'bg-stone-800 text-stone-50'}>
+        <Modal
+          isVisible={isModal}
+          title={'Hand Tally'}
+          className={'bg-stone-800 text-stone-50'}
+          clickAway={false}>
           <HandTally
             dealer={gameState.dealer}
             cut={gameState.deckCut.card!}
@@ -162,19 +166,26 @@ const GamePage = () => {
               cards: gameState.playerCards[opponent].played,
               points: gameState?.tally[opponent]
             }}
-            crib={gameState?.tally.crib}
+            crib={{
+              displayName: gameState.players[gameState.dealer].displayName,
+              avatar: gameState.players[gameState.dealer].avatar,
+              playerPos: gameState.dealer,
+              cards: gameState.crib,
+              points: gameState?.tally.crib
+            }}
           />
         </Modal>
       )}
       <div className="relative">
-        <div className="flex h-[90vh] flex-col justify-center">
-          <PlayField gameId={game.gameId} />
-        </div>
+        <PlayField gameId={game.gameId} />
+
         {canStartGame() && player === PlayerPos.P_ONE && (
           <Button
             handler={dealHandler}
-            className="absolute top-1/2 left-1/2  -translate-x-1/2 -translate-y-1/2">
-            START
+            buttonColor="secondary"
+            buttonSize="lg"
+            className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-radiate">
+            START GAME
           </Button>
         )}
       </div>

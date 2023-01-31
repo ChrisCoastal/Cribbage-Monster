@@ -198,7 +198,7 @@ const Tail: FC<TailProps> = ({ height, width, color = '#fff', className }) => {
           value: topOpenPathD
         }
       ],
-      delay: 2200
+      delay: 1100
     });
 
     timeline2.add(

@@ -56,7 +56,7 @@ const BarChart: FC<BarChartProps> = ({ barValues, colLabels }) => {
     return (
       <span
         key={nanoid()}
-        className={`relative row-start-2 justify-self-center whitespace-nowrap text-xs font-light text-stone-300`}>
+        className={`relative row-start-2 justify-self-center whitespace-nowrap text-xs font-light tracking-wider text-stone-300`}>
         <p>{label.slice(0, 3)}</p>
       </span>
     );

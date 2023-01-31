@@ -22,10 +22,19 @@ type PlayerTallyProps = {
   cut: CardType;
   scores: ReactNode;
   total: ReactNode;
+  className?: string;
   children?: ReactNode;
 };
 
-const PlayerTally: FC<PlayerTallyProps> = ({ displayName, avatar, cards, cut, scores, total }) => {
+const PlayerTally: FC<PlayerTallyProps> = ({
+  className,
+  displayName,
+  avatar,
+  cards,
+  cut,
+  scores,
+  total
+}) => {
   const cardValues = getCardValues(cards) as CardType[];
 
   function renderCards(
@@ -59,7 +68,7 @@ const PlayerTally: FC<PlayerTallyProps> = ({ displayName, avatar, cards, cut, sc
 
   return (
     <>
-      <Card padding="md">
+      <Card padding="md" className={className}>
         <div className="flex items-center gap-2">
           <Avatar className={AvatarSize.SM} avatar={avatar} />
           <h3 className="text-lg font-bold">{displayName}</h3>

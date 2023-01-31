@@ -27,13 +27,6 @@ const Nav = () => {
 
   const minMediaSm = useMediaQuery(MEDIA_SIZE.sm);
 
-  // const { toggleMenuHandler: toggleAppMenu, Menu: AppMenu, MenuButton: AppMenuButton } = useMenu();
-  // const {
-  //   toggleMenuHandler: toggleUserMenu,
-  //   Menu: UserMenu,
-  //   MenuButton: UserMenuButton
-  // } = useMenu();
-
   const menuItems = [
     <div key={0} className={`text-lg tracking-wide text-stone-50`}>
       <Link to={`/rules`}>Rules</Link>
@@ -52,57 +45,18 @@ const Nav = () => {
     </div>
   ];
 
-  const renderedMenuItems = []
-    .map((item, index) => {
-      return (
-        <li key={index} className={`text-lg tracking-wide text-stone-50`}>
-          {/* <Link to={item.path}>{item.text}</Link> */}
-        </li>
-      );
-    })
-    .concat(
-      userAuth && userSettingsState ? (
-        <li>
-          <Menu menuItems={menuItems}>
-            <Avatar className={`${AvatarSize.SM} user-menu`} avatar={userSettingsState.avatar} />
-          </Menu>
-          {/* <UserMenu menuItems={menuItems} /> */}
-        </li>
-      ) : (
-        <>
-          <li className="text-lg tracking-wide">
-            <Link to={'/login'}>Login</Link>
-          </li>
-          <li>
-            <Button buttonSize="sm" buttonColor="secondary">
-              <Link to={'signup'} className="">
-                JOIN
-              </Link>
-            </Button>
-          </li>
-        </>
-      )
-    );
-
   function isScroll() {
     if (window.scrollY > scrollY.pos) setScrollY({ pos: window.scrollY, isDown: true });
     if (window.scrollY < scrollY.pos || window.scrollY === 0)
       setScrollY({ pos: window.scrollY, isDown: false });
   }
 
-  const navPos = scrollY.isDown ? '-top-12' : 'top-0 ';
+  const navPos = scrollY.isDown ? '-top-16' : 'top-0 ';
 
   useEffect(() => {
     window.addEventListener('scroll', isScroll, { passive: true });
     return () => window.removeEventListener('scroll', isScroll);
   }, [scrollY.pos]);
-
-  // const mobileMenu = (
-  //   <button onClick={toggleAppMenu} className="app-menu">
-  //     <MenuIcon height="30" width="30" />
-  //     <AppMenu menuItems={renderedMenuItems} buttonClass="app-menu" />
-  //   </button>
-  // );
 
   const authNavItems = [
     <li key={0} className="border-b px-4 pb-4 tracking-wide md:text-base">
@@ -125,7 +79,7 @@ const Nav = () => {
         className="mt-4"
         buttonColor="secondary"
         handler={() => logoutUser(() => navigate('/'))}>
-        LOGOUT
+        Logout
       </Button>
     </li>
   ];
@@ -155,7 +109,6 @@ const Nav = () => {
         </h1>
       </Link>
       <div>
-        {/* <ul className="flex">{navItems}</ul> */}
         <Menu menuItems={navItems}>
           <MenuIcon height="30" width="30" />
         </Menu>

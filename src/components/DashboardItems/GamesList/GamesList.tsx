@@ -49,21 +49,29 @@ const GamesList: FC<GamesListProps> = () => {
         <li
           key={game.gameId}
           className="flex items-center justify-between gap-4 rounded-md bg-stone-900 py-2 px-4 font-light text-stone-50">
-          <span className="flex items-center justify-between gap-4">
-            <span className="flex items-center gap-2">
-              <Avatar
-                className={AvatarSize.SM}
-                avatar={game.player1.avatar.length ? game.player1.avatar : game.player2.avatar}
-              />
-              <p className="text-sm font-medium">
-                {game.player1.displayName.length
-                  ? game.player1.displayName
-                  : game.player2.displayName}
-              </p>
-            </span>
-            <p className="text-xs font-medium">🏆 {game.scoreToWin}</p>
+          <span className="flex items-center gap-2">
+            <Avatar
+              className={AvatarSize.SM}
+              avatar={game.player1.avatar.length ? game.player1.avatar : game.player2.avatar}
+            />
+            <p className="text-sm font-medium">
+              {game.player1.displayName.length
+                ? game.player1.displayName
+                : game.player2.displayName}
+            </p>
           </span>
-          {inProgress ? <p className="text-xs">In Progress</p> : <JoinGame gameId={game.gameId} />}
+
+          <div className="flex items-center justify-between gap-8">
+            <span className=" text-center">
+              <p className="text-xs font-medium">🏆</p>
+              <p className="text-xs font-medium">{game.scoreToWin}</p>
+            </span>
+            {inProgress ? (
+              <p className="text-xs">In Progress</p>
+            ) : (
+              <JoinGame gameId={game.gameId} />
+            )}
+          </div>
           {/* {!vacantPlayer && <JoinGame gameId={game.gameId} />} */}
         </li>
       );

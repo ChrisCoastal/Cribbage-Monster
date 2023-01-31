@@ -1,15 +1,16 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, MutableRefObject } from 'react';
 
 type T = any;
 
-export const useInterval = (callback: T, delay: number | null = 0) => {
-  const savedCallback: React.MutableRefObject<T> = useRef();
+export const useInterval = (callback: T, delay: number | null = 0, max?: number) => {
+  const savedCallback: MutableRefObject<T> = useRef();
 
   useEffect(() => {
     savedCallback.current = callback;
   }, [callback]);
 
   useEffect(() => {
+    if (max && savedCallback.current >= max) return;
     const tick = () => {
       savedCallback.current();
     };
@@ -18,5 +19,5 @@ export const useInterval = (callback: T, delay: number | null = 0) => {
       const interval = setInterval(tick, delay);
       return () => clearInterval(interval);
     }
-  }, [delay]);
+  }, [delay, max]);
 };

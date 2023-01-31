@@ -55,7 +55,7 @@ const DashCarousel: FC<DashCarouselProps> = ({ className, auto = 10000 }) => {
     return (
       <li key={i} className={`relative w-full`}>
         <Heading className={`absolute left-6 top-10 z-10 opacity-0 lg:left-10 ${animateTitle}`}>
-          $250K Prize
+          Big Prizes!
         </Heading>
         <p
           className={`absolute left-6 top-[40%] z-10 w-[90%] text-lg font-medium text-stone-50 opacity-0 sm:text-3xl lg:left-10 lg:text-4xl ${animateText}`}>

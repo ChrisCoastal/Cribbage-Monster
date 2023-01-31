@@ -38,6 +38,7 @@ module.exports = {
         'fade-up-delay-sm': '1.2s ease-out 0.8s fade-up-in both',
         'fade-up-delay-md': '1.5s ease-out 1.6s fade-up-in both',
         'fade-up-delay-lg': '1.5s ease-out 2s fade-up-in both',
+        'slide-in-out': '5.5s ease-in-out slide-in-out forwards',
         'modal-bounce-in': '0.6s ease-in-out bounce-in forwards',
         radiate: '0.6s ease-in radiate infinite alternate',
         grow: '0.6s ease-in grow',
@@ -63,9 +64,15 @@ module.exports = {
           '88%': { top: '52%' },
           '100%': { top: '50%' }
         },
+        'slide-in-out': {
+          '0%': { transform: 'translateX(10rem)', opacity: '0' },
+          '4%': { transform: 'translateX(0)', opacity: '1' },
+          '96%': { transform: 'translateX(0)', opacity: '1' },
+          '100%': { transform: 'translateX(-10rem)', opacity: '0' }
+        },
         radiate: {
-          '0%': { boxShadow: '0 0 0 0.25rem rgba(232,121,249,0)' },
-          '100%': { boxShadow: '0 0 0.6rem 0.4rem rgba(232,121,249,1)' }
+          '0%': { boxShadow: '0 0 0 0.25rem rgba(52, 211, 153,0)' },
+          '100%': { boxShadow: '0 0 0.3rem 0.2rem rgba(52, 211, 153,0.3)' }
         },
         grow: {
           '0%, 100%': { transform: 'scale(1)' },
