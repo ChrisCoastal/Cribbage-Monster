@@ -42,7 +42,7 @@ export const INITIAL_USER_SETTING: UserSettingsState = {
 
 export const INITIAL_GAME_STATE: GameState = {
   gameId: '',
-  status: GameStatus.DEAL,
+  status: GameStatus.NEW,
   dealer: PlayerPos.P_ONE,
   handNum: 0,
   players: {

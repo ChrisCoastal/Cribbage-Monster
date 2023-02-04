@@ -123,7 +123,8 @@ const GamePage = () => {
     const playerRef = getPlayerRef(game.gameId, player);
     const gameListRef = getGameFromList(game.gameId);
     update(gameListRef, { [player]: { displayName: '', avatar: '', presence: '' } });
-    update(playerRef, { id: '', displayName: '', activePlayer: IsActive.NOT_ACTIVE });
+    update(playerRef, { id: '', displayName: '', avatar: '', activePlayer: IsActive.NOT_ACTIVE });
+    // TODO: update game status and active player
   }
 
   window.onpopstate = () => leaveGameHandler();

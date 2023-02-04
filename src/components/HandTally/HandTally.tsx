@@ -137,27 +137,28 @@ const HandTally: FC<HandTallyProps> = ({ player, opponent, pone, dealer }) => {
       return;
     }
 
-    const tally = isCrib
+    const points = isCrib
       ? isScorePoints(gameState.crib, gameState.deckCut.card!, 'crib')
       : isScorePoints(gameState.playerCards[curTally].played, gameState.deckCut.card!);
 
-    console.log(tally);
+    console.log(points);
 
-    const tallyPoints: Tally = {
+    const tally: Tally = {
       displayName: gameState.players[curTally].displayName,
       avatar: gameState.players[curTally].avatar,
       cards: isCrib ? gameState.crib : gameState.playerCards[curTally].played,
       playerPos: curTally,
-      points: tally
+      points
     };
-    setTallyPoints(tallyPoints);
-    setUpdatedScore((prevScore) => ({
-      ...prevScore,
-      [curTally]: {
-        prev: prevScore[curTally].cur,
-        cur: prevScore[curTally].cur + tally.totalPoints
-      }
-    }));
+    setTallyPoints(tally);
+    points.totalPoints &&
+      setUpdatedScore((prevScore) => ({
+        ...prevScore,
+        [curTally]: {
+          prev: prevScore[curTally].cur,
+          cur: prevScore[curTally].cur + points.totalPoints
+        }
+      }));
     const playerScoreRef = getPlayerScoreRef(gameState.gameId, curTally);
     // isHost(player) &&
     //   set(playerScoreRef, {
@@ -296,6 +297,7 @@ const HandTally: FC<HandTallyProps> = ({ player, opponent, pone, dealer }) => {
               // cards={tallyPoints.cards}
               cut={gameState.deckCut.card!}
               tally={tallyPoints}
+              score={updatedScore[tallyPoints.playerPos]}
               // scores={renderScoreItems(tallyPoints.points)}
               handType={tallyIndex === 2 ? 'crib' : 'hand'}
               // total={scoreTotal}

@@ -1,19 +1,17 @@
 import anime from 'animejs';
 import React, { FC, useEffect, useState } from 'react';
-import useGameContext from 'src/hooks/useGameContext';
+import { ScoreType } from 'src/@types';
 
 type PlayerTallyScoreProps = {
-  initialScore: number;
-  addScore: number;
+  score: ScoreType;
 };
 
-const PlayerTallyScore: FC<PlayerTallyScoreProps> = ({ initialScore, addScore }) => {
-  const [score, setScore] = useState<number>(initialScore);
-  const { gameState } = useGameContext();
+const PlayerTallyScore: FC<PlayerTallyScoreProps> = ({ score }) => {
+  const [renderScore, setRenderScore] = useState<number>(score.prev);
 
   useEffect(() => {
-    if (score > initialScore + addScore) return;
-    if (score === initialScore + addScore) {
+    if (renderScore > score.cur) return;
+    if (renderScore === score.cur) {
       anime({
         targets: '.animate-text-grow',
         scale: [{ value: 1, duration: 0 }, 2, 1.4],
@@ -23,12 +21,12 @@ const PlayerTallyScore: FC<PlayerTallyScoreProps> = ({ initialScore, addScore })
       });
     }
     const timeout = setTimeout(() => {
-      setScore(score + 1);
+      setRenderScore((prev) => prev + 1);
     }, 120);
     return () => clearTimeout(timeout);
-  }, [score]);
+  }, [renderScore, score.cur]);
 
-  return <div className="animate-text-grow text-2xl">{score} / 121</div>;
+  return <div className="animate-text-grow text-2xl">{renderScore} / 121</div>;
 };
 
 export default PlayerTallyScore;

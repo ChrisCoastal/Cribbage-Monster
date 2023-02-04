@@ -9,7 +9,8 @@ import {
   AvatarSize,
   PlayerPos,
   Tally,
-  TallyPoints
+  TallyPoints,
+  ScoreType
 } from 'src/@types';
 
 import Avatar from 'src/components/Avatar/Avatar';
@@ -25,6 +26,7 @@ type PlayerTallyProps = {
   // avatar: string;
   // cards: CardsIndex;
   tally: Tally;
+  score: ScoreType;
   cut: CardType;
   // scores: ReactNode;
   // total: ReactNode;
@@ -38,6 +40,7 @@ const PlayerTally: FC<PlayerTallyProps> = ({
   // avatar,
   // cards,
   tally,
+  score,
   cut,
   // scores,
   // total,
@@ -200,7 +203,7 @@ const PlayerTally: FC<PlayerTallyProps> = ({
             <ul className="flex items-center justify-between text-2xl font-bold">{totalScore} </ul>
           </div>
           <div className="mr-4 flex h-24 w-24 items-center justify-center rounded-full border border-purple-500 text-xl font-bold">
-            <PlayerTallyScore initialScore={0} addScore={12} />
+            <PlayerTallyScore score={score} />
           </div>
         </div>
       </Card>

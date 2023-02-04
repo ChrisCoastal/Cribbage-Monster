@@ -50,7 +50,7 @@ import {
   getGameStatusRef
 } from 'src/utils/helpers';
 
-import Opponent from 'src/components/Opponent/Opponent';
+import Player from 'src/components/Player/Player';
 import Board from 'src/components/Board/Board';
 import CardBox from 'src/components/CardBox/CardBox';
 import Crib from 'src/components/Crib/Crib';
@@ -447,7 +447,8 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
         <div className="flex justify-between gap-8">
           <div className="flex flex-col items-center justify-start gap-4">
             <div className="flex flex-col items-center justify-center">
-              <Opponent
+              <Player
+                playerPos={opponent}
                 displayName={gameState.players[opponent].displayName}
                 avatar={gameState.players[opponent].avatar}
               />
@@ -503,9 +504,10 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
           </div>
         </div>
         <div className="flex h-24 w-[376px] items-center rounded-md border border-stone-400 px-12 sm:px-10">
-          <Avatar
+          <Player
+            playerPos={player}
+            displayName={gameState.players[player].displayName}
             avatar={gameState.players[player].avatar}
-            className={`${AvatarSize.MD} md:h-20 md:w-20 md:text-[4.2rem]`}
           />
           <p className="max-w-[150px] rounded-md px-2 text-sm font-light text-stone-50">
             {dealer ? `${gameState.players[dealer].displayName}'s crib` : 'no dealer'}
