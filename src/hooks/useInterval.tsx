@@ -11,6 +11,8 @@ export const useInterval = (callback: T, delay: number | null = 0, max?: number)
 
   useEffect(() => {
     if (max && savedCallback.current >= max) return;
+    console.log('tickx');
+
     const tick = () => {
       savedCallback.current();
     };

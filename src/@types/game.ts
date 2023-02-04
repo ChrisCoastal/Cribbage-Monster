@@ -75,10 +75,12 @@ export type TallyPoints = {
   pegging?: number;
 };
 
-export enum GameStage {
+export enum GameStatus {
   NEW = 'new',
-  ADD_CRIB = 'crib',
-  CUT = 'cut',
+  DEAL = 'deal',
+  LAY_CRIB = 'crib',
+  PONE_CUT = 'pone cut',
+  IS_CUT = 'is cut',
   CARD_PLAY = 'play',
   TALLY = 'tally',
   COMPLETE = 'complete'
@@ -86,7 +88,7 @@ export enum GameStage {
 
 export type GameState = {
   gameId: GameId;
-  stage: GameStage;
+  status: GameStatus;
   dealer: PlayerPos;
   handNum: number;
   players: {

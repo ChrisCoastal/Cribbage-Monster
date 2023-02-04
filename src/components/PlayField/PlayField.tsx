@@ -8,7 +8,7 @@ import {
   CardSize,
   CardType,
   GameId,
-  GameStage,
+  GameStatus,
   IsActive,
   PlayerPos,
   ScoreType,
@@ -46,7 +46,8 @@ import {
   getTallyRef,
   isWinner,
   getUserStatsRef,
-  getCardValues
+  getCardValues,
+  getGameStatusRef
 } from 'src/utils/helpers';
 
 import Opponent from 'src/components/Opponent/Opponent';
@@ -89,16 +90,43 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   const pone = getPone(dealer);
 
   useEffect(() => {
-    if (!numCardsPlayed) return;
+    // if (player !== PlayerPos.P_ONE) return;
     if (numCardsPlayed !== 8) return;
-    player === PlayerPos.P_ONE && tallyHand();
+    const gameStatusRef = getGameStatusRef(gameId);
+    if (numCardsPlayed === 8 && player !== PlayerPos.P_ONE) set(gameStatusRef, GameStatus.TALLY);
+
+    // isHost(player) && tallyHand();
   }, [numCardsPlayed]);
 
+  // useEffect(() => {
+  //   if (gameState.status === GameStatus.COMPLETE) return;
+  //   if (gameState.score[player].cur >= 121) isHost(player) && endGame(player);
+  //   if (gameState.score[opponent].cur >= 121) isHost(player) && endGame(opponent);
+  // }, [gameState.score, opponent, player]);
+
   useEffect(() => {
-    if (gameState.stage === GameStage.COMPLETE) return;
-    if (gameState.score[player].cur >= 20) player === PlayerPos.P_ONE && endGame(player);
-    if (gameState.score[opponent].cur >= 20) player === PlayerPos.P_ONE && endGame(opponent);
-  }, [gameState.score, opponent, player]);
+    const playersRef = getPlayersRef(gameId);
+    if (
+      !getCardValues(gameState.playerCards.player1.inHand).length &&
+      getCardValues(gameState.playerCards.player2.inHand).length &&
+      gameState.players.player2.activePlayer === IsActive.NOT_ACTIVE &&
+      gameState.players.player1.activePlayer === IsActive.ACTIVE
+    )
+      update(playersRef, {
+        player1: { ...gameState.players.player1, activePlayer: IsActive.NOT_ACTIVE },
+        player2: { ...gameState.players.player2, activePlayer: IsActive.ACTIVE }
+      });
+    if (
+      getCardValues(gameState.playerCards.player1.inHand).length &&
+      !getCardValues(gameState.playerCards.player2.inHand).length &&
+      gameState.players.player1.activePlayer === IsActive.NOT_ACTIVE &&
+      gameState.players.player2.activePlayer === IsActive.ACTIVE
+    )
+      update(playersRef, {
+        player1: { ...gameState.players.player1, activePlayer: IsActive.ACTIVE },
+        player2: { ...gameState.players.player2, activePlayer: IsActive.NOT_ACTIVE }
+      });
+  }, [gameState.playerCards.player1.inHand, gameState.playerCards.player2.inHand]);
 
   //TODO: should all refs be moved into an object?
 
@@ -143,71 +171,6 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
       default:
         return;
     }
-  }
-
-  function scoreHand() {
-    const playerHandTally = isScorePoints(
-      gameState.playerCards[player].played,
-      gameState.deckCut.card!
-    );
-    const opponentHandTally = isScorePoints(
-      gameState.playerCards[opponent].played,
-      gameState.deckCut.card!
-    );
-    const cribTally = isScorePoints(gameState.crib, gameState.deckCut.card!, 'crib');
-
-    return { playerHandTally, opponentHandTally, cribTally };
-  }
-
-  function getPlayerScores(
-    playerHandTally: TallyPoints,
-    opponentHandTally: TallyPoints,
-    cribTally: TallyPoints
-  ) {
-    const playerScore =
-      player === dealer
-        ? playerHandTally.totalPoints + cribTally.totalPoints
-        : playerHandTally.totalPoints;
-    const opponentScore =
-      opponent === dealer
-        ? opponentHandTally.totalPoints + cribTally.totalPoints
-        : opponentHandTally.totalPoints;
-
-    const updatedScore = {
-      [player]: {
-        cur: gameState.score[player].cur + playerScore,
-        prev: gameState.score[player].cur
-      },
-      [opponent]: {
-        cur: gameState.score[opponent].cur + opponentScore,
-        prev: gameState.score[opponent].cur
-      }
-    } as { player1: ScoreType; player2: ScoreType };
-
-    return updatedScore;
-  }
-
-  function tallyHand() {
-    const score = scoreHand();
-    const tally = {
-      [player]: score.playerHandTally,
-      [opponent]: score.opponentHandTally,
-      crib: score.cribTally
-    };
-    const updatedScore = getPlayerScores(
-      score.playerHandTally,
-      score.opponentHandTally,
-      score.cribTally
-    );
-    const winner = isWinner(updatedScore, dealer);
-    const tallyRef = getTallyRef(gameId);
-    const scoreRef = getScoreRef(gameId);
-    set(tallyRef, tally).then(() => {
-      // if the pone has won, dealer's score is not recorded (pone counts first)
-      winner === pone
-        ? update(scoreRef, { [pone]: updatedScore[pone] })
-        : update(scoreRef, updatedScore);
-    });
   }
 
   function cutDeckHandler(cutStatus: Status) {
@@ -354,7 +317,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     const gameRef = getGameRef(gameId);
     update(gameRef, {
       ...gameState,
-      stage: GameStage.COMPLETE,
+      stage: GameStatus.COMPLETE,
       players: {
         [player]: { ...gameState.players[player], activePlayer: IsActive.NOT_ACTIVE },
         [opponent]: { ...gameState.players[opponent], activePlayer: IsActive.NOT_ACTIVE }
@@ -392,6 +355,71 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     set(playerStatsRef, updatedPlayerStats);
   }
 
+  // function scoreHand() {
+  //   const playerHandTally = isScorePoints(
+  //     gameState.playerCards[player].played,
+  //     gameState.deckCut.card!
+  //   );
+  //   const opponentHandTally = isScorePoints(
+  //     gameState.playerCards[opponent].played,
+  //     gameState.deckCut.card!
+  //   );
+  //   const cribTally = isScorePoints(gameState.crib, gameState.deckCut.card!, 'crib');
+
+  //   return { playerHandTally, opponentHandTally, cribTally };
+  // }
+
+  // function getPlayerScores(
+  //   playerHandTally: TallyPoints,
+  //   opponentHandTally: TallyPoints,
+  //   cribTally: TallyPoints
+  // ) {
+  //   const playerScore =
+  //     player === dealer
+  //       ? playerHandTally.totalPoints + cribTally.totalPoints
+  //       : playerHandTally.totalPoints;
+  //   const opponentScore =
+  //     opponent === dealer
+  //       ? opponentHandTally.totalPoints + cribTally.totalPoints
+  //       : opponentHandTally.totalPoints;
+
+  //   const updatedScore = {
+  //     [player]: {
+  //       cur: gameState.score[player].cur + playerScore,
+  //       prev: gameState.score[player].cur
+  //     },
+  //     [opponent]: {
+  //       cur: gameState.score[opponent].cur + opponentScore,
+  //       prev: gameState.score[opponent].cur
+  //     }
+  //   } as { player1: ScoreType; player2: ScoreType };
+
+  //   return updatedScore;
+  // }
+
+  // function tallyHand() {
+  //   const score = scoreHand();
+  //   const tally = {
+  //     [player]: score.playerHandTally,
+  //     [opponent]: score.opponentHandTally,
+  //     crib: score.cribTally
+  //   };
+  //   const updatedScore = getPlayerScores(
+  //     score.playerHandTally,
+  //     score.opponentHandTally,
+  //     score.cribTally
+  //   );
+  //   const winner = isWinner(updatedScore, dealer);
+  //   const tallyRef = getTallyRef(gameId);
+  //   const scoreRef = getScoreRef(gameId);
+  //   set(tallyRef, tally).then(() => {
+  //     // if the pone has won, dealer's score is not recorded (pone counts first)
+  //     winner === pone
+  //       ? update(scoreRef, { [pone]: updatedScore[pone] })
+  //       : update(scoreRef, updatedScore);
+  //   });
+  // }
+
   function renderCards(
     cards: CardType[] = [],
     faceUp: boolean,
@@ -412,30 +440,6 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
       />
     ));
   }
-
-  useEffect(() => {
-    const playersRef = getPlayersRef(gameId);
-    if (
-      !getCardValues(gameState.playerCards.player1.inHand).length &&
-      getCardValues(gameState.playerCards.player2.inHand).length &&
-      gameState.players.player2.activePlayer === IsActive.NOT_ACTIVE &&
-      gameState.players.player1.activePlayer === IsActive.ACTIVE
-    )
-      update(playersRef, {
-        player1: { ...gameState.players.player1, activePlayer: IsActive.NOT_ACTIVE },
-        player2: { ...gameState.players.player2, activePlayer: IsActive.ACTIVE }
-      });
-    if (
-      getCardValues(gameState.playerCards.player1.inHand).length &&
-      !getCardValues(gameState.playerCards.player2.inHand).length &&
-      gameState.players.player1.activePlayer === IsActive.NOT_ACTIVE &&
-      gameState.players.player2.activePlayer === IsActive.ACTIVE
-    )
-      update(playersRef, {
-        player1: { ...gameState.players.player1, activePlayer: IsActive.ACTIVE },
-        player2: { ...gameState.players.player2, activePlayer: IsActive.NOT_ACTIVE }
-      });
-  }, [gameState.playerCards.player1.inHand, gameState.playerCards.player2.inHand]);
 
   return (
     <div className="relative h-screen scale-[0.85] items-center justify-items-center gap-11 px-4 pt-8 sm:scale-100 sm:pt-20">
@@ -473,9 +477,6 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
                     />
                     <Crib cribCards={gameState.crib} />
                   </div>
-                  <p className="max-w-[150px] rounded-md bg-stone-800 px-2 text-sm font-light text-stone-50">
-                    {dealer ? `${gameState.players[dealer].displayName}'s crib` : 'no dealer'}
-                  </p>
                 </div>
               </div>
               <CardBox
@@ -506,6 +507,9 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
             avatar={gameState.players[player].avatar}
             className={`${AvatarSize.MD} md:h-20 md:w-20 md:text-[4.2rem]`}
           />
+          <p className="max-w-[150px] rounded-md px-2 text-sm font-light text-stone-50">
+            {dealer ? `${gameState.players[dealer].displayName}'s crib` : 'no dealer'}
+          </p>
         </div>
         <div>
           <CardBox

@@ -38,7 +38,7 @@ module.exports = {
         'fade-up-delay-sm': '1.2s ease-out 0.8s fade-up-in both',
         'fade-up-delay-md': '1.5s ease-out 1.6s fade-up-in both',
         'fade-up-delay-lg': '1.5s ease-out 2s fade-up-in both',
-        'slide-in-out': '5.5s ease-in-out slide-in-out forwards',
+        'slide-in-out': '4s ease-in-out slide-in-out forwards',
         'modal-bounce-in': '0.6s ease-in-out bounce-in forwards',
         radiate: '0.6s ease-in radiate infinite alternate',
         grow: '0.6s ease-in grow',

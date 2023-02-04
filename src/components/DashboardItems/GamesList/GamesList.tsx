@@ -88,8 +88,12 @@ const GamesList: FC<GamesListProps> = () => {
             </ToolTip>
           </CreateGame>
         </div>
-        <ul className="flex max-h-80 flex-col gap-2 overflow-scroll">
-          {gamesListItems.length ? gamesListItems : <li>no games available</li>}
+        <ul className="flex max-h-80 flex-col gap-2 overflow-scroll text-stone-50">
+          {gamesListItems.length ? (
+            gamesListItems
+          ) : (
+            <li className="text-center ">No games available</li>
+          )}
         </ul>
       </div>
     </Card>

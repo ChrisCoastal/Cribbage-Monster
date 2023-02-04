@@ -41,11 +41,11 @@ const Menu: FC<MenuProps> = ({ menuItems, className, children }) => {
         targets: `.animate-item-${i}`,
         translateY: [
           { value: 60, duration: 0, delay: 0 },
-          { value: 0, duration: 800, delay: 150 * i }
+          { value: 0, duration: 800, delay: 120 * i }
         ],
         opacity: [
           { value: 0, duration: 0, delay: 0 },
-          { value: 1, duration: 800, delay: 150 * i }
+          { value: 1, duration: 800, delay: 120 * i }
         ],
 
         easing: 'spring(0.5, 100, 10, 0)'

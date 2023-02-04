@@ -48,6 +48,8 @@ export const getPlayerPresenceRef = (gameId: GameId, playerPos: PlayerPos) =>
 // game
 export const getGameRef = (gameId: GameId) => ref(rtdb, `games/${gameId}`);
 
+export const getGameStatusRef = (gameId: GameId) => ref(rtdb, `games/${gameId}/status`);
+
 export const getActivePlayerRef = (gameId: GameId, player: PlayerPos) =>
   ref(rtdb, `games/${gameId}/players/${player}/activePlayer`);
 
@@ -96,7 +98,7 @@ export function getPlayerOpponent(
   userId: UserId
 ) {
   const player = players.player1.id === userId ? PlayerPos.P_ONE : PlayerPos.P_TWO;
-  const opponent = player === PlayerPos.P_ONE ? PlayerPos.P_TWO : PlayerPos.P_ONE;
+  const opponent = isHost(player) ? PlayerPos.P_TWO : PlayerPos.P_ONE;
 
   return { player, opponent };
 }
@@ -112,6 +114,10 @@ export function findPlayerPos(
   if (!players.player1.id.length || players.player1.id === uid) return PlayerPos.P_ONE;
   if (!players.player2.id.length || players.player2.id === uid) return PlayerPos.P_TWO;
   return null;
+}
+
+export function isHost(player: PlayerPos): boolean {
+  return player === PlayerPos.P_ONE;
 }
 
 // DEAL CARDS

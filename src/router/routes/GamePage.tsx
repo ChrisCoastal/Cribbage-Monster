@@ -3,7 +3,7 @@ import { LoaderFunctionArgs, useLoaderData, useBeforeUnload } from 'react-router
 
 import { get, onValue, set, update } from 'firebase/database';
 
-import { GameReducerTypes, GameState, IsActive, Status, PlayerPos } from 'src/@types';
+import { GameReducerTypes, GameState, IsActive, Status, PlayerPos, GameStatus } from 'src/@types';
 
 import useAuthContext from 'src/hooks/useAuthContext';
 import useGameContext from 'src/hooks/useGameContext';
@@ -19,7 +19,8 @@ import {
   getGameRef,
   getPlayerOpponent,
   getPlayerRef,
-  getPone
+  getPone,
+  isHost
 } from 'src/utils/helpers';
 import { INITIAL_GAME_STATE } from 'src/utils/constants';
 
@@ -41,15 +42,17 @@ const GamePage = () => {
   const { userAuth } = useAuthContext();
   const uid = userAuth!.uid!;
   const { player, opponent } = getPlayerOpponent(gameState.players, uid);
+  const pone = getPone(gameState.dealer);
   // useInterval(() => update(presenceRef, { presence: serverTimestamp() }), 5000); // TODO: uncomment to add updating timestamp
 
   const { Modal, isModal, modalHandler } = useModal();
 
   async function dealHandler() {
-    if (player !== PlayerPos.P_ONE) return;
+    if (!isHost(player)) return;
     const deal = dealHands();
     const update: GameState = {
       ...gameState,
+      status: GameStatus.LAY_CRIB,
       handNum: gameState.handNum + 1,
       players: {
         player1: { ...gameState.players.player1, activePlayer: IsActive.ACTIVE },
@@ -70,29 +73,6 @@ const GamePage = () => {
     set(gameRef, update);
   }
 
-  const resetHand = useCallback(() => {
-    const newDealer = getPone(gameState.dealer);
-    const gameRef = getGameRef(game.gameId);
-    const deal = dealHands();
-    update(gameRef, {
-      ...gameState,
-      dealer: newDealer,
-      handNum: gameState.handNum + 1,
-      players: {
-        player1: { ...gameState.players.player1, activePlayer: IsActive.ACTIVE },
-        player2: { ...gameState.players.player2, activePlayer: IsActive.ACTIVE }
-      },
-      playerCards: {
-        player1: { inHand: deal.hands.player1, played: {} },
-        player2: { inHand: deal.hands.player2, played: {} }
-      },
-      crib: INITIAL_GAME_STATE.crib,
-      deckCut: { status: Status.INVALID, card: deal.cut },
-      turnTotals: INITIAL_GAME_STATE.turnTotals,
-      tally: INITIAL_GAME_STATE.tally
-    });
-  }, [game.gameId, gameState]);
-
   function canStartGame() {
     return (
       Boolean(gameState.players.player1.displayName.length) &&
@@ -106,9 +86,9 @@ const GamePage = () => {
     modalHandler(true);
     const timer = setTimeout(() => {
       modalHandler(false);
-      player === PlayerPos.P_ONE && resetHand();
-    }, 18000);
-  }, [player, modalHandler, resetHand]);
+      // isHost(player) && resetHand();
+    }, 16000);
+  }, [player, modalHandler]);
 
   useEffect(() => {
     const gameRef = getGameRef(game.gameId);
@@ -127,10 +107,17 @@ const GamePage = () => {
     return unsubscriber;
   }, []);
 
+  console.log(gameState.status);
+
   useEffect(() => {
-    if (!gameState.tally) return;
-    renderTally();
-  }, [gameState.tally, renderTally]);
+    if (gameState.status === GameStatus.TALLY) renderTally();
+    if (gameState.status === GameStatus.DEAL) {
+      console.log('reset hand', isHost(player));
+
+      modalHandler(false);
+      isHost(player) && dealHandler();
+    }
+  }, [gameState.status, renderTally]);
 
   function leaveGameHandler() {
     const playerRef = getPlayerRef(game.gameId, player);
@@ -143,43 +130,45 @@ const GamePage = () => {
 
   return (
     <>
-      {isModal && gameState.tally && (
+      {/* {isModal && gameState.tally && ( */}
+      {isModal && gameState.status === GameStatus.TALLY && (
         <Modal
           isVisible={isModal}
-          title={'Hand Tally'}
-          className={'bg-stone-800 text-stone-50'}
+          className={'w-full bg-stone-800 text-stone-50'}
           clickAway={false}>
           <HandTally
+            player={player}
+            opponent={opponent}
             dealer={gameState.dealer}
-            cut={gameState.deckCut.card!}
-            player={{
-              displayName: gameState.players[player].displayName,
-              avatar: gameState.players[player].avatar,
-              playerPos: player,
-              cards: gameState.playerCards[player].played,
-              points: gameState?.tally[player]
-            }}
-            opponent={{
-              displayName: gameState.players[opponent].displayName,
-              avatar: gameState.players[opponent].avatar,
-              playerPos: opponent,
-              cards: gameState.playerCards[opponent].played,
-              points: gameState?.tally[opponent]
-            }}
-            crib={{
-              displayName: gameState.players[gameState.dealer].displayName,
-              avatar: gameState.players[gameState.dealer].avatar,
-              playerPos: gameState.dealer,
-              cards: gameState.crib,
-              points: gameState?.tally.crib
-            }}
+            pone={pone}
+            // player={{
+            //   displayName: gameState.players[player].displayName,
+            //   avatar: gameState.players[player].avatar,
+            //   playerPos: player,
+            //   cards: gameState.playerCards[player].played
+            //   points: gameState?.tally[player]
+            // }}
+            // opponent={{
+            //   displayName: gameState.players[opponent].displayName,
+            //   avatar: gameState.players[opponent].avatar,
+            //   playerPos: opponent,
+            //   cards: gameState.playerCards[opponent].played
+            //   points: gameState?.tally[opponent]
+            // }}
+            // crib={{
+            //   displayName: gameState.players[gameState.dealer].displayName,
+            //   avatar: gameState.players[gameState.dealer].avatar,
+            //   playerPos: gameState.dealer,
+            //   cards: gameState.crib
+            //   points: gameState?.tally.crib
+            // }}
           />
         </Modal>
       )}
       <div className="relative">
         <PlayField gameId={game.gameId} />
 
-        {canStartGame() && player === PlayerPos.P_ONE && (
+        {canStartGame() && isHost(player) && (
           <Button
             handler={dealHandler}
             buttonColor="secondary"

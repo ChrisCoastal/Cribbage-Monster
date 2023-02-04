@@ -27,24 +27,6 @@ const Nav = () => {
 
   const minMediaSm = useMediaQuery(MEDIA_SIZE.sm);
 
-  const menuItems = [
-    <div key={0} className={`text-lg tracking-wide text-stone-50`}>
-      <Link to={`/rules`}>Rules</Link>
-    </div>,
-    <div
-      key={1}
-      className={`text-lg tracking-wide text-stone-50`}
-      onClick={() => navigate(`/dashboard/${userAuth?.uid}`)}>
-      {/* <Link to={`/dashboard/${userAuth?.uid}`}>Dashboard</Link> */}
-      <div className="cursor-pointer">Dashboard</div>
-    </div>,
-    <div key={2}>
-      <Button buttonColor="secondary" handler={() => logoutUser(() => navigate('/login'))}>
-        LOGOUT
-      </Button>
-    </div>
-  ];
-
   function isScroll() {
     if (window.scrollY > scrollY.pos) setScrollY({ pos: window.scrollY, isDown: true });
     if (window.scrollY < scrollY.pos || window.scrollY === 0)
@@ -65,6 +47,9 @@ const Nav = () => {
         <p className="text-sm">{userSettingsState.displayName}</p>
       </span>
     </li>,
+    <li key={2} className="tracking-wide md:text-base">
+      <Link to={`/`}>Home</Link>
+    </li>,
     <li key={1}>
       <CreateGame className="tracking-wide md:text-base">Create Game</CreateGame>
     </li>,
@@ -84,6 +69,9 @@ const Nav = () => {
     </li>
   ];
   const unAuthNavItems = [
+    <li key={2} className="tracking-wide md:text-base">
+      <Link to={`/`}>Home</Link>
+    </li>,
     <li key={6} className="tracking-wide md:text-base">
       <Link to={'/login'}>Login</Link>
     </li>,

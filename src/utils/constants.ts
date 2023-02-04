@@ -5,7 +5,7 @@ import {
   PlayerPos,
   UserSettingsState,
   Status,
-  GameStage
+  GameStatus
 } from 'src/@types';
 
 // Dates
@@ -42,7 +42,7 @@ export const INITIAL_USER_SETTING: UserSettingsState = {
 
 export const INITIAL_GAME_STATE: GameState = {
   gameId: '',
-  stage: GameStage.NEW,
+  status: GameStatus.DEAL,
   dealer: PlayerPos.P_ONE,
   handNum: 0,
   players: {
