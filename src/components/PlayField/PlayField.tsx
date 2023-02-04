@@ -451,6 +451,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
                 playerPos={opponent}
                 displayName={gameState.players[opponent].displayName}
                 avatar={gameState.players[opponent].avatar}
+                className="pb-1 md:pb-3"
               />
               <CardBox
                 size={{ height: CardBoxHeight.SM, width: CardBoxWidth.SM_SIX }}
@@ -503,7 +504,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
             </div>
           </div>
         </div>
-        <div className="flex h-24 w-[376px] items-center rounded-md border border-stone-400 px-12 sm:px-10">
+        <div className="flex w-[376px] items-center rounded-md border border-stone-400 py-2 px-12 sm:px-10">
           <Player
             playerPos={player}
             displayName={gameState.players[player].displayName}
