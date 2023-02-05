@@ -87,7 +87,7 @@ const Nav = () => {
 
   return (
     <nav
-      className={`${navPos} fixed z-40 flex h-16 w-full items-center justify-between bg-stone-900 px-4 text-stone-50 shadow-xl transition-all sm:px-12`}>
+      className={`${navPos} fixed z-40 flex h-16 w-full items-center justify-between bg-stone-900 px-4 text-stone-50 shadow-lg transition-all sm:px-12`}>
       <Link to={'/'}>
         <h1 className="cursor-pointer font-molle text-xl md:text-2xl lg:text-3xl">
           Cribbage Monster

@@ -6,6 +6,7 @@ import Avatar from '../Avatar/Avatar';
 type PlayerProps = {
   playerPos: PlayerPos;
   displayName: string;
+  isDealer: boolean;
   avatar?: string;
   isActive?: boolean;
   className?: string;
@@ -14,12 +15,15 @@ type PlayerProps = {
 const Player: FC<PlayerProps> = ({
   playerPos,
   displayName,
+  isDealer,
   avatar = '',
   isActive = false,
   className
 }) => {
   const playerColor =
-    playerPos === PlayerPos.P_ONE ? 'bg-red-500 ring-red-500' : 'bg-emerald-400 ring-emerald-400';
+    playerPos === PlayerPos.P_ONE
+      ? 'bg-purple-500 ring-purple-500'
+      : 'bg-emerald-400 ring-emerald-400';
   return (
     <div className={`${className} col-start-3 flex flex-col items-center justify-center`}>
       <div className="flex items-center gap-1">
@@ -35,7 +39,19 @@ const Player: FC<PlayerProps> = ({
           <p className="text-sm font-medium text-stone-800">{displayName || 'no player'}</p>
         )}
       </div>
-      <Avatar className={`${AvatarSize.MD} md:h-20 md:w-20 md:text-[4.2rem]`} avatar={avatar} />
+      <div className="relative">
+        <Avatar
+          className={`${AvatarSize.MD} ${
+            !displayName.length ? 'from-stone-700 to-stone-900' : ''
+          } shadow-md md:h-20 md:w-20 md:text-[4.2rem]`}
+          avatar={avatar}
+        />
+        {isDealer ? (
+          <div className="absolute bottom-0 right-1/2 translate-x-1/2 rounded-full bg-emerald-300 px-2 text-2xs font-semibold text-stone-900">
+            <p>DEALER</p>
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 };

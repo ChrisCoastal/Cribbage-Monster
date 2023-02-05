@@ -63,6 +63,7 @@ import useAuthContext from 'src/hooks/useAuthContext';
 import useGameContext from 'src/hooks/useGameContext';
 import useSound from 'use-sound';
 import { INITIAL_USER_STATS } from 'src/utils/constants';
+import PlayerDisplay from '../PlayerDisplay/PlayerDisplay';
 
 type PlayFieldProps = {
   gameId: GameId;
@@ -420,6 +421,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
               <Player
                 playerPos={opponent}
                 displayName={gameState.players[opponent].displayName}
+                isDealer={opponent === dealer}
                 avatar={gameState.players[opponent].avatar}
                 isActive={gameState.players[opponent].activePlayer === IsActive.ACTIVE}
                 className="pb-1 md:pb-3"
@@ -463,7 +465,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
           </div>
           <div className="flex flex-col items-center justify-center gap-1">
             <Board />
-            <div className="border-1 rounded-md border border-stone-400 p-2 text-center text-stone-50">
+            <div className="border-1 rounded-md border border-stone-400/60 p-2 text-center text-stone-50">
               <p className="font-bold">
                 COUNT: {gameState.turnTotals.cardTotal} {go && 'GO!!'}
               </p>
@@ -475,17 +477,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
             </div>
           </div>
         </div>
-        <div className="flex w-[376px] items-center rounded-md border border-stone-400 py-2 px-12 sm:px-10">
-          <Player
-            playerPos={player}
-            displayName={gameState.players[player].displayName}
-            avatar={gameState.players[player].avatar}
-            isActive={gameState.players[player].activePlayer === IsActive.ACTIVE}
-          />
-          <p className="max-w-[150px] rounded-md px-2 text-sm font-light text-stone-50">
-            {dealer ? `${gameState.players[dealer].displayName}'s crib` : 'no dealer'}
-          </p>
-        </div>
+        <PlayerDisplay />
         <div>
           <CardBox
             size={{ height: CardBoxHeight.LG, width: CardBoxWidth.LG_SIX }}

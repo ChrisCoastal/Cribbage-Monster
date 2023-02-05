@@ -8,6 +8,10 @@ module.exports = {
       normal: '0.2em',
       ...defaultTheme.letterSpacing
     },
+    fontSize: {
+      '2xs': ['0.6rem', { lineHeight: '0.75rem', letterSpacing: '0.08em' }],
+      ...defaultTheme.fontSize
+    },
     extend: {
       screens: {
         xs: '380px'
@@ -24,7 +28,6 @@ module.exports = {
         molle: ['Molle'],
         outfit: ['Outfit']
       },
-
       backgroundImage: {
         'cardback-md': `url('src/assets/cardback-md.svg')`,
         'cardback-sm': `url('src/assets/cardback-sm.svg')`,
