@@ -42,8 +42,7 @@ const ZSection = () => {
           image={monster2}
           title="Don't hide under the bed"
           text="Climb the leaderboard and play with friends. Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus earum nihil quam rem
-          cupiditate! Aliquam est at ratione nesciunt enim nam quaerat laborum fugiat ullam architecto
-          asperiores quod.">
+          cupiditate!">
           <Button buttonSize="md" buttonColor="secondary" handler={() => navigate('/signup')}>
             PLAY NOW
           </Button>

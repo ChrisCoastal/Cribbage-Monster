@@ -95,11 +95,11 @@ const Menu: FC<MenuProps> = ({ menuItems, className, children }) => {
             <>
               <div className="relative" onClick={() => setMenuIsVisible(false)}>
                 <div className="menu absolute right-2 top-0 z-[1000] h-4 w-4 rotate-45 bg-stone-50"></div>
-                <div className="absolute right-0 z-[1000] mt-1 flex flex-col items-end overflow-hidden rounded-lg border border-stone-50 bg-stone-900 p-8 text-stone-50 shadow-lg">
+                <div className="absolute right-0 z-[1000] mt-1 flex flex-col items-end overflow-hidden rounded-lg border border-stone-50/60 bg-stone-900 p-8 text-stone-50 shadow-lg">
                   <ul className="flex flex-col gap-6 py-2 px-2">{animatedMenuItems}</ul>
                 </div>
               </div>
-              <Overlay style="dark" onClick={() => setMenuIsVisible(false)} />
+              <Overlay style="transparent" onClick={() => setMenuIsVisible(false)} />
             </>
           )}
     </span>

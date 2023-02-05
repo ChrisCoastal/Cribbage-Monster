@@ -57,7 +57,7 @@ const Nav = () => {
       <Link to={`/dashboard/${userAuth?.uid}`}>Dashboard</Link>
     </li>,
     <li key={4} className="tracking-wide md:text-base">
-      <Link to={'/rules'}>Learn</Link>
+      <Link to={'/rules'}>How To Play</Link>
     </li>,
     <li key={5} className="flex w-full items-center">
       <Button
@@ -76,7 +76,7 @@ const Nav = () => {
       <Link to={'/login'}>Login</Link>
     </li>,
     <li key={7} className="tracking-wide md:text-base">
-      <Link to={'/rules'}>Learn</Link>
+      <Link to={'/rules'}>How To Play</Link>
     </li>,
     <li key={8}>
       <Button buttonSize="sm" buttonColor="secondary">
@@ -90,7 +90,7 @@ const Nav = () => {
 
   return (
     <nav
-      className={`${navPos} fixed z-40 flex h-16 w-full items-center justify-between bg-stone-900/60 px-4 text-stone-50 transition-all sm:px-12`}>
+      className={`${navPos} fixed z-40 flex h-16 w-full items-center justify-between bg-stone-900 px-4 text-stone-50 shadow-xl transition-all sm:px-12`}>
       <Link to={'/'}>
         <h1 className="cursor-pointer font-molle text-xl md:text-2xl lg:text-3xl">
           Cribbage Monster

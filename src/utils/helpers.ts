@@ -272,9 +272,9 @@ export function isPegPoints(
   const fifteen = isPegFifteen(card.playValue, turnTotals.cardTotal);
   const run = isPegRun(card.faceValue, turnTotals.cardsPlayed);
   const go = opponentGo && playerGo ? isPegGo(card.playValue, turnTotals.cardTotal) : 0;
-  const points = pairs + fifteen + run + go;
+  const totalPoints = pairs + fifteen + run + go;
 
-  return points;
+  return { pairs, fifteen, run, go, totalPoints };
 }
 
 export function expectGo(hand: CardsIndex, cardTotal: number, cardPlayed?: CardType): boolean {
@@ -361,15 +361,12 @@ export function isPegRun(cardFaceValue: number, cardsPlayed: CardsIndex = {}) {
 }
 
 // SCORING
-export function isWinner(
-  score: { player1: ScoreType; player2: ScoreType },
-  dealer: PlayerPos
-): PlayerPos | null {
-  const pone = getPone(dealer);
-  // pone counts first
-  if (score[pone].cur >= 121) return pone;
-  if (score[dealer].cur >= 121) return dealer;
-  return null;
+export function isWinner(curScore: number): boolean {
+  return curScore >= 121;
+}
+
+export function scoreCap(curScore: number): number {
+  return Math.min(curScore, 121);
 }
 
 export function isScorePoints(hand: CardsIndex, cutCard: CardType, isCrib?: 'crib'): TallyPoints {

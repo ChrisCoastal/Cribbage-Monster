@@ -83,6 +83,7 @@ export enum GameStatus {
   IS_CUT = 'is cut',
   CARD_PLAY = 'play',
   TALLY = 'tally',
+  WINNER = 'winner',
   COMPLETE = 'complete'
 }
 

@@ -47,7 +47,9 @@ import {
   isWinner,
   getUserStatsRef,
   getCardValues,
-  getGameStatusRef
+  getGameStatusRef,
+  scoreCap,
+  isHost
 } from 'src/utils/helpers';
 
 import Player from 'src/components/Player/Player';
@@ -56,12 +58,10 @@ import CardBox from 'src/components/CardBox/CardBox';
 import Crib from 'src/components/Crib/Crib';
 import Deck from 'src/components/Deck/Deck';
 import PlayingCard from 'src/components/PlayingCard/PlayingCard';
-import Score from 'src/components/Score/Score';
 
 import useAuthContext from 'src/hooks/useAuthContext';
 import useGameContext from 'src/hooks/useGameContext';
 import { INITIAL_USER_STATS } from 'src/utils/constants';
-import Avatar from '../Avatar/Avatar';
 
 type PlayFieldProps = {
   gameId: GameId;
@@ -76,6 +76,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
 
   const { player, opponent } = getPlayerOpponent(gameState.players, uid);
   const gameRef = getGameRef(gameId);
+  const gameStatusRef = getGameStatusRef(gameId);
   const gameScore = getGameTalliesRef(gameId);
   const playerHand = Object.values(gameState.playerCards[player].inHand);
   const opponentHand = Object.values(gameState.playerCards[opponent].inHand);
@@ -88,21 +89,14 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   const renderOpponentPlayed = renderCards(opponentPlayed, true, CardSize.MD, CardOverlap.HALF);
   const dealer = gameState.dealer;
   const pone = getPone(dealer);
+  const playerWins = isWinner(gameState.score[player].cur);
+  const opponentWins = isWinner(gameState.score[opponent].cur);
 
-  useEffect(() => {
-    // if (player !== PlayerPos.P_ONE) return;
-    if (numCardsPlayed !== 8) return;
-    const gameStatusRef = getGameStatusRef(gameId);
-    if (numCardsPlayed === 8 && player !== PlayerPos.P_ONE) set(gameStatusRef, GameStatus.TALLY);
-
-    // isHost(player) && tallyHand();
-  }, [numCardsPlayed]);
-
-  // useEffect(() => {
-  //   if (gameState.status === GameStatus.COMPLETE) return;
-  //   if (gameState.score[player].cur >= 121) isHost(player) && endGame(player);
-  //   if (gameState.score[opponent].cur >= 121) isHost(player) && endGame(opponent);
-  // }, [gameState.score, opponent, player]);
+  // game status conditions
+  if (isHost(player)) {
+    (playerWins || opponentWins) && set(getGameStatusRef(gameId), GameStatus.WINNER);
+    numCardsPlayed === 8 && set(gameStatusRef, GameStatus.TALLY);
+  }
 
   useEffect(() => {
     const playersRef = getPlayersRef(gameId);
@@ -266,7 +260,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
         gameState.turnTotals.cardTotal
       );
       set(cardTotalRef, updatedCardTotal);
-      const points = isPegPoints(
+      const { pairs, fifteen, run, go, totalPoints } = isPegPoints(
         targetCard,
         gameState.turnTotals,
         gameState.playerCards[player].inHand,
@@ -274,7 +268,8 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
       );
       const playerScore = gameState.score[player].cur;
       const playerScoreRef = getPlayerScoreRef(gameId, player);
-      points && set(playerScoreRef, { cur: playerScore + points, prev: playerScore });
+      totalPoints &&
+        set(playerScoreRef, { cur: scoreCap(playerScore + totalPoints), prev: playerScore });
       if (
         expectGo(opponentHand, updatedCardTotal) &&
         !expectGo(playerHand, updatedCardTotal, targetCard)
@@ -327,32 +322,6 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     // updatePlayerStats(winner === player, gameState.players[player].id);
     // updatePlayerStats(winner === opponent, gameState.players[opponent].id);
     console.log(`${winner} won!`);
-  }
-
-  async function updatePlayerStats(isWinner: boolean, uid: string) {
-    const playerStatsRef = getUserStatsRef(uid);
-    const playerStats: UserStats = await get(playerStatsRef).then((snapshot) => snapshot.val());
-    const curDate = new Date(Date.now()).toDateString().replaceAll(' ', '_');
-    const { date, won, played } = playerStats.dailyGames.at(-1) ?? {
-      ...INITIAL_USER_STATS.dailyGames[0],
-      date: curDate
-    };
-
-    let dailyGames;
-    if (date === curDate)
-      dailyGames = playerStats.dailyGames.splice(-1, 1, {
-        date: curDate,
-        won: isWinner ? won + 1 : won,
-        played: played + 1
-      });
-    if (date !== curDate)
-      dailyGames = playerStats.dailyGames.push({ date: curDate, won: isWinner ? 1 : 0, played: 1 });
-
-    const gamesWon = isWinner ? (playerStats?.gamesWon || 0) + 1 : playerStats?.gamesWon || 0;
-    const gamesPlayed = playerStats.gamesPlayed + 1;
-    const updatedPlayerStats = { gamesPlayed, gamesWon, dailyGames };
-
-    set(playerStatsRef, updatedPlayerStats);
   }
 
   // function scoreHand() {
@@ -451,6 +420,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
                 playerPos={opponent}
                 displayName={gameState.players[opponent].displayName}
                 avatar={gameState.players[opponent].avatar}
+                isActive={gameState.players[opponent].activePlayer === IsActive.ACTIVE}
                 className="pb-1 md:pb-3"
               />
               <CardBox
@@ -509,6 +479,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
             playerPos={player}
             displayName={gameState.players[player].displayName}
             avatar={gameState.players[player].avatar}
+            isActive={gameState.players[player].activePlayer === IsActive.ACTIVE}
           />
           <p className="max-w-[150px] rounded-md px-2 text-sm font-light text-stone-50">
             {dealer ? `${gameState.players[dealer].displayName}'s crib` : 'no dealer'}

@@ -34,7 +34,7 @@ const Deck: FC<DeckProps> = ({ cutDeck, isPone, callback }) => {
     <div className="relative">
       {cutDeck.status === Status.VALID && isPone && (
         <Button
-          className="absolute top-1/4 left-1/2 z-30 flex h-10 w-10 -translate-x-1/2 items-center justify-center text-sm font-bold text-stone-50"
+          className=" absolute top-1/4 left-1/2 z-30 flex h-10 w-10 -translate-x-1/2 items-center justify-center text-sm font-bold text-stone-50"
           buttonSize="circle"
           buttonColor="secondary"
           handler={clickDeckHandler}>

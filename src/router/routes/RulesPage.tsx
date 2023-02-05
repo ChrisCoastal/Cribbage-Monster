@@ -117,6 +117,9 @@ const RulesPage = () => {
           <p className="mb-2">
             A Jack in hand (or crib) that is the same suit as starter scores 1.
           </p>
+          <SubHeading className="mt-8">Play Time!</SubHeading>
+          <p className="mb-2">Ready to play? Join with a free account </p>
+          <p className="mb-2">Fifteen. Each combination of cards that totals 15 2</p>
         </div>
       </div>
       <Footer />
