@@ -20,7 +20,8 @@ const Overlay: FC<OverlayProps> = ({ style, className, onClick }) => {
   return createPortal(
     <div
       onClick={onClick}
-      className={`${overlayStyle} ${className} absolute top-0 left-0 z-40 h-screen w-screen opacity-60`}></div>,
+      onMouseOver={onClick}
+      className={`${overlayStyle} ${className} absolute top-0 left-0 z-40 h-full w-full opacity-60`}></div>,
     document.getElementById('overlay-root')!
   );
 };

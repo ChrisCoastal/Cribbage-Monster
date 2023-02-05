@@ -12,9 +12,6 @@ import Avatar from 'src/components/Avatar/Avatar';
 import CreateGame from 'src/components/CreateGame/CreateGame';
 import MenuIcon from 'src/components/UI/icons/MenuIcon/MenuIcon';
 import Menu from 'src/components/UI/Menu';
-// import useMenu from 'src/hooks/useMenu';
-import useMediaQuery from 'src/hooks/useMediaQuery';
-import { MEDIA_SIZE } from 'src/utils/constants';
 
 const Nav = () => {
   const navigate = useNavigate();
@@ -25,8 +22,6 @@ const Nav = () => {
 
   const [scrollY, setScrollY] = useState({ pos: 0, isDown: false });
 
-  const minMediaSm = useMediaQuery(MEDIA_SIZE.sm);
-
   function isScroll() {
     if (window.scrollY > scrollY.pos) setScrollY({ pos: window.scrollY, isDown: true });
     if (window.scrollY < scrollY.pos || window.scrollY === 0)
@@ -36,6 +31,8 @@ const Nav = () => {
   const navPos = scrollY.isDown ? '-top-16' : 'top-0 ';
 
   useEffect(() => {
+    console.log('scrolling');
+
     window.addEventListener('scroll', isScroll, { passive: true });
     return () => window.removeEventListener('scroll', isScroll);
   }, [scrollY.pos]);
@@ -57,7 +54,7 @@ const Nav = () => {
       <Link to={`/dashboard/${userAuth?.uid}`}>Dashboard</Link>
     </li>,
     <li key={4} className="tracking-wide md:text-base">
-      <Link to={'/rules'}>How To Play</Link>
+      <Link to={'/rules'}>Rules</Link>
     </li>,
     <li key={5} className="flex w-full items-center">
       <Button
@@ -76,7 +73,7 @@ const Nav = () => {
       <Link to={'/login'}>Login</Link>
     </li>,
     <li key={7} className="tracking-wide md:text-base">
-      <Link to={'/rules'}>How To Play</Link>
+      <Link to={'/rules'}>Rules</Link>
     </li>,
     <li key={8}>
       <Button buttonSize="sm" buttonColor="secondary">

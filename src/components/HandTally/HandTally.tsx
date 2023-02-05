@@ -26,6 +26,8 @@ const HandTally: FC<HandTallyProps> = ({ player, opponent, pone, dealer }) => {
   console.log('tallyIndex', tallyIndex);
 
   useEffect(() => {
+    console.log('tallyIndex', tallyIndex);
+
     const orderOfCount = [pone, dealer, dealer];
     const playerPos = orderOfCount[tallyIndex];
     const isCrib = tallyIndex === 2;
@@ -55,6 +57,8 @@ const HandTally: FC<HandTallyProps> = ({ player, opponent, pone, dealer }) => {
     };
     setTallyPoints(tally);
     const updatedCurScore = scoreCap(updatedScore[playerPos].cur + points.totalPoints);
+    console.log('updatedCur', updatedCurScore);
+
     points.totalPoints &&
       setUpdatedScore((prevScore) => ({
         ...prevScore,
@@ -65,17 +69,12 @@ const HandTally: FC<HandTallyProps> = ({ player, opponent, pone, dealer }) => {
       }));
 
     const timer = setTimeout(() => {
-      // TODO:
       setTallyPoints(null);
       updatedCurScore >= 121 ? setTallyIndex(3) : setTallyIndex((prev) => prev + 1);
     }, 4600);
 
     return () => clearTimeout(timer);
   }, [tallyIndex]);
-
-  useEffect(() => {
-    console.log('mounted');
-  }, []);
 
   return (
     <div>

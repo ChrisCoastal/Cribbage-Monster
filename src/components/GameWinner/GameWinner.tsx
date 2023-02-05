@@ -190,9 +190,11 @@ const GameWinner: FC<GameWinnerProps> = ({ playerIsWinner, winner, quitHandler, 
       />
       <div className="flex flex-col items-center justify-center">
         <h2 className="my-16 mx-8 text-3xl font-bold tracking-wider sm:text-5xl">
-          CONGRATULATIONS!
+          {playerIsWinner ? `CONGRATULATIONS!` : `GOOD TRY!`}
         </h2>
-        <p className="text-xl font-bold tracking-wider sm:text-2xl">{winner.displayName} wins!</p>
+        <p className="text-xl font-bold tracking-wider sm:text-2xl">
+          {playerIsWinner ? `YOU WON!` : `${winner.displayName} WINS!`}
+        </p>
         <Avatar avatar={winner.avatar} className={`${AvatarSize.XL} relative z-[500]`} />
       </div>
       <div className="my-16 flex justify-around">

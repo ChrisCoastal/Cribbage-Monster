@@ -61,6 +61,7 @@ import PlayingCard from 'src/components/PlayingCard/PlayingCard';
 
 import useAuthContext from 'src/hooks/useAuthContext';
 import useGameContext from 'src/hooks/useGameContext';
+import useSound from 'use-sound';
 import { INITIAL_USER_STATS } from 'src/utils/constants';
 
 type PlayFieldProps = {
@@ -430,7 +431,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
                 {renderOpponentHand}
               </CardBox>
             </div>
-            <div className="rounded-full bg-gradient-to-br from-purple-500 to-purple-700 p-2 py-4">
+            <div className="rounded-full bg-gradient-to-br from-purple-500 to-purple-800 p-2 py-4">
               <CardBox
                 size={{ height: CardBoxHeight.MD, width: CardBoxWidth.MD_FOUR_HALF }}
                 maxCards={4}

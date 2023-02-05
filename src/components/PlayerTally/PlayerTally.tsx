@@ -145,16 +145,14 @@ const PlayerTally: FC<PlayerTallyProps> = ({
       // const animate = count === i + delay ? 'animate-text-grow' : '';
       if (key === 'totalPoints')
         return (
-          <li
-            key={key}
-            className={`relative inline text-2xl tracking-wide animate-item-${i} opacity-0`}>
+          <li key={key} className={`text-2xl tracking-wide animate-item-${i} opacity-0`}>
             <span>{key.slice(0, 5).toUpperCase() + ': '}</span>
             <span className={` font-semibold`}>{value}</span>
           </li>
         );
       else
         return (
-          <li key={key} className={`relative inline tracking-wide animate-item-${i} opacity-0`}>
+          <li key={key} className={`tracking-wide animate-item-${i} opacity-0`}>
             <span>{key.slice(0, 1).toUpperCase() + key.slice(1) + ' for '}</span>
             <span className={`font-semibold`}>{value}</span>
           </li>

@@ -29,7 +29,7 @@ const gameReducer = (state: GameState, action: GameReducerActions): GameState =>
         deckCut: payload.deckCut || null,
         turn: {
           cardsPlayed: payload?.turnTotals?.cardsPlayed || {},
-          cardTotal: payload.turnTotals.cardTotal
+          cardTotal: payload?.turnTotals?.cardTotal
         }
       };
 

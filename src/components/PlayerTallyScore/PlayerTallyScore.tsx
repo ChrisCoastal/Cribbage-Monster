@@ -19,9 +19,12 @@ const PlayerTallyScore: FC<PlayerTallyScoreProps> = ({ score }) => {
       });
     }
     if (renderScore < score.cur) {
-      const timeout = setTimeout(() => {
-        setRenderScore((prev) => prev + 1);
-      }, 120);
+      const timeout = setTimeout(
+        () => {
+          setRenderScore((prev) => prev + 1);
+        },
+        renderScore === score.prev ? 500 : 120
+      );
       return () => clearTimeout(timeout);
     }
   }, [renderScore, score.cur]);

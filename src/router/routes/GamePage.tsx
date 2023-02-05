@@ -122,6 +122,7 @@ const GamePage = () => {
       ...state,
       status: GameStatus.LAY_CRIB,
       handNum: state.handNum + 1,
+      dealer: pone,
       players: {
         player1: { ...gameState.players.player1, activePlayer: IsActive.ACTIVE },
         player2: { ...gameState.players.player2, activePlayer: IsActive.ACTIVE }
@@ -164,10 +165,14 @@ const GamePage = () => {
     const playerStatsRef = getUserStatsRef(uid);
     const playerStats: UserStats = await get(playerStatsRef).then((snapshot) => snapshot.val());
     const curDate = new Date(Date.now()).toDateString().replaceAll(' ', '_');
-    const { date, won, played } = playerStats.dailyGames.at(-1) ?? {
-      ...INITIAL_USER_STATS.dailyGames[0],
-      date: curDate
-    };
+    console.log(playerStats);
+
+    const { date, won, played } = playerStats.dailyGames
+      ? playerStats.dailyGames.at(-1)!
+      : {
+          ...INITIAL_USER_STATS.dailyGames[0],
+          date: curDate
+        };
 
     let dailyGames;
     if (date === curDate)
@@ -216,6 +221,7 @@ const GamePage = () => {
     <>
       {isTallyModal && (
         <TallyModal
+          title="Hand Tally"
           isVisible={isTallyModal}
           className={'w-full bg-stone-800 text-stone-50'}
           clickAway={false}>
@@ -229,7 +235,7 @@ const GamePage = () => {
           clickAway={false}>
           <GameWinner
             winner={winnerData()}
-            playerIsWinner={true}
+            playerIsWinner={playerWins}
             quitHandler={quitGameHandler}
             playHandler={playAgainHandler}
           />

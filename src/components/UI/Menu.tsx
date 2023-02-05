@@ -25,14 +25,12 @@ const Menu: FC<MenuProps> = ({ menuItems, className, children }) => {
   };
 
   function isScroll() {
+    console.log('scrolling');
+
     if (window.scrollY > scrollY.pos) setScrollY({ pos: window.scrollY, isDown: true });
     if (window.scrollY < scrollY.pos || window.scrollY === 0)
       setScrollY({ pos: window.scrollY, isDown: false });
   }
-
-  useEffect(() => {
-    if (!overlay) return;
-  }, [overlay]);
 
   useEffect(() => {
     if (!menuIsVisible) return;
@@ -51,7 +49,7 @@ const Menu: FC<MenuProps> = ({ menuItems, className, children }) => {
         easing: 'spring(0.5, 100, 10, 0)'
       });
     }
-  }, [menuIsVisible]);
+  }, [menuIsVisible, menuItems.length]);
 
   useEffect(() => {
     console.log(scrollY);
@@ -61,7 +59,7 @@ const Menu: FC<MenuProps> = ({ menuItems, className, children }) => {
       passive: true
     });
     return () => window.removeEventListener('scroll', isScroll);
-  }, [scrollY.pos, scrollY.isDown]);
+  }, [scrollY.pos]);
 
   const animatedMenuItems = menuItems.map((item, i) => {
     return (
@@ -95,7 +93,7 @@ const Menu: FC<MenuProps> = ({ menuItems, className, children }) => {
             <>
               <div className="relative" onClick={() => setMenuIsVisible(false)}>
                 <div className="menu absolute right-2 top-0 z-[1000] h-4 w-4 rotate-45 bg-stone-50"></div>
-                <div className="absolute right-0 z-[1000] mt-1 flex flex-col items-end overflow-hidden rounded-lg border border-stone-50/60 bg-stone-900 p-8 text-stone-50 shadow-lg">
+                <div className="absolute right-0 z-[1000] mt-1 flex flex-col items-end rounded-lg border border-stone-50/60 bg-stone-900 p-8 text-stone-50 shadow-lg">
                   <ul className="flex flex-col gap-6 py-2 px-2">{animatedMenuItems}</ul>
                 </div>
               </div>
