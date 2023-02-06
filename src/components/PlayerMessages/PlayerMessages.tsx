@@ -1,9 +1,18 @@
-import React from 'react';
+import React, { FC } from 'react';
+import { Player, PlayerPos } from 'src/@types';
 
-type Props = {};
+type PlayerMessagesProps = {
+  dealerName: string;
+  player: Player;
+  opponent: Player;
+  messages: string[];
+};
 
-const PlayerMessages = (props: Props) => {
-  return <div>PlayerMessages</div>;
+const PlayerMessages: FC<PlayerMessagesProps> = ({ dealerName, player, opponent, messages }) => {
+  const isDealer = player.displayName === dealerName;
+  const dealerArticle = isDealer ? 'our' : `${dealerName}'s`;
+
+  return <div></div>;
 };
 
 export default PlayerMessages;

@@ -17,7 +17,7 @@ const BoardPegHole: FC<BoardPegHoleProps> = ({ track, isPeg, className }) => {
   function renderPeg() {
     const pegBase = 'animate-move-peg ring-offset-1 ring-offset-stone-800 ring-1';
     const player1Color = 'bg-purple-500 ring-purple-500';
-    const player2Color = 'bg-emerald-500 ring-emerald-500';
+    const player2Color = 'bg-emerald-400 ring-emerald-400';
     // const player2Color = gameState.players.player2.color;
     if (track === PlayerPos.P_ONE && isPeg) return `${player1Color} ${pegBase}`;
     if (track === PlayerPos.P_TWO && isPeg) return `${player2Color} ${pegBase}`;

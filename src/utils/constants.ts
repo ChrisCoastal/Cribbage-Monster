@@ -75,6 +75,10 @@ export const INITIAL_GAME_STATE: GameState = {
   },
   crib: {},
   deckCut: { status: Status.INVALID, card: null },
+  pegging: {
+    player1: [],
+    player2: []
+  },
   score: {
     player1: {
       cur: 0,

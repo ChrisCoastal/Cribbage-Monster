@@ -133,6 +133,10 @@ const GamePage = () => {
       },
       deckCut: { status: Status.INVALID, card: deal.cut },
       crib: {},
+      pegging: {
+        player1: [],
+        player2: []
+      },
       tally: null,
       turnTotals: {
         cardsPlayed: {},

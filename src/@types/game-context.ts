@@ -40,15 +40,9 @@ export type UpdateGameAction = {
   payload: GameState;
 };
 
-export type HandTallyAction = {
-  type: GameReducerTypes.HAND_TALLY;
-  payload: { player1: TallyPoints; player2: TallyPoints; crib: TallyPoints };
-};
-
 export type GameReducerActions =
   | CreateGameAction
   | JoinPlayerAction
   | DealCardAction
   | PlayCardAction
-  | UpdateGameAction
-  | HandTallyAction;
+  | UpdateGameAction;

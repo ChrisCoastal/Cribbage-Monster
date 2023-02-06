@@ -12,6 +12,10 @@ module.exports = {
       '2xs': ['0.6rem', { lineHeight: '0.75rem', letterSpacing: '0.08em' }],
       ...defaultTheme.fontSize
     },
+    lineHeight: {
+      below: '0.75',
+      ...defaultTheme.lineHeight
+    },
     extend: {
       screens: {
         xs: '380px'

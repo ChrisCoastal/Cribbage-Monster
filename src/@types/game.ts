@@ -57,6 +57,13 @@ export type ScoreType = {
   prev: number;
 };
 
+export type PeggingType = {
+  fifteen: number;
+  run: number;
+  pairs: number;
+  go: number;
+};
+
 export type Tally = {
   displayName: string;
   avatar: string;
@@ -112,6 +119,10 @@ export type GameState = {
   };
   crib: CardsIndex;
   deckCut: Cut;
+  pegging: {
+    player1: PeggingType[];
+    player2: PeggingType[];
+  };
   score: {
     player1: ScoreType;
     player2: ScoreType;

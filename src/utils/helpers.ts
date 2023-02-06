@@ -83,6 +83,9 @@ export const getCardTotalRef = (gameId: GameId) =>
 
 export const getTallyRef = (gameId: GameId) => ref(rtdb, `games/${gameId}/tally`);
 
+export const getPlayerPeggingRef = (gameId: GameId, player: PlayerPos) =>
+  ref(rtdb, `games/${gameId}/pegging/${player}`);
+
 export const getScoreRef = (gameId: GameId) => ref(rtdb, `games/${gameId}/score`);
 
 export const getPlayerScoreRef = (gameId: GameId, player: PlayerPos) =>

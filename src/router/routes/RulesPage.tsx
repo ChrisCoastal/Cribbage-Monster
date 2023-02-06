@@ -1,10 +1,16 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+
 import Board from 'src/components/Board/Board';
 import Footer from 'src/components/Footer/Footer';
 import Heading from 'src/components/UI/Heading';
 import SubHeading from 'src/components/UI/SubHeading';
+import Button from 'src/components/UI/Button';
+
+import useAuthContext from 'src/hooks/useAuthContext';
 
 const RulesPage = () => {
+  const { userAuth } = useAuthContext();
   return (
     <>
       <div className="mt-32 mb-16 flex justify-center px-4 text-stone-50 sm:px-12">
@@ -118,8 +124,20 @@ const RulesPage = () => {
             A Jack in hand (or crib) that is the same suit as starter scores 1.
           </p>
           <SubHeading className="mt-8">Play Time!</SubHeading>
-          <p className="mb-2">Ready to play? Join with a free account </p>
-          <p className="mb-2">Fifteen. Each combination of cards that totals 15 2</p>
+          <p className="mb-2">
+            Your teeth look sharp! Go get &apos;em Monster! One of us. One of us.
+          </p>
+          <div className="mt-8 flex items-center justify-between">
+            <Button buttonSize="md" buttonColor="secondary">
+              {userAuth?.uid ? (
+                <Link to={`/dashboard/${userAuth?.uid}`}>Dashboard</Link>
+              ) : (
+                <Link to={'/signup'} className="">
+                  JOIN
+                </Link>
+              )}
+            </Button>
+          </div>
         </div>
       </div>
       <Footer />
