@@ -1,5 +1,6 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 import {
+  AvatarSize,
   CardBoxHeight,
   CardBoxWidth,
   CardOverlap,
@@ -7,7 +8,7 @@ import {
   CardSize,
   CardType,
   GameId,
-  GameStage,
+  GameStatus,
   IsActive,
   PlayerPos,
   ScoreType,
@@ -45,20 +46,25 @@ import {
   getTallyRef,
   isWinner,
   getUserStatsRef,
-  getCardValues
+  getCardValues,
+  getGameStatusRef,
+  scoreCap,
+  isHost,
+  getPlayerPeggingRef
 } from 'src/utils/helpers';
 
-import Opponent from 'src/components/Opponent/Opponent';
+import Player from 'src/components/Player/Player';
 import Board from 'src/components/Board/Board';
 import CardBox from 'src/components/CardBox/CardBox';
 import Crib from 'src/components/Crib/Crib';
 import Deck from 'src/components/Deck/Deck';
 import PlayingCard from 'src/components/PlayingCard/PlayingCard';
-import Score from 'src/components/Score/Score';
 
 import useAuthContext from 'src/hooks/useAuthContext';
 import useGameContext from 'src/hooks/useGameContext';
+import useSound from 'use-sound';
 import { INITIAL_USER_STATS } from 'src/utils/constants';
+import PlayerDisplay from '../PlayerDisplay/PlayerDisplay';
 
 type PlayFieldProps = {
   gameId: GameId;
@@ -73,32 +79,57 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
 
   const { player, opponent } = getPlayerOpponent(gameState.players, uid);
   const gameRef = getGameRef(gameId);
+  const gameStatusRef = getGameStatusRef(gameId);
   const gameScore = getGameTalliesRef(gameId);
   const playerHand = Object.values(gameState.playerCards[player].inHand);
   const opponentHand = Object.values(gameState.playerCards[opponent].inHand);
   const playerPlayed = Object.values(gameState.playerCards[player].played);
   const opponentPlayed = Object.values(gameState.playerCards[opponent].played);
   const numCardsPlayed = playerPlayed.length + opponentPlayed.length;
+  const numCardsCrib = getCardValues(gameState.crib).length;
   const renderPlayerHand = renderCards(playerHand, true, CardSize.LG, CardOverlap.TWO_THIRDS, true);
   const renderOpponentHand = renderCards(opponentHand, false, CardSize.SM, CardOverlap.TWO_THIRDS);
   const renderPlayerPlayed = renderCards(playerPlayed, true, CardSize.MD, CardOverlap.HALF);
   const renderOpponentPlayed = renderCards(opponentPlayed, true, CardSize.MD, CardOverlap.HALF);
   const dealer = gameState.dealer;
   const pone = getPone(dealer);
+  const playerWins = isWinner(gameState.score[player].cur);
+  const opponentWins = isWinner(gameState.score[opponent].cur);
+
+  // game status conditions
+  useEffect(() => {
+    if (isHost(player)) {
+      if (numCardsCrib === 4 && numCardsPlayed === 0 && gameState.deckCut.status === Status.VALID)
+        set(gameStatusRef, GameStatus.PONE_CUT);
+      if (numCardsPlayed === 8 && gameState.status !== GameStatus.TALLY)
+        set(gameStatusRef, GameStatus.TALLY);
+      if (playerWins || opponentWins) set(getGameStatusRef(gameId), GameStatus.WINNER);
+    }
+  }, [gameState.status, numCardsPlayed, numCardsCrib]);
 
   useEffect(() => {
-    if (!numCardsPlayed) return;
-    if (numCardsPlayed !== 8) return;
-    player === PlayerPos.P_ONE && tallyHand();
-  }, [numCardsPlayed]);
-
-  useEffect(() => {
-    if (gameState.stage === GameStage.COMPLETE) return;
-    if (gameState.score[player].cur >= 20) player === PlayerPos.P_ONE && endGame(player);
-    if (gameState.score[opponent].cur >= 20) player === PlayerPos.P_ONE && endGame(opponent);
-  }, [gameState.score, opponent, player]);
-
-  //TODO: should all refs be moved into an object?
+    const playersRef = getPlayersRef(gameId);
+    if (
+      !getCardValues(gameState.playerCards.player1.inHand).length &&
+      getCardValues(gameState.playerCards.player2.inHand).length &&
+      gameState.players.player2.activePlayer === IsActive.NOT_ACTIVE &&
+      gameState.players.player1.activePlayer === IsActive.ACTIVE
+    )
+      update(playersRef, {
+        player1: { ...gameState.players.player1, activePlayer: IsActive.NOT_ACTIVE },
+        player2: { ...gameState.players.player2, activePlayer: IsActive.ACTIVE }
+      });
+    if (
+      getCardValues(gameState.playerCards.player1.inHand).length &&
+      !getCardValues(gameState.playerCards.player2.inHand).length &&
+      gameState.players.player1.activePlayer === IsActive.NOT_ACTIVE &&
+      gameState.players.player2.activePlayer === IsActive.ACTIVE
+    )
+      update(playersRef, {
+        player1: { ...gameState.players.player1, activePlayer: IsActive.ACTIVE },
+        player2: { ...gameState.players.player2, activePlayer: IsActive.NOT_ACTIVE }
+      });
+  }, [gameState.playerCards.player1.inHand, gameState.playerCards.player2.inHand]);
 
   function addCardToCrib(card: CardType, callback?: () => void): void {
     const playerHandRef = getInHandRef(gameId, player);
@@ -143,71 +174,6 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     }
   }
 
-  function scoreHand() {
-    const playerHandTally = isScorePoints(
-      gameState.playerCards[player].played,
-      gameState.deckCut.card!
-    );
-    const opponentHandTally = isScorePoints(
-      gameState.playerCards[opponent].played,
-      gameState.deckCut.card!
-    );
-    const cribTally = isScorePoints(gameState.crib, gameState.deckCut.card!, 'crib');
-
-    return { playerHandTally, opponentHandTally, cribTally };
-  }
-
-  function getPlayerScores(
-    playerHandTally: TallyPoints,
-    opponentHandTally: TallyPoints,
-    cribTally: TallyPoints
-  ) {
-    const playerScore =
-      player === dealer
-        ? playerHandTally.totalPoints + cribTally.totalPoints
-        : playerHandTally.totalPoints;
-    const opponentScore =
-      opponent === dealer
-        ? opponentHandTally.totalPoints + cribTally.totalPoints
-        : opponentHandTally.totalPoints;
-
-    const updatedScore = {
-      [player]: {
-        cur: gameState.score[player].cur + playerScore,
-        prev: gameState.score[player].cur
-      },
-      [opponent]: {
-        cur: gameState.score[opponent].cur + opponentScore,
-        prev: gameState.score[opponent].cur
-      }
-    } as { player1: ScoreType; player2: ScoreType };
-
-    return updatedScore;
-  }
-
-  function tallyHand() {
-    const score = scoreHand();
-    const tally = {
-      [player]: score.playerHandTally,
-      [opponent]: score.opponentHandTally,
-      crib: score.cribTally
-    };
-    const updatedScore = getPlayerScores(
-      score.playerHandTally,
-      score.opponentHandTally,
-      score.cribTally
-    );
-    const winner = isWinner(updatedScore, dealer);
-    const tallyRef = getTallyRef(gameId);
-    const scoreRef = getScoreRef(gameId);
-    set(tallyRef, tally).then(() => {
-      // if the pone has won, dealer's score is not recorded (pone counts first)
-      winner === pone
-        ? update(scoreRef, { [pone]: updatedScore[pone] })
-        : update(scoreRef, updatedScore);
-    });
-  }
-
   function cutDeckHandler(cutStatus: Status) {
     const deckCutRef = getDeckRef(gameId);
     switch (cutStatus) {
@@ -227,6 +193,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
         )
           return;
         set(deckCutRef, { status: Status.COMPLETED, card: gameState.deckCut.card });
+        set(gameStatusRef, GameStatus.IS_CUT);
         if (jack) {
           const scoreRef = getScoreRef(gameId);
           update(scoreRef, {
@@ -301,15 +268,20 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
         gameState.turnTotals.cardTotal
       );
       set(cardTotalRef, updatedCardTotal);
-      const points = isPegPoints(
+      const { totalPoints, ...pointsPegging } = isPegPoints(
         targetCard,
         gameState.turnTotals,
         gameState.playerCards[player].inHand,
         gameState.playerCards[opponent].inHand
       );
       const playerScore = gameState.score[player].cur;
+      const playerPeggingRef = getPlayerPeggingRef(gameId, player);
+      const playerPegCardRef = push(playerPeggingRef);
       const playerScoreRef = getPlayerScoreRef(gameId, player);
-      points && set(playerScoreRef, { cur: playerScore + points, prev: playerScore });
+      if (totalPoints > 0) {
+        set(playerScoreRef, { cur: scoreCap(playerScore + totalPoints), prev: playerScore });
+        set(playerPegCardRef, { ...pointsPegging, totalPoints });
+      }
       if (
         expectGo(opponentHand, updatedCardTotal) &&
         !expectGo(playerHand, updatedCardTotal, targetCard)
@@ -347,48 +319,6 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     }, 1000);
   }
 
-  async function endGame(winner: PlayerPos) {
-    const gameRef = getGameRef(gameId);
-    update(gameRef, {
-      ...gameState,
-      stage: GameStage.COMPLETE,
-      players: {
-        [player]: { ...gameState.players[player], activePlayer: IsActive.NOT_ACTIVE },
-        [opponent]: { ...gameState.players[opponent], activePlayer: IsActive.NOT_ACTIVE }
-      }
-    });
-
-    updatePlayerStats(winner === player, gameState.players[player].id);
-    updatePlayerStats(winner === opponent, gameState.players[opponent].id);
-    console.log(`${winner} won!`);
-  }
-
-  async function updatePlayerStats(isWinner: boolean, uid: string) {
-    const playerStatsRef = getUserStatsRef(uid);
-    const playerStats: UserStats = await get(playerStatsRef).then((snapshot) => snapshot.val());
-    const curDate = new Date(Date.now()).toDateString().replaceAll(' ', '_');
-    const { date, won, played } = playerStats.dailyGames.at(-1) ?? {
-      ...INITIAL_USER_STATS.dailyGames[0],
-      date: curDate
-    };
-
-    let dailyGames;
-    if (date === curDate)
-      dailyGames = playerStats.dailyGames.splice(-1, 1, {
-        date: curDate,
-        won: isWinner ? won + 1 : won,
-        played: played + 1
-      });
-    if (date !== curDate)
-      dailyGames = playerStats.dailyGames.push({ date: curDate, won: isWinner ? 1 : 0, played: 1 });
-
-    const gamesWon = isWinner ? (playerStats?.gamesWon || 0) + 1 : playerStats?.gamesWon || 0;
-    const gamesPlayed = playerStats.gamesPlayed + 1;
-    const updatedPlayerStats = { gamesPlayed, gamesWon, dailyGames };
-
-    set(playerStatsRef, updatedPlayerStats);
-  }
-
   function renderCards(
     cards: CardType[] = [],
     faceUp: boolean,
@@ -410,39 +340,19 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     ));
   }
 
-  useEffect(() => {
-    const playersRef = getPlayersRef(gameId);
-    if (
-      !getCardValues(gameState.playerCards.player1.inHand).length &&
-      getCardValues(gameState.playerCards.player2.inHand).length &&
-      gameState.players.player2.activePlayer === IsActive.NOT_ACTIVE &&
-      gameState.players.player1.activePlayer === IsActive.ACTIVE
-    )
-      update(playersRef, {
-        player1: { ...gameState.players.player1, activePlayer: IsActive.NOT_ACTIVE },
-        player2: { ...gameState.players.player2, activePlayer: IsActive.ACTIVE }
-      });
-    if (
-      getCardValues(gameState.playerCards.player1.inHand).length &&
-      !getCardValues(gameState.playerCards.player2.inHand).length &&
-      gameState.players.player1.activePlayer === IsActive.NOT_ACTIVE &&
-      gameState.players.player2.activePlayer === IsActive.ACTIVE
-    )
-      update(playersRef, {
-        player1: { ...gameState.players.player1, activePlayer: IsActive.ACTIVE },
-        player2: { ...gameState.players.player2, activePlayer: IsActive.NOT_ACTIVE }
-      });
-  }, [gameState.playerCards.player1.inHand, gameState.playerCards.player2.inHand]);
-
   return (
-    <div className=" relative mt-24 scale-[0.85] items-center justify-items-center gap-11 px-4 sm:mt-32 sm:scale-100">
+    <div className="relative h-screen scale-[0.85] items-center justify-items-center gap-11 px-4 pt-6 sm:scale-100 sm:pt-20">
       <div className="flex flex-col items-center justify-center gap-4">
         <div className="flex justify-between gap-8">
           <div className="flex flex-col items-center justify-start gap-4">
             <div className="flex flex-col items-center justify-center">
-              <Opponent
+              <Player
+                playerPos={opponent}
                 displayName={gameState.players[opponent].displayName}
+                isDealer={opponent === dealer}
                 avatar={gameState.players[opponent].avatar}
+                isActive={gameState.players[opponent].activePlayer === IsActive.ACTIVE}
+                className="pb-1 md:pb-3"
               />
               <CardBox
                 size={{ height: CardBoxHeight.SM, width: CardBoxWidth.SM_SIX }}
@@ -451,7 +361,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
                 {renderOpponentHand}
               </CardBox>
             </div>
-            <div className="rounded-full bg-gradient-to-br from-purple-500 to-purple-700 p-2 py-4">
+            <div className="rounded-full bg-gradient-to-br from-purple-500 to-purple-800 p-2 py-4">
               <CardBox
                 size={{ height: CardBoxHeight.MD, width: CardBoxWidth.MD_FOUR_HALF }}
                 maxCards={4}
@@ -462,7 +372,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
 
               <div>
                 <div className="flex flex-col items-center gap-1 py-4">
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="my-2 grid grid-cols-2 gap-2">
                     <Deck
                       cutDeck={gameState.deckCut}
                       isPone={player === pone}
@@ -481,20 +391,16 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
               </CardBox>
             </div>
           </div>
-          <div className="flex flex-col items-center justify-center gap-1">
+          <div className="flex w-44 flex-col items-center justify-end">
             <Board />
-            <div className="border-1 rounded-md border border-stone-400 p-2 text-center text-stone-100">
-              <p className="font-bold">
+            <div className="text-center text-stone-50">
+              <p className="text-xl font-bold">
                 COUNT: {gameState.turnTotals.cardTotal} {go && 'GO!!'}
               </p>
-              <div className="w-36 rounded-md bg-stone-800 text-xs font-medium text-stone-100">
-                {gameState.players[player].activePlayer === IsActive.ACTIVE
-                  ? 'your turn'
-                  : `wait for opponent`.toUpperCase()}
-              </div>
             </div>
           </div>
         </div>
+        <PlayerDisplay />
         <div>
           <CardBox
             size={{ height: CardBoxHeight.LG, width: CardBoxWidth.LG_SIX }}

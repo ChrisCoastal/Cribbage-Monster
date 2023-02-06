@@ -46,10 +46,10 @@ const Carousel: FC<CarouselProps> = ({ className, auto = 10000 }) => {
     return (
       <li key={i} className={`absolute w-full ${slidePos[i]} object-cover`}>
         <Heading className={`absolute left-10 top-10 z-10 text-3xl ${animateTitle}`}>
-          $250K Prize
+          Huge Prizes!
         </Heading>
         <p
-          className={`absolute left-10 top-[14rem] z-10 text-4xl font-medium text-white ${animateText}`}>
+          className={`absolute left-10 top-[14rem] z-10 text-4xl font-medium text-stone-50 ${animateText}`}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi consequat ligula justo, sed
           pretium ligula tincidunt ac.
         </p>

@@ -5,11 +5,22 @@ import {
   PlayerPos,
   UserSettingsState,
   Status,
-  GameStage
+  GameStatus
 } from 'src/@types';
 
+// Dates
 export const MILLISEC_PER_DAY = 86400000;
 
+// Media Queries
+export const MEDIA_SIZE = {
+  sm: '(min-width: 576px)',
+  md: '(min-width: 768px)',
+  lg: '(min-width: 1024px)',
+  xl: '(min-width: 1280px)',
+  '2xl': '(min-width: 1536px)'
+};
+
+// Game
 export const HAND_SIZE = 6;
 
 export const NUM_SUITS = 4;
@@ -31,7 +42,7 @@ export const INITIAL_USER_SETTING: UserSettingsState = {
 
 export const INITIAL_GAME_STATE: GameState = {
   gameId: '',
-  stage: GameStage.NEW,
+  status: GameStatus.NEW,
   dealer: PlayerPos.P_ONE,
   handNum: 0,
   players: {
@@ -64,6 +75,10 @@ export const INITIAL_GAME_STATE: GameState = {
   },
   crib: {},
   deckCut: { status: Status.INVALID, card: null },
+  pegging: {
+    player1: [],
+    player2: []
+  },
   score: {
     player1: {
       cur: 0,

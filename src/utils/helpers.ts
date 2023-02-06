@@ -48,6 +48,8 @@ export const getPlayerPresenceRef = (gameId: GameId, playerPos: PlayerPos) =>
 // game
 export const getGameRef = (gameId: GameId) => ref(rtdb, `games/${gameId}`);
 
+export const getGameStatusRef = (gameId: GameId) => ref(rtdb, `games/${gameId}/status`);
+
 export const getActivePlayerRef = (gameId: GameId, player: PlayerPos) =>
   ref(rtdb, `games/${gameId}/players/${player}/activePlayer`);
 
@@ -81,6 +83,9 @@ export const getCardTotalRef = (gameId: GameId) =>
 
 export const getTallyRef = (gameId: GameId) => ref(rtdb, `games/${gameId}/tally`);
 
+export const getPlayerPeggingRef = (gameId: GameId, player: PlayerPos) =>
+  ref(rtdb, `games/${gameId}/pegging/${player}`);
+
 export const getScoreRef = (gameId: GameId) => ref(rtdb, `games/${gameId}/score`);
 
 export const getPlayerScoreRef = (gameId: GameId, player: PlayerPos) =>
@@ -96,7 +101,7 @@ export function getPlayerOpponent(
   userId: UserId
 ) {
   const player = players.player1.id === userId ? PlayerPos.P_ONE : PlayerPos.P_TWO;
-  const opponent = player === PlayerPos.P_ONE ? PlayerPos.P_TWO : PlayerPos.P_ONE;
+  const opponent = isHost(player) ? PlayerPos.P_TWO : PlayerPos.P_ONE;
 
   return { player, opponent };
 }
@@ -112,6 +117,10 @@ export function findPlayerPos(
   if (!players.player1.id.length || players.player1.id === uid) return PlayerPos.P_ONE;
   if (!players.player2.id.length || players.player2.id === uid) return PlayerPos.P_TWO;
   return null;
+}
+
+export function isHost(player: PlayerPos): boolean {
+  return player === PlayerPos.P_ONE;
 }
 
 // DEAL CARDS
@@ -266,9 +275,9 @@ export function isPegPoints(
   const fifteen = isPegFifteen(card.playValue, turnTotals.cardTotal);
   const run = isPegRun(card.faceValue, turnTotals.cardsPlayed);
   const go = opponentGo && playerGo ? isPegGo(card.playValue, turnTotals.cardTotal) : 0;
-  const points = pairs + fifteen + run + go;
+  const totalPoints = pairs + fifteen + run + go;
 
-  return points;
+  return { pairs, fifteen, run, go, totalPoints };
 }
 
 export function expectGo(hand: CardsIndex, cardTotal: number, cardPlayed?: CardType): boolean {
@@ -355,15 +364,12 @@ export function isPegRun(cardFaceValue: number, cardsPlayed: CardsIndex = {}) {
 }
 
 // SCORING
-export function isWinner(
-  score: { player1: ScoreType; player2: ScoreType },
-  dealer: PlayerPos
-): PlayerPos | null {
-  const pone = getPone(dealer);
-  // pone counts first
-  if (score[pone].cur >= 121) return pone;
-  if (score[dealer].cur >= 121) return dealer;
-  return null;
+export function isWinner(curScore: number): boolean {
+  return curScore >= 121;
+}
+
+export function scoreCap(curScore: number): number {
+  return Math.min(curScore, 121);
 }
 
 export function isScorePoints(hand: CardsIndex, cutCard: CardType, isCrib?: 'crib'): TallyPoints {

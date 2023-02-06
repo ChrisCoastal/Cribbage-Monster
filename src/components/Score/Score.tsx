@@ -17,7 +17,7 @@ type ScoreProps = {
 
 const Score: FC<ScoreProps> = ({ player, opponent }) => {
   return (
-    <div className="rounded-md border border-solid border-white p-2 text-white">
+    <div className="rounded-md border border-solid border-white p-2 text-stone-50">
       <div className="flex items-center gap-2 ">
         <h3 className="text-sm">{opponent.displayName}</h3>
         <p className="text-sm">

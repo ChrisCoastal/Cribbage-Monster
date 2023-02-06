@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { nanoid } from 'nanoid';
 
@@ -13,10 +13,16 @@ import useAuthContext from 'src/hooks/useAuthContext';
 import useGameContext from 'src/hooks/useGameContext';
 
 import Button from 'src/components/UI/Button';
+import ToolTip from 'src/components/UI/ToolTip';
 import useSettingsContext from 'src/hooks/useSettingsContext';
 import AddIcon from 'src/components/UI/icons/AddIcon/AddIcon';
 
-const CreateGame = () => {
+type CreateGameProps = {
+  className?: string;
+  children?: ReactNode;
+};
+
+const CreateGame: FC<CreateGameProps> = ({ className, children }) => {
   const { userAuth } = useAuthContext();
   const { userSettingsState } = useSettingsContext();
 
@@ -68,13 +74,9 @@ const CreateGame = () => {
   }
 
   return (
-    <Button
-      handler={createGameHandler}
-      className="text-2xl font-bold"
-      tooltip="create game"
-      buttonSize="circle">
-      <AddIcon height="36" width="36" />
-    </Button>
+    <button className={`${className}`} onClick={createGameHandler}>
+      {children}
+    </button>
   );
 };
 

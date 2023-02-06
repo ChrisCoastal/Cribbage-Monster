@@ -22,13 +22,19 @@ const Crib: FC<CribProps> = ({ cribCards }) => {
     />
   ));
 
+  const placeholder = (
+    <div className="col-span-3 flex items-center justify-center rounded-[8%] border border-solid border-stone-50/60 text-sm font-extralight tracking-wide text-stone-50">
+      {/* crib */}
+    </div>
+  );
+
   return (
     <>
       <CardBox
         size={{ height: CardBoxHeight.MD, width: CardBoxWidth.MD_ONE }}
         maxCards={0}
         overlap={CardOverlap.NONE}>
-        {renderCrib}
+        {renderCrib.length ? renderCrib : placeholder}
       </CardBox>
     </>
   );

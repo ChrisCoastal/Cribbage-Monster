@@ -13,7 +13,7 @@ const ErrorPage: FC = () => {
   console.error(error);
 
   return (
-    <div className="bg-black text-white">
+    <div className="bg-black text-stone-50">
       <h1>Oops!</h1>
       <p>Sorry, an unexpected error has occurred.</p>
       <p>

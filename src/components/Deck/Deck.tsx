@@ -3,6 +3,7 @@ import { CardSize, CardType, CardBoxHeight, CardBoxWidth, CardOverlap, Status } 
 
 import PlayingCard from 'src/components/PlayingCard/PlayingCard';
 import CardBox from 'src/components/CardBox/CardBox';
+import Button from '../UI/Button';
 
 type DeckProps = {
   cutDeck: { status: Status; card: CardType | null };
@@ -32,9 +33,13 @@ const Deck: FC<DeckProps> = ({ cutDeck, isPone, callback }) => {
   return (
     <div className="relative">
       {cutDeck.status === Status.VALID && isPone && (
-        <div className="pointer-events-none absolute top-1/4 left-1/2 z-30 flex h-10 w-10 -translate-x-1/2 animate-radiate items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-purple-800 text-sm font-bold text-white">
+        <Button
+          className=" absolute top-1/4 left-1/2 z-30 flex h-10 w-10 -translate-x-1/2 items-center justify-center text-sm font-bold text-stone-50"
+          buttonSize="circle"
+          buttonColor="secondary"
+          handler={clickDeckHandler}>
           CUT
-        </div>
+        </Button>
       )}
       <CardBox
         size={{ height: CardBoxHeight.MD, width: CardBoxWidth.MD_ONE }}

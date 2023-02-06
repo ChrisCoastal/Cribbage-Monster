@@ -8,8 +8,8 @@ type AvatarProps = {
 const Avatar: FC<AvatarProps> = ({ avatar, className }) => {
   return (
     <div
-      className={`${className} flex items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-purple-500 to-stone-900`}>
-      <p className={`pt-2`}>{avatar}</p>
+      className={`${className} flex items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-stone-700 to-stone-900`}>
+      <p className={`pointer-events-none pt-2`}>{avatar}</p>
     </div>
   );
 };

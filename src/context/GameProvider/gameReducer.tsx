@@ -27,25 +27,16 @@ const gameReducer = (state: GameState, action: GameReducerActions): GameState =>
         },
         crib: payload?.crib || {},
         deckCut: payload.deckCut || null,
+        pegging: {
+          player1: payload?.pegging?.player1 || [],
+          player2: payload?.pegging?.player2 || []
+        },
         turn: {
           cardsPlayed: payload?.turnTotals?.cardsPlayed || {},
-          cardTotal: payload.turnTotals.cardTotal
+          cardTotal: payload?.turnTotals?.cardTotal
         }
       };
 
-      return updatedState;
-    }
-
-    case GameReducerTypes.HAND_TALLY: {
-      const updatedState = {
-        ...state,
-        tally: {
-          ...state.tally,
-          player1: payload.player1,
-          player2: payload.player2,
-          crib: payload.crib
-        }
-      };
       return updatedState;
     }
 

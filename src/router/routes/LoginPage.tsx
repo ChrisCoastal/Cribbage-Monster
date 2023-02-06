@@ -39,11 +39,11 @@ const LoginPage = () => {
   }, [userAuth?.uid]);
 
   return (
-    <div className="relative flex h-screen items-center justify-center bg-cardbacks object-scale-down text-stone-100">
+    <div className="relative flex h-screen items-center justify-center bg-cardbacks object-scale-down text-stone-50">
       <div className="pointer-events-none absolute h-full w-full bg-gradient-to-br from-stone-900/70 to-stone-900/90 "></div>
-      <div className="relative z-10 w-80 animate-fade-up-delay-xs rounded-md bg-black/40 p-8 sm:w-96">
-        <h3 className="mb-3 text-lg font-semibold tracking-wider">LOGIN</h3>
-        <form onSubmit={submitHandler} className="mb-6">
+      <div className="relative z-10 w-80 animate-fade-up-delay-xs rounded-xl bg-stone-900/60 p-8 sm:w-96">
+        <h3 className="mb-6 text-lg font-semibold tracking-wider">LOGIN</h3>
+        <form onSubmit={submitHandler} className="mb-8">
           <ul className="flex flex-col gap-2">
             <li>
               <label htmlFor="email" className="mb-0.5 block text-sm">
@@ -70,7 +70,7 @@ const LoginPage = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </li>
-            <li className="mt-2 self-center">
+            <li className="mt-3 self-center">
               <Button buttonColor="secondary" type="submit">
                 Login
               </Button>
@@ -81,7 +81,7 @@ const LoginPage = () => {
           Don&apos;t have an account?
           <span
             tabIndex={0}
-            className="ml-1 cursor-pointer font-medium underline transition-all hover:text-emerald-300"
+            className="cursor-pointer p-2 text-lg font-medium underline transition-all hover:text-emerald-300 sm:text-base"
             onClick={() => navigate('/signup')}>
             Join
           </span>

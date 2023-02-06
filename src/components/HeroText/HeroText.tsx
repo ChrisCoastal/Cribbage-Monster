@@ -164,10 +164,10 @@ const Tail: FC<TailProps> = ({ height, width, color = '#fff', className }) => {
 
   // const tailLength = document.querySelector('.tailsvg') as SVGGeometryElement;
 
-  useEffect(() => {
-    if (!pathRef.current) return;
-    console.log(pathRef.current.getTotalLength());
-  }, [pathRef]);
+  // useEffect(() => {
+  //   if (!pathRef.current) return;
+  //   console.log(pathRef.current.getTotalLength());
+  // }, [pathRef]);
 
   useEffect(() => {
     const timeline = anime.timeline({
@@ -198,7 +198,7 @@ const Tail: FC<TailProps> = ({ height, width, color = '#fff', className }) => {
           value: topOpenPathD
         }
       ],
-      delay: 2200
+      delay: 900
     });
 
     timeline2.add(
