@@ -36,7 +36,7 @@ const GameWinner: FC<GameWinnerProps> = ({ playerIsWinner, winner, quitHandler, 
   };
 
   return (
-    <>
+    <div className="sm:w-[624px]">
       <Particles
         init={particlesInit}
         options={{
@@ -205,7 +205,7 @@ const GameWinner: FC<GameWinnerProps> = ({ playerIsWinner, winner, quitHandler, 
           Play Again
         </Button>
       </div>
-    </>
+    </div>
   );
 };
 

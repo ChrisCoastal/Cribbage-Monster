@@ -89,7 +89,6 @@ const GamePage = () => {
   useEffect(() => {
     if (gameState.status === GameStatus.TALLY && !isTallyModal) {
       console.log(isTallyModal, 'effect setting tally');
-
       tallyModalHandler(true);
     }
     if (gameState.status !== GameStatus.TALLY) {
@@ -114,18 +113,18 @@ const GamePage = () => {
     );
   }
 
-  async function dealHandler(newGame = false) {
+  async function dealHandler(newGame?: 'newGame') {
     if (!isHost(player)) return;
     const deal = dealHands();
-    const state = newGame ? INITIAL_GAME_STATE : gameState;
+    // const state = newGame ? INITIAL_GAME_STATE : gameState;
     const update: GameState = {
-      ...state,
+      ...gameState,
       status: GameStatus.LAY_CRIB,
-      handNum: state.handNum + 1,
+      handNum: newGame ? 0 : gameState.handNum + 1,
       dealer: pone,
       players: {
-        player1: { ...gameState.players.player1, activePlayer: IsActive.ACTIVE },
-        player2: { ...gameState.players.player2, activePlayer: IsActive.ACTIVE }
+        player1: { ...gameState.players.player1, activePlayer: IsActive.ACTIVE, playAgain: false },
+        player2: { ...gameState.players.player2, activePlayer: IsActive.ACTIVE, playAgain: false }
       },
       playerCards: {
         player1: { inHand: deal.hands.player1, played: {} },
@@ -136,6 +135,10 @@ const GamePage = () => {
       pegging: {
         player1: [],
         player2: []
+      },
+      score: {
+        player1: newGame ? { cur: 0, prev: -1 } : gameState.score.player1,
+        player2: newGame ? { cur: 0, prev: -1 } : gameState.score.player2
       },
       tally: null,
       turnTotals: {
@@ -158,10 +161,8 @@ const GamePage = () => {
         displayName: gameState.players[opponent].displayName
       };
     return {
-      // avatar: '',
-      // displayName: ''
-      avatar: gameState.players[player].avatar,
-      displayName: gameState.players[player].displayName
+      avatar: '',
+      displayName: ''
     };
   }
 
@@ -171,7 +172,7 @@ const GamePage = () => {
     const curDate = new Date(Date.now()).toDateString().replaceAll(' ', '_');
     console.log(playerStats);
 
-    const { date, won, played } = playerStats.dailyGames
+    const { date, won, played } = playerStats?.dailyGames
       ? playerStats.dailyGames.at(-1)!
       : {
           ...INITIAL_USER_STATS.dailyGames[0],
@@ -180,11 +181,15 @@ const GamePage = () => {
 
     let dailyGames;
     if (date === curDate)
-      dailyGames = playerStats.dailyGames.splice(-1, 1, {
-        date: curDate,
-        won: isWinner ? won + 1 : won,
-        played: played + 1
-      });
+      // FIXME: if there are no dailyGames returning undefined
+      dailyGames = playerStats?.dailyGames
+        ? playerStats.dailyGames.splice(-1, 1, {
+            date: curDate,
+            won: isWinner ? won + 1 : won,
+            played: played + 1
+          })
+        : { date, won, played };
+
     if (date !== curDate)
       dailyGames = playerStats.dailyGames.push({ date: curDate, won: isWinner ? 1 : 0, played: 1 });
 
@@ -201,14 +206,18 @@ const GamePage = () => {
   }
 
   function quitGameHandler() {
-    winModalHandler(false);
+    // winModalHandler(false);
     leaveGameHandler();
     navigate(`/dashboard/${uid}`);
   }
 
   function playAgainHandler() {
     winModalHandler(false);
-    dealHandler(true);
+    const playerRef = getPlayerRef(game.gameId, player);
+    console.log(game.players[opponent]?.playAgain);
+
+    if (game.players[opponent]?.playAgain) dealHandler('newGame');
+    else update(playerRef, { ...game.players[player], playAgain: true });
   }
 
   function leaveGameHandler() {
@@ -225,7 +234,7 @@ const GamePage = () => {
     <>
       {isTallyModal && (
         <TallyModal
-          title="Hand Tally"
+          title="ROUND TALLY"
           isVisible={isTallyModal}
           className={'w-full bg-stone-800 text-stone-50'}
           clickAway={false}>
@@ -248,12 +257,12 @@ const GamePage = () => {
       <div className="relative">
         <PlayField gameId={game.gameId} />
 
-        {canStartGame() && isHost(player) && (
+        {canStartGame() && (
           <Button
             handler={() => dealHandler()}
             buttonColor="secondary"
             buttonSize="lg"
-            className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-radiate">
+            className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 animate-radiate">
             START GAME
           </Button>
         )}

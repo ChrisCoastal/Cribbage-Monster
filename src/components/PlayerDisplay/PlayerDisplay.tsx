@@ -20,17 +20,29 @@ const PlayerDisplay = () => {
   const isDealer = player === dealer;
 
   useEffect(() => {
+    console.log('updating display status', gameState.status);
+
     updateStatusHandler(gameState.status);
   }, [gameState.status]);
 
   useEffect(() => {
+    console.log('pegging', gameState.pegging.player1.length, gameState.pegging.player2.length);
+
     updateStatusHandler(gameState.status);
   }, [gameState.pegging.player1.length, gameState.pegging.player2.length]);
 
   function updateStatusHandler(status: GameStatus) {
-    if (status === GameStatus.NEW) {
+    if (status === GameStatus.NEW && !gameState.players[opponent].displayName.length) {
       setMessages((prev) =>
         maxMessagesLength([`${gameState.players[player].avatar} Waiting for opponent...`, ...prev])
+      );
+    }
+    if (status === GameStatus.JOINED && gameState.players[opponent].displayName.length) {
+      setMessages((prev) =>
+        maxMessagesLength([
+          `${gameState.players[opponent].avatar} ${gameState.players[opponent].displayName} joined.`,
+          ...prev
+        ])
       );
     }
     if (status === GameStatus.LAY_CRIB) {
@@ -43,13 +55,18 @@ const PlayerDisplay = () => {
       setMessages((prev) => maxMessagesLength(['Okay! Cut the deck!', ...prev]));
     }
     if (status === GameStatus.IS_CUT) {
-      const dealerArticle = isDealer ? 'We' : `${gameState.players[dealer].displayName}`;
+      const poneArticle = !isDealer ? 'We' : `${gameState.players[opponent].displayName}`;
       setMessages((prev) =>
         maxMessagesLength([
-          ` cut the ${gameState.deckCut.card?.name} of ${gameState.deckCut.card?.suit}`,
+          `${poneArticle} cut the ${
+            gameState.deckCut.card?.name
+          } of ${gameState.deckCut.card?.suit.toLowerCase()}`,
           ...prev
         ])
       );
+    }
+    if (status === GameStatus.WINNER) {
+      setMessages([]);
     }
   }
 
@@ -69,12 +86,12 @@ const PlayerDisplay = () => {
   }
 
   function maxMessagesLength(messages: string[]) {
-    return messages.slice(-30);
+    return messages.slice(0, 30);
   }
 
   console.log(messages.length);
 
-  const renderMessages = messages.slice(-messagesNum).map((message) => (
+  const renderMessages = messages.slice(0, messagesNum).map((message) => (
     <li
       key={nanoid()}
       className="relative inline-block rounded-md bg-gradient-to-br from-emerald-300 to-emerald-500 py-0.5 px-2 text-xs text-stone-800">
@@ -91,7 +108,7 @@ const PlayerDisplay = () => {
         avatar={gameState.players[player].avatar}
         isActive={gameState.players[player].activePlayer === IsActive.ACTIVE}
       />
-      <div className="">
+      <div className="flex-shrink">
         <ul className="mt-1 flex max-h-20 flex-col-reverse gap-1 overflow-y-scroll sm:h-[6.2rem]">
           {/* <p className="w-40 animate-pulse rounded-md bg-stone-800 text-xs font-medium text-stone-50">
             {gameState.players[player].activePlayer === IsActive.ACTIVE

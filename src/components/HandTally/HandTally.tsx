@@ -80,7 +80,7 @@ const HandTally: FC<HandTallyProps> = ({ player, opponent, pone, dealer }) => {
     <div>
       <div className="relative overflow-hidden pt-2 sm:w-[26rem]">
         {tallyPoints && (
-          <div className={`animate-slide-in-out opacity-0`}>
+          <div>
             <PlayerTally
               cut={gameState.deckCut.card!}
               tally={tallyPoints}

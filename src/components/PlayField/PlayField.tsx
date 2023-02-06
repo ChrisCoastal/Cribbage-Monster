@@ -86,6 +86,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   const playerPlayed = Object.values(gameState.playerCards[player].played);
   const opponentPlayed = Object.values(gameState.playerCards[opponent].played);
   const numCardsPlayed = playerPlayed.length + opponentPlayed.length;
+  const numCardsCrib = getCardValues(gameState.crib).length;
   const renderPlayerHand = renderCards(playerHand, true, CardSize.LG, CardOverlap.TWO_THIRDS, true);
   const renderOpponentHand = renderCards(opponentHand, false, CardSize.SM, CardOverlap.TWO_THIRDS);
   const renderPlayerPlayed = renderCards(playerPlayed, true, CardSize.MD, CardOverlap.HALF);
@@ -96,15 +97,15 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   const opponentWins = isWinner(gameState.score[opponent].cur);
 
   // game status conditions
-  if (isHost(player)) {
-    getCardValues(gameState.crib).length === 4 &&
-      gameState.status !== GameStatus.PONE_CUT &&
-      set(gameStatusRef, GameStatus.PONE_CUT);
-    numCardsPlayed === 8 &&
-      gameState.status !== GameStatus.TALLY &&
-      set(gameStatusRef, GameStatus.TALLY);
-    (playerWins || opponentWins) && set(getGameStatusRef(gameId), GameStatus.WINNER);
-  }
+  useEffect(() => {
+    if (isHost(player)) {
+      if (numCardsCrib === 4 && numCardsPlayed === 0 && gameState.deckCut.status === Status.VALID)
+        set(gameStatusRef, GameStatus.PONE_CUT);
+      if (numCardsPlayed === 8 && gameState.status !== GameStatus.TALLY)
+        set(gameStatusRef, GameStatus.TALLY);
+      if (playerWins || opponentWins) set(getGameStatusRef(gameId), GameStatus.WINNER);
+    }
+  }, [gameState.status, numCardsPlayed, numCardsCrib]);
 
   useEffect(() => {
     const playersRef = getPlayersRef(gameId);
@@ -129,8 +130,6 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
         player2: { ...gameState.players.player2, activePlayer: IsActive.NOT_ACTIVE }
       });
   }, [gameState.playerCards.player1.inHand, gameState.playerCards.player2.inHand]);
-
-  //TODO: should all refs be moved into an object?
 
   function addCardToCrib(card: CardType, callback?: () => void): void {
     const playerHandRef = getInHandRef(gameId, player);
