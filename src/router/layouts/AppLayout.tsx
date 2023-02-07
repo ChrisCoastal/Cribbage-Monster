@@ -11,8 +11,8 @@ const AppLayout = () => {
         <main className="main">
           <Outlet />
         </main>
+        <ScrollRestoration />
       </div>
-      <ScrollRestoration />
     </>
   );
 };

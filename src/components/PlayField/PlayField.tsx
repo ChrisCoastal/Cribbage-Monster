@@ -101,6 +101,12 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     if (isHost(player)) {
       if (numCardsCrib === 4 && numCardsPlayed === 0 && gameState.deckCut.status === Status.VALID)
         set(gameStatusRef, GameStatus.PONE_CUT);
+      if (
+        gameState.deckCut.status === Status.COMPLETED &&
+        !gameState.turnTotals.cardsPlayed &&
+        gameState.status !== GameStatus.CARD_PLAY
+      )
+        set(gameStatusRef, GameStatus.CARD_PLAY);
       if (numCardsPlayed === 8 && gameState.status !== GameStatus.TALLY)
         set(gameStatusRef, GameStatus.TALLY);
       if (playerWins || opponentWins) set(getGameStatusRef(gameId), GameStatus.WINNER);
@@ -130,6 +136,34 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
         player2: { ...gameState.players.player2, activePlayer: IsActive.NOT_ACTIVE }
       });
   }, [gameState.playerCards.player1.inHand, gameState.playerCards.player2.inHand]);
+  // useEffect(() => {
+  //   const playersRef = getPlayersRef(gameId);
+  //   if (
+  //     playerHand.length &&
+  //     opponentHand.length &&
+  //     gameState.players.player2.activePlayer === IsActive.NOT_ACTIVE &&
+  //     gameState.players.player1.activePlayer === IsActive.ACTIVE
+  //   )
+  //     update(playersRef, {
+  //       player1: { ...gameState.players.player1, activePlayer: IsActive.NOT_ACTIVE },
+  //       player2: { ...gameState.players.player2, activePlayer: IsActive.ACTIVE }
+  //     });
+  //   if (
+  //     playerHand.length &&
+  //     opponentHand.length &&
+  //     gameState.players.player1.activePlayer === IsActive.NOT_ACTIVE &&
+  //     gameState.players.player2.activePlayer === IsActive.ACTIVE
+  //   )
+  //     update(playersRef, {
+  //       player1: { ...gameState.players.player1, activePlayer: IsActive.ACTIVE },
+  //       player2: { ...gameState.players.player2, activePlayer: IsActive.NOT_ACTIVE }
+  //     });
+  //   if (!playerHand.length && !opponentHand.length)
+  //     update(playersRef, {
+  //       player1: { ...gameState.players.player1, activePlayer: IsActive.NOT_ACTIVE },
+  //       player2: { ...gameState.players.player2, activePlayer: IsActive.NOT_ACTIVE }
+  //     });
+  // }, [playerHand.length, opponentHand.length]);
 
   function addCardToCrib(card: CardType, callback?: () => void): void {
     const playerHandRef = getInHandRef(gameId, player);
@@ -242,7 +276,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
 
   function resetCardTotal() {
     const turnRef = getTurnRef(gameId);
-    set(turnRef, { cardsPlayed: {}, cardTotal: 0 });
+    set(turnRef, { cardsPlayed: {}, cardTotal: 0 }).then(() => updateActivePlayer('toggle'));
   }
 
   function cardClickHandler(targetCard: CardType) {
@@ -268,19 +302,27 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
         gameState.turnTotals.cardTotal
       );
       set(cardTotalRef, updatedCardTotal);
-      const { totalPoints, ...pointsPegging } = isPegPoints(
+      const { totalPoints, ...pegDetail } = isPegPoints(
         targetCard,
         gameState.turnTotals,
         gameState.playerCards[player].inHand,
         gameState.playerCards[opponent].inHand
       );
+
       const playerScore = gameState.score[player].cur;
       const playerPeggingRef = getPlayerPeggingRef(gameId, player);
-      const playerPegCardRef = push(playerPeggingRef);
+      const newPeggingPointsRef = push(playerPeggingRef);
       const playerScoreRef = getPlayerScoreRef(gameId, player);
       if (totalPoints > 0) {
+        // const updates = {
+        //   ['/score/' + player]: { cur: scoreCap(playerScore + totalPoints), prev: playerScore },
+        //   ['/pegging/' + player + '/' + newPeggingPointsRef]: { ...pegDetail, totalPoints }
+        // };
+        // update(gameRef, updates);
         set(playerScoreRef, { cur: scoreCap(playerScore + totalPoints), prev: playerScore });
-        set(playerPegCardRef, { ...pointsPegging, totalPoints });
+        update(newPeggingPointsRef, { ...pegDetail, totalPoints }).then(() =>
+          console.log('set pegging points')
+        );
       }
       if (
         expectGo(opponentHand, updatedCardTotal) &&
@@ -293,14 +335,12 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
         !isLastCard(gameState.playerCards.player1.inHand, gameState.playerCards.player2.inHand)
       ) {
         renderGo(resetCardTotal);
-        updateActivePlayer('toggle');
       } else if (
         expectGo(opponentHand, updatedCardTotal) &&
         expectGo(playerHand, updatedCardTotal, targetCard) &&
         isLastCard(gameState.playerCards.player1.inHand, gameState.playerCards.player2.inHand)
       ) {
-        renderGo();
-        updateActivePlayer('toggle');
+        renderGo(() => updateActivePlayer('toggle'));
       } else {
         updateActivePlayer('toggle');
       }
@@ -313,7 +353,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
 
   function renderGo(callback?: () => void) {
     setGo(true);
-    const timer = setTimeout(() => {
+    setTimeout(() => {
       setGo(false);
       if (callback) callback();
     }, 1000);

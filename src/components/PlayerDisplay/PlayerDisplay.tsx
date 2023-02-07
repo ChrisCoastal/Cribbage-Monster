@@ -7,15 +7,18 @@ import useGameContext from 'src/hooks/useGameContext';
 import useAuthContext from 'src/hooks/useAuthContext';
 import { getPlayerOpponent } from 'src/utils/helpers';
 import { nanoid } from 'nanoid';
+import MessageTail from '../UI/icons/MessageTail/MessageTail';
+import anime from 'animejs';
 
 const PlayerDisplay = () => {
-  const [messagesNum, setMessagesNum] = useState<number>(8);
-  const [messages, setMessages] = useState<string[]>([]);
+  const [message, setMessage] = useState<string | null>(null);
   const { gameState } = useGameContext();
   const { userAuth } = useAuthContext();
   const uid = userAuth!.uid!;
 
   const { player, opponent } = getPlayerOpponent(gameState.players, uid);
+  const playerPegging = Object.values(gameState.pegging[player]);
+  const opponentPegging = Object.values(gameState.pegging[opponent]);
   const dealer = gameState.dealer;
   const isDealer = player === dealer;
 
@@ -26,81 +29,102 @@ const PlayerDisplay = () => {
   }, [gameState.status]);
 
   useEffect(() => {
-    console.log('pegging', gameState.pegging.player1.length, gameState.pegging.player2.length);
+    if (!playerPegging.length) return;
+    const { totalPoints, ...pegDetail } = playerPegging.at(-1)!;
+    console.log('pegging player', pegDetail);
 
-    updateStatusHandler(gameState.status);
-  }, [gameState.pegging.player1.length, gameState.pegging.player2.length]);
+    updatePeggingHandler(pegDetail, player);
+  }, [playerPegging.length]);
+
+  useEffect(() => {
+    if (!opponentPegging.length) return;
+    const { totalPoints, ...pegDetail } = opponentPegging.at(-1)!;
+    console.log('pegging opponent', pegDetail);
+
+    updatePeggingHandler(pegDetail, opponent);
+  }, [opponentPegging.length]);
 
   function updateStatusHandler(status: GameStatus) {
-    if (status === GameStatus.NEW && !gameState.players[opponent].displayName.length) {
-      setMessages((prev) =>
-        maxMessagesLength([`${gameState.players[player].avatar} Waiting for opponent...`, ...prev])
-      );
-    }
-    if (status === GameStatus.JOINED && gameState.players[opponent].displayName.length) {
-      setMessages((prev) =>
-        maxMessagesLength([
-          `${gameState.players[opponent].avatar} ${gameState.players[opponent].displayName} joined.`,
-          ...prev
-        ])
-      );
-    }
-    if (status === GameStatus.LAY_CRIB) {
-      const dealerArticle = isDealer ? 'our' : `${gameState.players[dealer].displayName}'s`;
-      setMessages((prev) =>
-        maxMessagesLength([`It's ${dealerArticle} crib! Pick 2 cards to add.`, ...prev])
-      );
-    }
-    if (status === GameStatus.PONE_CUT && !isDealer) {
-      setMessages((prev) => maxMessagesLength(['Okay! Cut the deck!', ...prev]));
-    }
-    if (status === GameStatus.IS_CUT) {
-      const poneArticle = !isDealer ? 'We' : `${gameState.players[opponent].displayName}`;
-      setMessages((prev) =>
-        maxMessagesLength([
+    switch (status) {
+      case GameStatus.NEW: {
+        if (!gameState.players[opponent].displayName.length) {
+          setMessage(`${gameState.players[player].avatar} Waiting for opponent...`);
+        }
+        break;
+      }
+
+      case GameStatus.JOINED: {
+        if (gameState.players[opponent].displayName.length) {
+          setMessage(
+            `${gameState.players[opponent].avatar} ${gameState.players[opponent].displayName} joined.`
+          );
+        }
+
+        break;
+      }
+
+      case GameStatus.LAY_CRIB: {
+        const dealerArticle = isDealer ? 'our' : `${gameState.players[dealer].displayName}'s`;
+        const newMessage = `It's ${dealerArticle} crib! Pick 2 cards to add.`;
+        if (message === newMessage) return;
+        setMessage(`It's ${dealerArticle} crib! Pick 2 cards to add.`);
+        break;
+      }
+
+      case GameStatus.PONE_CUT: {
+        if (!isDealer) {
+          setMessage('Okay! Cut the deck!');
+        }
+        break;
+      }
+
+      case GameStatus.IS_CUT: {
+        const poneArticle = !isDealer ? 'We' : `${gameState.players[opponent].displayName}`;
+        setMessage(
           `${poneArticle} cut the ${
             gameState.deckCut.card?.name
-          } of ${gameState.deckCut.card?.suit.toLowerCase()}`,
-          ...prev
-        ])
-      );
-    }
-    if (status === GameStatus.WINNER) {
-      setMessages([]);
+          } of ${gameState.deckCut.card?.suit.toLowerCase()}`
+        );
+        break;
+      }
+
+      case GameStatus.WINNER: {
+        setMessage(null);
+        break;
+      }
+      default:
+        break;
     }
   }
 
-  function updatePeggingHandler(points: PeggingType, playerPos: PlayerPos) {
+  function updatePeggingHandler(points: Omit<PeggingType, 'totalPoints'>, playerPos: PlayerPos) {
+    console.log('pegging', points, playerPos);
+
     const pegText: string[] = [];
     for (const point in points) {
       const pointKey = point as keyof typeof points;
-      if (points[pointKey] === 0) return;
-      else pegText.push(`${pointKey === 'go' ? 'a go' : pointKey} for ${point}`);
+      console.log('key', points[pointKey]);
+      if (points[pointKey] === 0) null;
+      else pegText.push(`${pointKey === 'go' ? 'a GO' : pointKey} for ${points[pointKey]}`);
     }
-    setMessages((prev) =>
-      maxMessagesLength([
-        ...prev,
-        `${gameState.players[playerPos].avatar} pegged ${pegText.join(' and ')}! `
-      ])
-    );
+    console.log(pegText);
+
+    setMessage(`${gameState.players[playerPos].avatar} pegged ${pegText.join(' and ')}! `);
   }
 
-  function maxMessagesLength(messages: string[]) {
-    return messages.slice(0, 30);
-  }
-
-  console.log(messages.length);
-
-  const renderMessages = messages.slice(0, messagesNum).map((message) => (
-    <li
-      key={nanoid()}
-      className="relative inline-block rounded-md bg-gradient-to-br from-emerald-300 to-emerald-500 py-0.5 px-2 text-xs text-stone-800">
-      {message}
-    </li>
-  ));
+  useEffect(() => {
+    anime({
+      targets: '.animate-message',
+      scale: [0, 1.05, 1],
+      translateX: [-8, 0],
+      translateY: [8, 0],
+      duration: 600,
+      easing: 'spring(0.5, 100, 10, 0)'
+    });
+  }, [message]);
 
   return (
-    <div className="flex w-[376px] gap-4 rounded-md border border-stone-400 py-2 pl-10 pr-2 sm:py-2">
+    <div className="flex w-[376px] gap-4 rounded-md border border-stone-400 py-2 pl-10 pr-4 sm:py-2">
       <Player
         playerPos={player}
         isDealer={isDealer}
@@ -109,21 +133,15 @@ const PlayerDisplay = () => {
         isActive={gameState.players[player].activePlayer === IsActive.ACTIVE}
       />
       <div className="flex-shrink">
-        <ul className="mt-1 flex max-h-20 flex-col-reverse gap-1 overflow-y-scroll sm:h-[6.2rem]">
-          {/* <p className="w-40 animate-pulse rounded-md bg-stone-800 text-xs font-medium text-stone-50">
-            {gameState.players[player].activePlayer === IsActive.ACTIVE
-              ? `YOUR TURN`
-              : `WAITING FOR OPPONENT...`}
-          </p> */}
-          {/* <li className="relative inline-block rounded-md bg-gradient-to-br from-emerald-300 to-emerald-500 py-0.5 px-2 text-xs text-stone-800 sm:text-sm sm:leading-tight">
-            <span className="leading-below">
-              {dealer ? `It's ${dealerArticle} crib. Pick 2 cards to add.` : 'no dealer'}
-            </span>
-          </li>
-          <li className="relative inline-block rounded-md bg-gradient-to-br from-emerald-300 to-emerald-500 py-0.5 px-2 text-xs text-stone-800 sm:text-sm sm:leading-tight">
-            Another message
-          </li> */}
-          {renderMessages}
+        <ul className="mt-1 flex max-h-20 flex-col-reverse gap-1 sm:max-h-[6.5rem]">
+          {message && (
+            <li
+              key={nanoid()}
+              className="animate-message relative inline-block origin-bottom-left rounded-md bg-gradient-to-br from-emerald-300 to-emerald-500 py-0.5 px-2 text-sm text-stone-800">
+              {message}
+              <MessageTail height="36" width="36" className="absolute left-0" />
+            </li>
+          )}
         </ul>
       </div>
     </div>

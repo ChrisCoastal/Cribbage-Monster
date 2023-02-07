@@ -164,17 +164,23 @@ const PlayerTally: FC<PlayerTallyProps> = ({
 
   const renderScores = renderScoreItems(tally.points);
   const totalScore = renderScores.splice(-1, 1);
-  // const renderOpponentScores = renderScoreItems(opponent.playerPos, opponent.points);
-  // const opponentTotal = renderOpponentScores.splice(-1, 1);
-  // const renderCribScores = renderScoreItems(dealer, crib.points);
-  // const cribTotal = renderCribScores.splice(-1, 1);
+  const scoreColor =
+    // tally.playerPos === PlayerPos.P_ONE ? 'border-purple-500' : 'border-emerald-400';
+    // const playerOutline =
+    tally.playerPos === PlayerPos.P_ONE ? 'outline-purple-500' : 'outline-emerald-400';
 
   return (
     <>
       <Card padding="md" className={`${className}`}>
         <div className="flex items-center gap-2">
-          <div>
+          {/* <div>
             <Avatar className={AvatarSize.MD} avatar={tally.avatar} />
+          </div> */}
+          <div className={`relative `}>
+            <span
+              className={`absolute h-20 w-20 ${scoreColor} animate-pulse rounded-full outline outline-2
+              `}></span>
+            <Avatar className={`${AvatarSize.LG}`} avatar={tally.avatar} />
           </div>
           <h3 className="text-lg tracking-wide">
             {tally.displayName}&apos;s {handType}
@@ -200,7 +206,8 @@ const PlayerTally: FC<PlayerTallyProps> = ({
             <ul className="mb-6 flex flex-col gap-3 text-sm">{renderScores}</ul>
             <ul className="flex items-center justify-between text-2xl font-bold">{totalScore} </ul>
           </div>
-          <div className="mr-4 flex h-24 w-24 items-center justify-center rounded-full border border-purple-500 text-xl font-bold">
+          <div
+            className={`mr-4 flex h-24 w-24 items-center justify-center rounded-full outline-double outline-1 ${scoreColor} text-xl font-bold`}>
             <PlayerTallyScore score={score} />
           </div>
         </div>

@@ -68,6 +68,7 @@ export type PeggingType = {
   run: number;
   pairs: number;
   go: number;
+  totalPoints: number;
 };
 
 export type Tally = {

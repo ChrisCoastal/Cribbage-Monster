@@ -79,7 +79,7 @@ module.exports = {
         },
         radiate: {
           '0%': { boxShadow: '0 0 0 0.25rem rgba(52, 211, 153,0)' },
-          '100%': { boxShadow: '0 0 0.3rem 0.2rem rgba(52, 211, 153,0.3)' }
+          '100%': { boxShadow: '0 0 0.3rem 0.3rem rgba(52, 211, 153,0.5)' }
         },
         grow: {
           '0%, 100%': { transform: 'scale(1)' },

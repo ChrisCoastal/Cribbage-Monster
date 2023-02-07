@@ -97,7 +97,7 @@ const DashboardPage = () => {
   return (
     <div className="relative">
       <div className="absolute h-screen min-h-full w-full bg-cardbacks bg-cover opacity-[0.03]"></div>
-      <div className="relative mx-auto grid w-full auto-rows-fr justify-items-center gap-4 rounded-lg px-2 pt-24 pb-16 md:w-[50rem] md:grid-cols-2 xl:w-[75rem] xl:grid-cols-3">
+      <div className="relative mx-auto grid w-full auto-rows-fr justify-items-center gap-4 rounded-lg px-4 pt-24 pb-16 md:w-[50rem] md:grid-cols-2 xl:w-[75rem] xl:grid-cols-3">
         <Card padding="md">
           <div className="flex flex-col items-center gap-4">
             {isUser ? (
