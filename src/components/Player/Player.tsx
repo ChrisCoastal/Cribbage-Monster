@@ -24,9 +24,9 @@ const Player: FC<PlayerProps> = ({
     playerPos === PlayerPos.P_ONE
       ? 'bg-purple-500 ring-purple-500'
       : 'bg-emerald-400 ring-emerald-400';
-
   const playerOutline =
     playerPos === PlayerPos.P_ONE ? 'outline-purple-500' : 'outline-emerald-400';
+
   return (
     <div className={`${className} col-start-3 flex flex-col items-center justify-center gap-1`}>
       <div className="flex items-center gap-1">
@@ -34,7 +34,7 @@ const Player: FC<PlayerProps> = ({
           <>
             <span
               className={`${playerColor} h-2 w-2 rounded-full ring-1 ring-offset-1 ring-offset-stone-800`}></span>
-            <p className="text-sm font-medium text-stone-50">{displayName || 'k'}</p>
+            <p className="text-sm font-medium text-stone-50">{displayName}</p>
           </>
         ) : (
           <p className="text-sm font-medium text-stone-800">{displayName || 'no player'}</p>

@@ -88,8 +88,11 @@ const GamePage = () => {
 
   useEffect(() => {
     if (gameState.status === GameStatus.TALLY && !isTallyModal) {
-      console.log(isTallyModal, 'effect setting tally');
-      tallyModalHandler(true);
+      const tallyTimer = setTimeout(() => {
+        tallyModalHandler(true);
+      }, 2000);
+
+      return () => clearTimeout(tallyTimer);
     }
     if (gameState.status !== GameStatus.TALLY) {
       tallyModalHandler(false);
@@ -109,12 +112,12 @@ const GamePage = () => {
       Boolean(gameState.players.player1.displayName.length) &&
       Boolean(gameState.players.player2.displayName.length) &&
       !gameState.handNum &&
-      !Object.keys(gameState.playerCards.player1.inHand).length
+      Boolean(gameState.status === GameStatus.JOINED)
     );
   }
 
   async function dealHandler(newGame?: 'newGame') {
-    if (!isHost(player)) return;
+    if (!isHost(player) && !newGame) return;
     const deal = dealHands();
     // const state = newGame ? INITIAL_GAME_STATE : gameState;
     const update: GameState = {
@@ -234,7 +237,7 @@ const GamePage = () => {
     <>
       {isTallyModal && (
         <TallyModal
-          title="ROUND TALLY"
+          title={`ROUND TALLY | Hand ${gameState.handNum}`}
           isVisible={isTallyModal}
           className={'w-full bg-stone-800 text-stone-50'}
           clickAway={false}>
@@ -259,7 +262,7 @@ const GamePage = () => {
 
         {canStartGame() && (
           <Button
-            handler={() => dealHandler()}
+            handler={() => dealHandler('newGame')}
             buttonColor="secondary"
             buttonSize="lg"
             className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 animate-radiate">
