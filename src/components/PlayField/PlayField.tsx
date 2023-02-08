@@ -392,7 +392,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
                 isDealer={opponent === dealer}
                 avatar={gameState.players[opponent].avatar}
                 isActive={gameState.players[opponent].activePlayer === IsActive.ACTIVE}
-                className="pb-1 md:pb-3"
+                className="pb-3"
               />
               <CardBox
                 size={{ height: CardBoxHeight.SM, width: CardBoxWidth.SM_SIX }}

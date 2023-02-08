@@ -17,6 +17,8 @@ const PlayerDisplay = () => {
   const uid = userAuth!.uid!;
 
   const { player, opponent } = getPlayerOpponent(gameState.players, uid);
+  const playerHand = Object.values(gameState.playerCards[player].inHand);
+  const opponentHand = Object.values(gameState.playerCards[opponent].inHand);
   const playerPegging = Object.values(gameState.pegging[player]);
   const opponentPegging = Object.values(gameState.pegging[opponent]);
   const dealer = gameState.dealer;
@@ -24,24 +26,36 @@ const PlayerDisplay = () => {
 
   useEffect(() => {
     console.log('updating display status', gameState.status);
-
     updateStatusHandler(gameState.status);
   }, [gameState.status]);
 
   useEffect(() => {
-    if (!playerPegging.length) return;
-    const { totalPoints, ...pegDetail } = playerPegging.at(-1)!;
-    console.log('pegging player', pegDetail);
+    if (
+      gameState.players[player].activePlayer === IsActive.NOT_ACTIVE &&
+      message === "👋 Hey! It's our turn to play a card."
+    )
+      setMessage('Phewf! I was almost 😴.');
+    if (gameState.players[player].activePlayer === IsActive.NOT_ACTIVE) return;
+    const timer = setTimeout(() => {
+      setMessage("👋 Hey! It's our turn to play a card.");
+    }, 18000);
+    return () => clearTimeout(timer);
+  }, [gameState.players[player].activePlayer, gameState.players[opponent].activePlayer]);
 
-    updatePeggingHandler(pegDetail, player);
+  useEffect(() => {
+    if (!playerPegging.length) return;
+    const pegging = playerPegging.at(-1)!;
+    console.log('pegging player', pegging);
+
+    updatePeggingHandler(pegging, player);
   }, [playerPegging.length]);
 
   useEffect(() => {
     if (!opponentPegging.length) return;
-    const { totalPoints, ...pegDetail } = opponentPegging.at(-1)!;
-    console.log('pegging opponent', pegDetail);
+    const pegging = opponentPegging.at(-1)!;
+    console.log('pegging opponent', pegging);
 
-    updatePeggingHandler(pegDetail, opponent);
+    updatePeggingHandler(pegging, opponent);
   }, [opponentPegging.length]);
 
   function updateStatusHandler(status: GameStatus) {
@@ -75,6 +89,9 @@ const PlayerDisplay = () => {
         if (!isDealer) {
           setMessage('Okay! Cut the deck!');
         }
+        if (isDealer) {
+          setMessage(`Nice choice! ${gameState.players[opponent].avatar} is cutting the deck!`);
+        }
         break;
       }
 
@@ -83,7 +100,7 @@ const PlayerDisplay = () => {
         setMessage(
           `${poneArticle} cut the ${
             gameState.deckCut.card?.name
-          } of ${gameState.deckCut.card?.suit.toLowerCase()}`
+          } of ${gameState.deckCut.card?.suit.toLowerCase()}.`
         );
         break;
       }
@@ -97,19 +114,25 @@ const PlayerDisplay = () => {
     }
   }
 
-  function updatePeggingHandler(points: Omit<PeggingType, 'totalPoints'>, playerPos: PlayerPos) {
-    console.log('pegging', points, playerPos);
-
+  function updatePeggingHandler(pegging: PeggingType, playerPos: PlayerPos) {
+    console.log('pegging', pegging, playerPos);
+    const { totalPoints, ...points } = pegging;
     const pegText: string[] = [];
+
     for (const point in points) {
       const pointKey = point as keyof typeof points;
       console.log('key', points[pointKey]);
       if (points[pointKey] === 0) null;
       else pegText.push(`${pointKey === 'go' ? 'a GO' : pointKey} for ${points[pointKey]}`);
     }
-    console.log(pegText);
 
-    setMessage(`${gameState.players[playerPos].avatar} pegged ${pegText.join(' and ')}! `);
+    const isPlayer = playerPos === player;
+    const playerArticle = isPlayer ? 'We' : `${gameState.players[opponent].displayName}`;
+    setMessage(
+      `${playerArticle} pegged ${pegText.join(' and ')}${
+        isPlayer ? '! ' + gameState.players[playerPos].avatar + '🎉' : '.'
+      }`
+    );
   }
 
   useEffect(() => {

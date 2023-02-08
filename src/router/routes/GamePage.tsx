@@ -90,7 +90,7 @@ const GamePage = () => {
     if (gameState.status === GameStatus.TALLY && !isTallyModal) {
       const tallyTimer = setTimeout(() => {
         tallyModalHandler(true);
-      }, 1500);
+      }, 2000);
 
       return () => clearTimeout(tallyTimer);
     }
@@ -237,7 +237,7 @@ const GamePage = () => {
     <>
       {isTallyModal && (
         <TallyModal
-          title="ROUND TALLY"
+          title={`ROUND TALLY | Hand ${gameState.handNum}`}
           isVisible={isTallyModal}
           className={'w-full bg-stone-800 text-stone-50'}
           clickAway={false}>
