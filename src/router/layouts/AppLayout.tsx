@@ -2,6 +2,7 @@ import Nav from 'src/components/Nav/Nav';
 import ScrollRestoration from 'src/router/scroll/ScrollRestoration';
 import { Outlet } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import Footer from 'src/components/Footer/Footer';
 
 const AppLayout = () => {
   // const [scrollY, setScrollY] = useState({ pos: 0, isDown: false });
@@ -23,13 +24,16 @@ const AppLayout = () => {
 
   return (
     <>
-      <div className="relative overflow-x-hidden bg-stone-800" id="container">
-        <div id="overlay-root"></div>
-        <Nav />
-        <main className="main">
-          <Outlet />
-        </main>
-        <ScrollRestoration />
+      <div className="relative min-h-screen overflow-hidden bg-stone-800">
+        <div id="container" className="pb-12">
+          <div id="overlay-root"></div>
+          <Nav />
+          <main className="main">
+            <Outlet />
+          </main>
+          <ScrollRestoration />
+        </div>
+        <div id="footer" className="relative"></div>
       </div>
     </>
   );

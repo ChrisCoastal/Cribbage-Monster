@@ -8,9 +8,13 @@ import useAuthContext from 'src/hooks/useAuthContext';
 
 import HeroText from 'src/components/HeroText/HeroText';
 import Button from 'src/components/UI/Button';
+import PlayButton from 'src/components/UI/PlayButton';
 
 import ZSection from 'src/components/HomeItems/ZSection/ZSection';
 import Footer from 'src/components/Footer/Footer';
+import SkillSection from 'src/components/HomeItems/SkillSection/SkillSection';
+import MessagesSection from 'src/components/HomeItems/MessagesSection/MessagesSection';
+import ProgressSection from 'src/components/HomeItems/ProgressSection/ProgressSection';
 
 const HomePage = () => {
   const { userAuth } = useAuthContext();
@@ -36,16 +40,13 @@ const HomePage = () => {
               aria-label="Are you a Monster?"
             />
           </div>
-          <Button
-            className="self-start justify-self-center lg:self-end"
-            buttonSize="md"
-            buttonColor="secondary"
-            handler={playHandler}>
-            PLAY NOW
-          </Button>
+          <PlayButton className="self-start justify-self-center lg:self-end" />
         </section>
       </div>
+      <SkillSection />
       <ZSection />
+      <ProgressSection />
+      <MessagesSection />
       <Footer />
     </div>
   );

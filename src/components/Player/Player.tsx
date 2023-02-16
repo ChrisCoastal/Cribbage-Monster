@@ -37,7 +37,7 @@ const Player: FC<PlayerProps> = ({
             <p className="text-sm font-medium text-stone-50">{displayName}</p>
           </>
         ) : (
-          <p className="text-sm font-medium text-stone-800">{displayName || 'no player'}</p>
+          <span className="h-5"></span>
         )}
       </div>
       <div className={`relative `}>

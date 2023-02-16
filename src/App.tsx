@@ -61,7 +61,7 @@ const router = createBrowserRouter([
 
 function App() {
   const { userAuth } = useAuthContext();
-  const { userSettingsState, dispatchSettings } = useSettingsContext();
+  const { dispatchSettings } = useSettingsContext();
   const uid = userAuth?.uid;
 
   // presence if app is open

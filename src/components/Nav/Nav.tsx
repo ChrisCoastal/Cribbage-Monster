@@ -6,8 +6,9 @@ import { AvatarSize } from 'src/@types';
 import useAuthContext from 'src/hooks/useAuthContext';
 import useSettingsContext from 'src/hooks/useSettingsContext';
 import useFirebaseAuth from 'src/hooks/useFirebaseAuth';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Button from 'src/components/UI/Button';
+import Logo from 'src/components/Logo/Logo';
 import Avatar from 'src/components/Avatar/Avatar';
 import CreateGame from 'src/components/CreateGame/CreateGame';
 import MenuIcon from 'src/components/UI/icons/MenuIcon/MenuIcon';
@@ -15,6 +16,7 @@ import Menu from 'src/components/UI/Menu';
 
 const Nav = () => {
   const navigate = useNavigate();
+  const params = useParams();
 
   const { userAuth } = useAuthContext();
   const { userSettingsState } = useSettingsContext();
@@ -28,11 +30,9 @@ const Nav = () => {
       setScrollY({ pos: window.scrollY, isDown: false });
   }
 
-  const navPos = scrollY.isDown ? '-top-16' : 'top-0 ';
+  const navPos = scrollY.isDown && !params.gameId ? '-top-16' : 'top-0 ';
 
   useEffect(() => {
-    console.log('scrolling');
-
     window.addEventListener('scroll', isScroll, { passive: true });
     return () => window.removeEventListener('scroll', isScroll);
   }, [scrollY.pos]);
@@ -44,16 +44,24 @@ const Nav = () => {
         <p className="text-sm">{userSettingsState.displayName}</p>
       </span>
     </li>,
-    <li key={2} className="tracking-wide md:text-base">
+    <li
+      key={2}
+      className="tracking-wide transition-all duration-200 hover:text-emerald-300 md:text-base">
       <Link to={`/`}>Home</Link>
     </li>,
     <li key={1}>
-      <CreateGame className="tracking-wide md:text-base">Create Game</CreateGame>
+      <CreateGame className="tracking-wide transition-all duration-200 hover:text-emerald-300 md:text-base">
+        Create Game
+      </CreateGame>
     </li>,
-    <li key={2} className="tracking-wide md:text-base">
+    <li
+      key={2}
+      className="tracking-wide transition-all duration-200 hover:text-emerald-300 md:text-base">
       <Link to={`/dashboard/${userAuth?.uid}`}>Dashboard</Link>
     </li>,
-    <li key={4} className="tracking-wide md:text-base">
+    <li
+      key={4}
+      className="tracking-wide transition-all duration-200 hover:text-emerald-300 md:text-base">
       <Link to={'/rules'}>Rules</Link>
     </li>,
     <li key={5} className="flex w-full items-center">
@@ -66,13 +74,19 @@ const Nav = () => {
     </li>
   ];
   const unAuthNavItems = [
-    <li key={2} className="tracking-wide md:text-base">
+    <li
+      key={2}
+      className="tracking-wide transition-all duration-200 hover:text-emerald-300 md:text-base">
       <Link to={`/`}>Home</Link>
     </li>,
-    <li key={6} className="tracking-wide md:text-base">
+    <li
+      key={6}
+      className="tracking-wide transition-all duration-200 hover:text-emerald-300 md:text-base">
       <Link to={'/login'}>Login</Link>
     </li>,
-    <li key={7} className="tracking-wide md:text-base">
+    <li
+      key={7}
+      className="tracking-wide transition-all duration-200 hover:text-emerald-300 md:text-base">
       <Link to={'/rules'}>Rules</Link>
     </li>,
     <li key={8}>
@@ -88,14 +102,22 @@ const Nav = () => {
   return (
     <nav
       className={`${navPos} fixed z-40 flex h-16 w-full items-center justify-between bg-stone-900 px-4 text-stone-50 shadow-lg transition-all sm:px-12`}>
-      <Link to={'/'}>
-        <h1 className="cursor-pointer font-molle text-xl md:text-2xl lg:text-3xl">
-          Cribbage Monster
-        </h1>
-      </Link>
       <div>
-        <Menu menuItems={navItems}>
-          <MenuIcon height="30" width="30" />
+        <Link to={'/'}>
+          <Logo
+            height="40"
+            width="120"
+            className=" transition-all duration-200 hover:fill-emerald-300"
+          />
+        </Link>
+      </div>
+      <div>
+        <Menu menuItems={navItems} scrollY={scrollY}>
+          <MenuIcon
+            height="30"
+            width="30"
+            className=" transition-all duration-200 hover:fill-emerald-300"
+          />
         </Menu>
       </div>
     </nav>
