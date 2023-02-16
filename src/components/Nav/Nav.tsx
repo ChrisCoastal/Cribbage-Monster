@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import useScrollY from 'src/hooks/useScrollY';
 
 import { AvatarSize } from 'src/@types';
 
 import useAuthContext from 'src/hooks/useAuthContext';
 import useSettingsContext from 'src/hooks/useSettingsContext';
 import useFirebaseAuth from 'src/hooks/useFirebaseAuth';
-import { useNavigate, useParams } from 'react-router-dom';
 import Button from 'src/components/UI/Button';
 import Logo from 'src/components/Logo/Logo';
 import Avatar from 'src/components/Avatar/Avatar';
@@ -17,25 +17,14 @@ import Menu from 'src/components/UI/Menu';
 const Nav = () => {
   const navigate = useNavigate();
   const params = useParams();
+  const scrollY = useScrollY();
 
   const { userAuth } = useAuthContext();
   const { userSettingsState } = useSettingsContext();
   const { logoutUser } = useFirebaseAuth();
 
-  const [scrollY, setScrollY] = useState({ pos: 0, isDown: false });
-
-  function isScroll() {
-    if (window.scrollY > scrollY.pos) setScrollY({ pos: window.scrollY, isDown: true });
-    if (window.scrollY < scrollY.pos || window.scrollY === 0)
-      setScrollY({ pos: window.scrollY, isDown: false });
-  }
-
-  const navPos = scrollY.isDown && !params.gameId ? '-top-16' : 'top-0 ';
-
-  useEffect(() => {
-    window.addEventListener('scroll', isScroll, { passive: true });
-    return () => window.removeEventListener('scroll', isScroll);
-  }, [scrollY.pos]);
+  const isGame = params.gameId;
+  const navPos = scrollY.isDown && !isGame ? '-top-16' : 'top-0 ';
 
   const authNavItems = [
     <li key={0} className="border-b px-4 pb-4 tracking-wide md:text-base">
@@ -101,7 +90,9 @@ const Nav = () => {
 
   return (
     <nav
-      className={`${navPos} fixed z-40 flex h-16 w-full items-center justify-between bg-stone-900 px-4 text-stone-50 shadow-lg transition-all sm:px-12`}>
+      className={`${navPos} ${
+        !isGame ? 'fixed' : ''
+      } z-40 flex h-16 w-full items-center justify-between bg-stone-900 px-4 text-stone-50 shadow-lg transition-all sm:px-8 md:px-12`}>
       <div>
         <Link to={'/'}>
           <Logo
