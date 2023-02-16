@@ -54,7 +54,7 @@ const Menu: FC<MenuProps> = ({ menuItems, scrollY, className, children }) => {
 
   useEffect(() => {
     // console.log(scrollY);
-    if (scrollY.isDown) setMenuIsVisible(false);
+    setMenuIsVisible(false);
 
     // window.addEventListener('scroll', isScroll, {
     //   passive: true
@@ -80,7 +80,8 @@ const Menu: FC<MenuProps> = ({ menuItems, scrollY, className, children }) => {
         ? createPortal(
             <div
               className="menu absolute right-0 z-[1000] flex h-screen w-screen flex-col items-center overflow-hidden bg-stone-800 px-4 text-2xl font-medium text-stone-50"
-              onClick={() => setMenuIsVisible(false)}>
+              onClick={() => setMenuIsVisible(false)}
+              style={{ top: scrollY.pos }}>
               <div className="flex h-16 items-center self-end pb-2">
                 <button onClick={() => toggleMenuHandler}>
                   <CloseIcon height="30" width="30" className=" fill-stone-100" />

@@ -24,7 +24,8 @@ const Nav = () => {
   const { logoutUser } = useFirebaseAuth();
 
   const isGame = params.gameId;
-  const navPos = scrollY.isDown && !isGame ? '-top-16' : 'top-0 ';
+  const navIsVisible = scrollY.isDown && scrollY.pos > 140 && !isGame;
+  const navPos = navIsVisible ? '-top-16' : 'top-0';
 
   const authNavItems = [
     <li key={0} className="border-b px-4 pb-4 tracking-wide md:text-base">
@@ -92,7 +93,7 @@ const Nav = () => {
     <nav
       className={`${navPos} ${
         !isGame ? 'fixed' : ''
-      } z-40 flex h-16 w-full items-center justify-between bg-stone-900 px-4 text-stone-50 shadow-lg transition-all sm:px-8 md:px-12`}>
+      } z-40 flex h-16 w-full items-center justify-between bg-stone-900 px-4 text-stone-50 shadow-lg transition-all duration-500 sm:px-8 md:px-12`}>
       <div>
         <Link to={'/'}>
           <Logo
