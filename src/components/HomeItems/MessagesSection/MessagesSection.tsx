@@ -17,8 +17,8 @@ const MessagesSection = () => {
   const animate = isIntersect ? 'opacity-1 translate-y-0' : 'opacity-0 translate-y-12';
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <h3 className="text-4xl font-bold text-stone-50 sm:text-6xl lg:text-7xl">
+    <div className="flex flex-col items-center justify-center pb-36">
+      <h3 className="mb-4 text-4xl font-bold text-stone-50 sm:text-6xl lg:text-7xl">
         Nothing to be afraid of.
       </h3>
       <p className="text-stone-50">
@@ -29,17 +29,17 @@ const MessagesSection = () => {
           <Player
             playerPos={PlayerPos.P_ONE}
             isDealer={false}
-            displayName={'Monster'}
+            displayName={'A. Monster'}
             avatar={'🧟‍♀️'}
             isActive={false}
           />
           <div className="flex-shrink">
             <ul className="mt-1 flex max-h-20 flex-col-reverse gap-1 sm:max-h-[6.5rem]">
               {message && (
-                <li className="animate-message relative inline-block origin-bottom-left rounded-md bg-gradient-to-br from-emerald-300 to-emerald-500 py-0.5 px-2 text-sm text-stone-800">
+                <li className="relative inline-block origin-bottom-left rounded-md bg-gradient-to-br from-emerald-300 to-emerald-500 py-0.5 px-2 text-sm text-stone-800">
                   {/* {message} */}
 
-                  <p>Hey! Let&apos;s play a game!</p>
+                  <p>Okay, can we play cards now?</p>
                   <MessageTail height="36" width="36" className="absolute left-0" />
                 </li>
               )}

@@ -16,6 +16,8 @@ import Footer from 'src/components/Footer/Footer';
 import SkillSection from 'src/components/HomeItems/SkillSection/SkillSection';
 import MessagesSection from 'src/components/HomeItems/MessagesSection/MessagesSection';
 import ProgressSection from 'src/components/HomeItems/ProgressSection/ProgressSection';
+import UsersSection from 'src/components/HomeItems/UsersSection/UsersSection';
+import ClassicSection from 'src/components/HomeItems/ClassicSection/ClassicSection';
 
 const HomePage = () => {
   const { userAuth } = useAuthContext();
@@ -29,6 +31,8 @@ const HomePage = () => {
   return (
     <div className="bg-stone-900">
       <Hero />
+      <ClassicSection />
+      <UsersSection />
       <SkillSection />
       {/* <ZSection /> */}
       <ProgressSection />
