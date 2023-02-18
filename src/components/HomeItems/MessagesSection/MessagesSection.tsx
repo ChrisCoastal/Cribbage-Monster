@@ -3,6 +3,8 @@ import { PlayerPos } from 'src/@types';
 import Player from 'src/components/Player/Player';
 import MessageTail from 'src/components/UI/icons/MessageTail/MessageTail';
 import Button from 'src/components/UI/Button';
+import line from 'src/assets/line.svg';
+import downArrow1 from 'src/assets/arrow-down-1-green.svg';
 
 import useMediaQuery from 'src/hooks/useMediaQuery';
 import { MEDIA_SIZE } from 'src/utils/constants';
@@ -18,8 +20,19 @@ const MessagesSection = () => {
 
   return (
     <div className="flex flex-col items-center justify-center pb-36">
-      <h3 className="mb-4 text-4xl font-bold text-stone-50 sm:text-6xl lg:text-7xl">
-        Nothing to be afraid of.
+      <h3 className="mb-4 text-center  text-5xl font-bold text-stone-50 sm:text-6xl lg:text-7xl">
+        <span className="relative inline-block">
+          Nothing
+          <div
+            className={`absolute -top-24 flex w-48 -rotate-3 gap-1 text-right font-annie text-2xl leading-tight tracking-wider text-stone-50 transition-all duration-500 lg:-top-12 lg:left-16 lg:w-auto`}>
+            <img src={downArrow1} width="72px" className="scale-x-[-1] lg:translate-y-1" />
+            <h3 className="whitespace-nowrap font-annie text-3xl text-emerald-300">
+              Almost nothing
+            </h3>
+          </div>
+          <img src={line} alt="line" className="absolute top-1/2 w-full scale-105" />
+        </span>{' '}
+        to be afraid of.
       </h3>
       <div className="flex justify-between gap-4">
         <div className="w-36">

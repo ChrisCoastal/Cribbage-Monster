@@ -31,13 +31,13 @@ const ProgressSection = () => {
   }, []);
 
   return (
-    <section className="mb-56 flex flex-col items-center justify-center">
+    <section className=" mb-48 flex flex-col items-center justify-center bg-gradient-to-br from-stone-900 to-stone-800 py-56">
       <div className="mx-16 w-[80%] place-content-center [perspective:900px] lg:mx-0 lg:grid lg:grid-cols-5 lg:grid-rows-1 lg:gap-8 xl:w-[66rem]">
-        <div className="relative my-auto mx-auto mb-24 flex aspect-square flex-col items-center justify-center rounded-full p-16 sm:max-w-[400px] lg:col-span-2 lg:col-start-1 lg:row-start-1 lg:mb-0">
-          <h3 className="relative z-30 mb-2 text-4xl font-bold text-stone-900 lg:text-3xl xl:mb-4 xl:text-4xl">
+        <div className="relative my-auto mx-auto mb-28 flex aspect-square flex-col items-center justify-center rounded-full p-16 sm:max-w-[400px] lg:col-span-2 lg:col-start-1 lg:row-start-1 lg:mb-0">
+          <h3 className="relative z-30 ml-4 mb-2 text-4xl font-bold text-stone-900 lg:text-3xl xl:mb-4 xl:text-4xl">
             Light up the shadows!
           </h3>
-          <p className="relative z-30 text-lg font-medium text-stone-900 sm:text-base xl:text-lg">
+          <p className="text-md relative z-30 ml-4 font-medium text-stone-900 xl:text-xl xl:leading-tight">
             Get insight into your play with game analysis, stat tracking, strategy guides, and more.
           </p>
           <div

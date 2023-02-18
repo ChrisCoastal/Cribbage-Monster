@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import useMediaQuery from 'src/hooks/useMediaQuery';
 
 import DashView from 'src/assets/dash-view.jpg';
-import GameView from 'src/assets/game-view.jpg';
+import GameView from 'src/assets/game-view-partial.jpg';
 
 import useIntersectionObserver from 'src/hooks/useIntersectionObserver';
 import downArrow1 from 'src/assets/arrow-down-1.svg';
@@ -33,16 +33,22 @@ const ClassicSection = () => {
 
   return (
     <section className="mb-36 flex flex-col items-center justify-center">
-      <h3 className="mb-4 text-3xl font-bold text-stone-50 sm:text-5xl lg:text-5xl">
-        Classic game.
-      </h3>
-      <h3 className="mb-4 text-3xl font-bold text-stone-50 sm:text-5xl lg:text-5xl">
-        Scary good competition.
-      </h3>
-      <p className="text-stone-50">Don&apos;t hide under the bed.</p>
-      <div className="mx-4 overflow-hidden rounded-xl">
+      <div className="mb-8 text-center">
+        <h3 className="text-5xl font-bold text-stone-50 sm:text-6xl">Classic game.</h3>
+        <h3 className="mb-4 text-center text-5xl font-bold text-stone-50 sm:text-6xl">
+          Scary good fun.
+        </h3>
+      </div>
+      <div className="mx-4 mb-12 overflow-hidden rounded-xl">
         <img src={GameView} alt="Game View" />
         {/* <img src={mobileApp} alt="Game View" /> */}
+      </div>
+      <div className="flex w-[60rem] justify-between gap-12 text-stone-50">
+        {/* <div className="flex-1 rounded-lg bg-stone-800 p-8">
+          Free to play online with friends or monsters unknown. Make fifteens, runs, and sets to
+          strike fear into your opponents.
+        </div>
+        <div className="flex-1 rounded-lg bg-stone-800 p-8">Not</div> */}
       </div>
     </section>
   );

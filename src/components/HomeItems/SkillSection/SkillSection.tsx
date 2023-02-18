@@ -51,12 +51,6 @@ const SkillSection = () => {
 
   useEffect(() => {
     if (!isIntersect) return;
-    // if (!message.text.length)
-    //   setMessage((prev) => ({
-    //     text: messages[prev.index],
-    //     index: prev.index + 1 < messages.length ? prev.index + 1 : 0
-    //   }));
-    const tick = !message.text.length ? 500 : 2000 + Math.random() * 3000;
     const interval = setInterval(() => {
       anime({
         targets: '.animate-message',
@@ -75,7 +69,7 @@ const SkillSection = () => {
         text: messages[prev.index],
         index: prev.index + 1 < messages.length ? prev.index + 1 : 0
       }));
-    }, tick);
+    }, 3600);
 
     return () => clearInterval(interval);
   }, [isIntersect, message.text]);
@@ -94,14 +88,14 @@ const SkillSection = () => {
   return (
     <div
       ref={containerRef}
-      className="relative mb-56 bg-emerald-300 bg-gradient-to-br from-emerald-300 to-emerald-400 py-28 ">
+      className="relative bg-emerald-300 bg-gradient-to-br from-emerald-300 to-emerald-400 py-36">
       {/* <Teeth className="absolute" style={{ top: -80 }} /> */}
       {/* <Teeth className="absolute -bottom-36 rotate-180" /> */}
       <div className="mx-8 flex flex-col items-center text-center">
         <h3 className="text-5xl font-bold text-stone-900 sm:text-6xl lg:text-7xl">
           Sharp teeth not required.
         </h3>
-        <div className="mt-6 flex w-48 -translate-y-4 rotate-2 items-baseline sm:w-auto sm:pl-[40%]">
+        <div className="mt-3 flex w-48 -translate-y-4 rotate-2 items-baseline sm:w-auto sm:pl-[40%]">
           <img src={downArrow1} className="rotate-180 stroke-stone-900" />
           <h4 className="-translate-y-2 font-annie text-3xl font-bold">but they are recommended</h4>
         </div>
@@ -127,7 +121,9 @@ const SkillSection = () => {
           {/* <div className={`${animate} transition-all duration-700`}> */}
           <div
             className={`border-1 rounded-lg border-stone-900 bg-stone-800 p-4 text-left shadow-xl`}>
-            <div ref={avatarRef} className="flex w-[80vw] gap-4 py-2 pl-10 pr-4 sm:py-2">
+            <div
+              ref={avatarRef}
+              className="flex w-[80vw] gap-4 py-2 pl-10 pr-4 sm:w-[374px] sm:py-2">
               <Player
                 playerPos={PlayerPos.P_ONE}
                 isDealer={false}

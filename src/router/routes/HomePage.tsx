@@ -32,7 +32,7 @@ const HomePage = () => {
     <div className="bg-stone-900">
       <Hero />
       <ClassicSection />
-      <UsersSection />
+      {/* <UsersSection /> */}
       <SkillSection />
       {/* <ZSection /> */}
       <ProgressSection />
