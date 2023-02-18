@@ -140,10 +140,13 @@ const PlayerDisplay = () => {
   useEffect(() => {
     anime({
       targets: '.animate-message',
-      scale: [0, 1.05, 1],
+      scale: [
+        { value: 0, duration: 0 },
+        { value: 1.05, duration: 200 },
+        { value: 1, duration: 200 }
+      ],
       translateX: [-8, 0],
       translateY: [8, 0],
-      duration: 600,
       easing: 'spring(0.5, 100, 10, 0)'
     });
   }, [message]);

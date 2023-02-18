@@ -21,9 +21,19 @@ const MessagesSection = () => {
       <h3 className="mb-4 text-4xl font-bold text-stone-50 sm:text-6xl lg:text-7xl">
         Nothing to be afraid of.
       </h3>
-      <p className="text-stone-50">
-        You&apos;re not alone and that is a good thing! Get monster in game advice and pointers.
-      </p>
+      <div className="flex justify-between gap-4">
+        <div className="w-36">
+          <p className="text-stone-50">
+            You&apos;re not alone and that is a good thing! Get monster in game advice and pointers.
+          </p>
+        </div>
+        <div className="w-36">
+          <p className="text-stone-50">Free to join and play!</p>
+        </div>
+        <div className="w-36">
+          <p className="text-stone-50">Play with friends or stranger sorts.</p>
+        </div>
+      </div>
       <div className={`${animate} transition-all duration-700`}>
         <div ref={avatarRef} className="flex w-[376px] gap-4 py-2 pl-10 pr-4 sm:py-2">
           <Player

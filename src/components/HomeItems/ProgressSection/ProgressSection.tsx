@@ -31,7 +31,7 @@ const ProgressSection = () => {
   }, []);
 
   return (
-    <section className="mb-36 flex flex-col items-center justify-center">
+    <section className="mb-56 flex flex-col items-center justify-center">
       <div className="mx-16 w-[80%] place-content-center [perspective:900px] lg:mx-0 lg:grid lg:grid-cols-5 lg:grid-rows-1 lg:gap-8 xl:w-[66rem]">
         <div className="relative my-auto mx-auto mb-24 flex aspect-square flex-col items-center justify-center rounded-full p-16 sm:max-w-[400px] lg:col-span-2 lg:col-start-1 lg:row-start-1 lg:mb-0">
           <h3 className="relative z-30 mb-2 text-4xl font-bold text-stone-900 lg:text-3xl xl:mb-4 xl:text-4xl">
@@ -60,7 +60,7 @@ const ProgressSection = () => {
             <img src={downArrow2} width="36px" className=" translate-y-3" />
           </div>
           <div
-            className={`${detailsVisible} absolute left-24 -bottom-12 flex rotate-3 gap-1 font-annie text-xl tracking-wider text-stone-50 transition-all duration-500`}>
+            className={`${detailsVisible} absolute left-24 -bottom-16 flex rotate-3 gap-1 font-annie text-xl tracking-wider text-stone-50 transition-all duration-500 sm:-bottom-12`}>
             <img src={downArrow1} width="36px" className="-translate-y-3 rotate-180" />
             join tournaments and leagues
           </div>

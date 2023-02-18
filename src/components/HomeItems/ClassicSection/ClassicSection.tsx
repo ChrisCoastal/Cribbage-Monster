@@ -7,6 +7,7 @@ import GameView from 'src/assets/game-view.jpg';
 import useIntersectionObserver from 'src/hooks/useIntersectionObserver';
 import downArrow1 from 'src/assets/arrow-down-1.svg';
 import downArrow2 from 'src/assets/arrow-down-2.svg';
+import mobileApp from 'src/assets/mobile-app.png';
 
 import { MEDIA_SIZE } from 'src/utils/constants';
 
@@ -33,13 +34,15 @@ const ClassicSection = () => {
   return (
     <section className="mb-36 flex flex-col items-center justify-center">
       <h3 className="mb-4 text-3xl font-bold text-stone-50 sm:text-5xl lg:text-5xl">
-        Classic game...
+        Classic game.
       </h3>
-      <p className="text-stone-50">
-        You&apos;re not alone and that is a good thing! Get monster in game advice and pointers.
-      </p>
-      <div>
+      <h3 className="mb-4 text-3xl font-bold text-stone-50 sm:text-5xl lg:text-5xl">
+        Scary good competition.
+      </h3>
+      <p className="text-stone-50">Don&apos;t hide under the bed.</p>
+      <div className="mx-4 overflow-hidden rounded-xl">
         <img src={GameView} alt="Game View" />
+        {/* <img src={mobileApp} alt="Game View" /> */}
       </div>
     </section>
   );
