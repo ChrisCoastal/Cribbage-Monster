@@ -69,10 +69,10 @@ const SkillSection = () => {
         text: messages[prev.index],
         index: prev.index + 1 < messages.length ? prev.index + 1 : 0
       }));
-    }, 3600);
+    }, 3600 * message.index);
 
     return () => clearInterval(interval);
-  }, [isIntersect, message.text]);
+  }, [isIntersect, message.text, message.index]);
 
   // useEffect(() => {
   //   anime({
@@ -97,7 +97,7 @@ const SkillSection = () => {
         </h3>
         <div className="mt-3 flex w-48 -translate-y-4 rotate-2 items-baseline sm:w-auto sm:pl-[40%]">
           <img src={downArrow1} className="rotate-180 stroke-stone-900" />
-          <h4 className="-translate-y-2 font-annie text-3xl font-bold">but they are recommended</h4>
+          <h4 className="-translate-y-2 font-annie text-3xl font-bold">but are recommended</h4>
         </div>
         <div className="mx-8 flex flex-col-reverse items-center justify-between gap-4 md:flex-row">
           <div className="rounded-md p-4 text-left text-stone-900">
