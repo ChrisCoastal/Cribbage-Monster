@@ -55,7 +55,7 @@ const MessagesSection = () => {
   );
 
   return (
-    <div className="flex flex-col items-center justify-center pb-36">
+    <div className="flex flex-col items-center justify-center pb-36 pt-48">
       <h3 className="mb-4 w-72 text-center text-5xl font-bold text-stone-50 sm:text-6xl md:w-auto lg:text-7xl">
         <span ref={textRef} className="relative inline-block">
           Nothing
