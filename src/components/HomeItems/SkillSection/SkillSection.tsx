@@ -36,7 +36,7 @@ const SkillSection = () => {
   });
 
   const avatarRef = useRef<HTMLDivElement>(null);
-  const isIntersect = useIntersectionObserver(containerRef, { threshold: 1 });
+  const isIntersect = useIntersectionObserver(containerRef);
   const animate = isIntersect ? 'opacity-1 translate-y-0' : 'opacity-0 translate-y-12';
   console.log(isIntersect);
   // const windowWidth = window.innerWidth;

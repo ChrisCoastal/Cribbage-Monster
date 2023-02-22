@@ -14,7 +14,6 @@ type AvatarPickerProps = {
 };
 
 const AvatarPicker: FC<AvatarPickerProps> = ({ selection, setSelection, userAvatar }) => {
-  // const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
   const { userSettingsState, dispatchSettings } = useSettingsContext();
 
   function changeAvatarHandler(avatar: string) {

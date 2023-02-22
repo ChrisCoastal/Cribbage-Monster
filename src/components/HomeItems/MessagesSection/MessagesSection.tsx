@@ -1,26 +1,19 @@
-import React, { useState, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { PlayerPos } from 'src/@types';
-import Player from 'src/components/Player/Player';
-import MessageTail from 'src/components/UI/icons/MessageTail/MessageTail';
-import Button from 'src/components/UI/Button';
-// import line from 'src/assets/line.svg';
-import downArrow1 from 'src/assets/arrow-down-1-green.svg';
 
-import useMediaQuery from 'src/hooks/useMediaQuery';
-import { MEDIA_SIZE } from 'src/utils/constants';
-import useIntersectionObserver from 'src/hooks/useIntersectionObserver';
+import MessageTail from 'src/components/UI/icons/MessageTail/MessageTail';
+import Player from 'src/components/Player/Player';
 import PlayButton from 'src/components/UI/PlayButton';
 
-const MessagesSection = () => {
-  const [message, setMessage] = useState<string>('Hey');
+import useIntersectionObserver from 'src/hooks/useIntersectionObserver';
 
-  const navigate = useNavigate();
+import downArrow1 from 'src/assets/arrow-down-1-green.svg';
+
+const MessagesSection = () => {
   const avatarRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
-  const isIntersectAvatar = useIntersectionObserver(avatarRef, { threshold: 0.3 });
-  // const isIntersectText = useIntersectionObserver(textRef, { threshold: 0.3 });
-  const animateAvatar = isIntersectAvatar ? 'opacity-1 translate-y-0' : 'opacity-0 translate-y-12';
+  const isIntersectAvatar = useIntersectionObserver(avatarRef);
   const animateText = isIntersectAvatar
     ? 'opacity-1 translate-y-0 -rotate-3'
     : 'opacity-0 translate-y-12 rotate-[20deg]';
@@ -41,10 +34,11 @@ const MessagesSection = () => {
         strokeWidth="4"
         strokeLinecap="round"
         strokeMiterlimit="10"
+        className="animate-draw-path"
         style={{
           strokeDasharray: '240',
-          strokeDashoffset: '240',
-          animation: 'draw-path 0.6s ease-out 0.4s forwards'
+          strokeDashoffset: '240'
+          // animation: 'draw-path 0.6s ease-out 0.4s forwards'
         }}
         d="M3.17,17.24
     c1.8-0.21,4.29-1.12,6.44-1.36c8.36-0.93,16.94-0.78,25.36-0.63c6.4,0.11,12.16-0.34,18.47-1.02c3.75-0.4,7.46,0.23,11.19,0.13
@@ -70,7 +64,6 @@ const MessagesSection = () => {
             </h3>
           </div>
           {isIntersectAvatar ? line : null}
-          {/* <img src={line} alt="line" className="absolute top-1/2 w-full scale-105" /> */}
         </span>{' '}
         to be afraid of.
       </h3>
@@ -85,32 +78,20 @@ const MessagesSection = () => {
           />
           <div className="flex-shrink">
             <ul className="mt-1 flex max-h-20 flex-col-reverse gap-1 sm:max-h-[6.5rem]">
-              {message && (
-                <li className="relative inline-block origin-bottom-left rounded-md bg-gradient-to-br from-emerald-300 to-emerald-500 py-0.5 px-2 text-sm text-stone-800">
-                  {/* {message} */}
-
-                  <p>Okay, can we play cards now?</p>
-                  <MessageTail height="36" width="36" className="absolute left-0" />
-                </li>
-              )}
+              <li className="relative inline-block origin-bottom-left rounded-md bg-gradient-to-br from-emerald-300 to-emerald-500 py-0.5 px-2 text-sm text-stone-800">
+                <p>Okay, can we play cards now?</p>
+                <MessageTail height="36" width="36" className="absolute left-0" />
+              </li>
             </ul>
           </div>
         </div>
       </div>
       <div className="mx-16 flex flex-col justify-between gap-12 sm:flex-row ">
-        {/* <div className="flex max-w-[24rem] flex-1 flex-col justify-between overflow-hidden rounded-lg bg-stone-800 bg-cardbacks text-stone-50">
-          <div className="bg-gradient-to-br from-emerald-300/95 to-emerald-400/95 p-8 text-stone-800">
-            <p className="font-medium">
-              You&apos;re not alone and that is a good thing! Get monster in game advice and
-              pointers.
-            </p>
-          </div>
-          <PlayButton />
-        </div> */}
         <div className="flex aspect-square max-w-[18rem] flex-col justify-between rounded-lg border border-stone-50/60 bg-stone-800 p-8 text-stone-50">
           <h4 className="text-2xl font-bold text-emerald-300">Not yet...</h4>
           <p className="text-sm">
-            Still a little scared? Check out the how to play guide and build up your confidence.
+            Still a little scared? Don&apos;t be! Check out the how to play guide and build up your
+            confidence.
           </p>
           <Link
             to={'/rules'}

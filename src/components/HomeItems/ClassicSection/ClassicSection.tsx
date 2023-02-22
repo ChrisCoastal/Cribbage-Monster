@@ -18,7 +18,7 @@ const ClassicSection = () => {
   const minMediaSm = useMediaQuery(MEDIA_SIZE.sm);
   // !minMediaSm && setDashDetails(true);
 
-  const isIntersect = useIntersectionObserver(lightRef, { threshold: 0.3 });
+  const isIntersect = useIntersectionObserver(lightRef);
   const animate = isIntersect
     ? 'opacity-1 translate-y-0 translate-x-0'
     : 'opacity-0 translate-y-36 -translate-x-24';

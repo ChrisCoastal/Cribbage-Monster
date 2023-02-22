@@ -1,5 +1,5 @@
 import { Dispatch } from 'react';
-import { CardType, GameState, TallyPoints } from './index';
+import { CardType, GameState } from './index';
 
 export type GameContextType = {
   gameState: GameState;

@@ -20,7 +20,7 @@ const ProgressSection = () => {
   const minMediaSm = useMediaQuery(MEDIA_SIZE.sm);
   // !minMediaSm && setDashDetails(true);
 
-  const isIntersect = useIntersectionObserver(lightRefLeft, { threshold: 0.3 });
+  const isIntersect = useIntersectionObserver(lightRefLeft);
   const animateLeft = isIntersect
     ? 'opacity-1 -translate-y-1 scale-[160%] md:scale-[180%]'
     : 'opacity-0 translate-y-36 -translate-x-24 scale-75';
