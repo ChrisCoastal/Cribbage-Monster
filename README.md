@@ -14,20 +14,15 @@
     <img src="src/assets/logo/readme-logo.jpg" alt="Logo">
   </a>
 
-<h3 align="center">Explore the live demo 
   <a href="https://cribbage.netlify.app/" target="blank">
-    here
-  </a>.
-</h3>
+    <h3 align="center">Explore a live demo here »</h3>
+  </a>
 
   <p align="center">
-    Are you a Monster? The classic card game for 2 player online play, built with React and Firebase.
+    A two player online version of the classic card game.
     <br />
-    <a href="https://github.com/ChrisCoastal/cribbage-monster"><strong>Explore the docs »</strong></a>
+    Thanks for giving this project a star. ⭐️
     <br />
-    <br />
-    <a href="https://github.com/ChrisCoastal/cribbage-monster">View Demo</a>
-    ·
     <a href="https://github.com/ChrisCoastal/cribbage-monster/issues">Report Bug</a>
     ·
     <a href="https://github.com/ChrisCoastal/cribbage-monster/issues">Request Feature</a>
@@ -84,8 +79,9 @@
 
 ## Play
 
-<img src='src/assets/game-view.jpg' width="300px" align="center">
-
+<p align="center">
+  <img src='src/assets/game-view.jpg' width="300px" >
+</p>
 Check out the live playable version at <a href="https://cribbage.netlify.app/" target="blank">Cribbage Monster</a>.
 
 ## Project
@@ -96,23 +92,25 @@ Cribbage Monster started with the idea of building a small app (as a holiday gif
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-### Theme
-
 <!-- ROADMAP -->
 
 ## Roadmap
 
-There is still more work and ideas I would love to add (and more I would like to go back and change), but I am pleased with where it is at and excited to move my focus to other work for now.
+There is still more work and ideas I would love to add (or go back and change 😅), but I am pleased with where it is at and excited to move my focus to other work for now.
 
-- [x] block out auth, pages, and routing
+- [x] block out pages and routing
+- [x] Firebase auth
 - [x] block out game play UI
-- [x] write game logic
-- [x] read/write game and app context from Firebase
+- [x] game logic
+- [x] read/write game and app context from Firebase backend
+- [x] websocket state updates between game clients
+- [x] game cleanup via cloud functions
 - [x] flush out UI
-- [ ] add presence for users in game
+- [ ] presence for users in game
 - [ ] custom avatar illustrations
 - [ ] expand game play options
-      ... 🏁
+- [ ] computer opponent(s)
+- [ ] ... 🏁
 
 See the [open issues](https://github.com/ChrisCoastal/cribbage-monster/issues) for a full list of proposed features (and known issues).
 
@@ -124,7 +122,7 @@ See the [open issues](https://github.com/ChrisCoastal/cribbage-monster/issues) f
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+If you have a suggestion that would make Cribbage Monster better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
 Don't forget to give the project a star! Thanks again!
 
 1. Fork the Project
@@ -176,4 +174,4 @@ Project Link: [https://github.com/ChrisCoastal/cribbage-monster](https://github.
 [license-url]: https://github.com/ChrisCoastal/cribbage-monster/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/christopher-allen-3194371b5
-[product-screenshot]: src/assets/logo/readme-logo.jpg
+[product-screenshot]: src/assets/game-view-partial.jpg
