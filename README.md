@@ -1,20 +1,4 @@
 <div id="top"></div>
-<!--
-*** Thanks for checking out the Best-README-Template. If you have a suggestion
-*** that would make this better, please fork the repo and create a pull request
-*** or simply open an issue with the tag "enhancement".
-*** Don't forget to give the project a star!
-*** Thanks again! Now go create something AMAZING! :D
--->
-
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
 
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
@@ -27,13 +11,17 @@
 <br />
 <div align="center">
   <a href="https://github.com/ChrisCoastal/cribbage-monster">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="src/assets/logo/readme-logo.jpg" alt="Logo">
   </a>
 
-<h3 align="center">Cribbage Monster</h3>
+<h3 align="center">Explore the live demo 
+  <a href="https://cribbage.netlify.app/" target="blank">
+    here
+  </a>.
+</h3>
 
   <p align="center">
-    project_description
+    Are you a Monster? The classic card game for 2 player online play, built with React and Firebase.
     <br />
     <a href="https://github.com/ChrisCoastal/cribbage-monster"><strong>Explore the docs »</strong></a>
     <br />
@@ -63,7 +51,7 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
+    <li><a href="#Project">Usage</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
@@ -78,15 +66,13 @@
 
 [![Product Name Screen Shot][product-screenshot]](https://cribbage.netlify.app/)
 
-Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `ChrisCoastal`, `cribbage-monster`, `christopher-allen-3194371b5`, `gmail`, `contactchriscoastal`, `Cribbage Monster`, `project_description`
-
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Built With
 
 - [Typescript](https://www.typescriptlang.org/)
 - [Vite](https://vitejs.dev/)
-- [React](https://reactjs.org/)
+- [React 18](https://reactjs.org/)
 - [Firebase](https://firebase.google.com/)
 - [React Router 6.4](https://reactrouter.com/en/main)
 - [Anime.js](https://animejs.com/)
@@ -94,74 +80,39 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-<!-- GETTING STARTED -->
+<!-- Play -->
 
-## Getting Started
+## Play
 
-Check out the playable version at <a href="https://cribbage.netlify.app/" target='blank'>Cribbage Monster</a>.
+<img src='src/assets/game-view.jpg' width="300px" align="center">
 
-To get a local copy up and running follow these simple example steps.
+Check out the live playable version at <a href="https://cribbage.netlify.app/" target="blank">Cribbage Monster</a>.
 
-### Prerequisites
+## Project
 
-You will need NPM, Yarn, or another package manager to initialize and run Cribbage Monster locally.
+### Inspiration
 
-- npm
-
-  ```sh
-  npm install npm@latest -g
-  ```
-
-Install Yarn (optional, but recommended) [https://yarnpkg.com/](https://yarnpkg.com/getting-started/install)
-
-### Installation
-
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/ChrisCoastal/cribbage-monster.git
-   ```
-3. Install packages
-   ```sh
-   yarn init
-   ```
-4. Start tailwind CLI build process
-
-```sh
-yarn run css
-```
-
-5. Start a dev server
-   ```sh
-   yarn run dev
-   ```
+Cribbage Monster started with the idea of building a small app (as a holiday gift) that my Dad, brothers, and their families could pursue the family pasttime with.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-<!-- USAGE EXAMPLES -->
-
-## Usage
-
-<img src='src/assets/game-view.jpg'>
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
-
-<p align="right">(<a href="#top">back to top</a>)</p>
+### Theme
 
 <!-- ROADMAP -->
 
 ## Roadmap
 
-As with many things, this project has taken longer than expected when I first got underway. There is still more work and ideas I would love to add.
+There is still more work and ideas I would love to add (and more I would like to go back and change), but I am pleased with where it is at and excited to move my focus to other work for now.
 
-- [✅] block out auth, pages, and routing
-- [✅] block out game play UI
-- [✅] write game logic
-- [✅] read/write game and app context from Firebase
-- [✅] flush out UI
+- [x] block out auth, pages, and routing
+- [x] block out game play UI
+- [x] write game logic
+- [x] read/write game and app context from Firebase
+- [x] flush out UI
 - [ ] add presence for users in game
+- [ ] custom avatar illustrations
 - [ ] expand game play options
+      ... 🏁
 
 See the [open issues](https://github.com/ChrisCoastal/cribbage-monster/issues) for a full list of proposed features (and known issues).
 
@@ -196,7 +147,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 ## Contact
 
-Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - contactchriscoastal@gmail.com
+ChrisCoastal: contactchriscoastal@gmail.com 🌊
 
 Project Link: [https://github.com/ChrisCoastal/cribbage-monster](https://github.com/ChrisCoastal/cribbage-monster)
 
@@ -206,9 +157,7 @@ Project Link: [https://github.com/ChrisCoastal/cribbage-monster](https://github.
 
 ## Acknowledgments
 
-- []()
-- []()
-- []()
+- Thanks to everyone that has put amazing amounts of work and skill into the libraries, packages, and other code that has made this project posible. 🙏
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -227,4 +176,4 @@ Project Link: [https://github.com/ChrisCoastal/cribbage-monster](https://github.
 [license-url]: https://github.com/ChrisCoastal/cribbage-monster/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/christopher-allen-3194371b5
-[product-screenshot]: src/assets/readme-logo.jpg
+[product-screenshot]: src/assets/logo/readme-logo.jpg
