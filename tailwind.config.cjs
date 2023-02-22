@@ -29,7 +29,6 @@ module.exports = {
       },
       fontFamily: {
         sans: ['"Outfit"', ...defaultTheme.fontFamily.sans],
-        molle: ['Molle'],
         annie: ['Annie Use Your Telescope'],
         outfit: ['Outfit']
       },
