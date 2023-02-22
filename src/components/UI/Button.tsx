@@ -31,7 +31,7 @@ const Button: FC<ButtonProps> = ({
   const color =
     buttonColor === 'primary'
       ? 'from-purple-400/90 to-purple-700/90'
-      : 'from-emerald-300/90 to-emerald-700/90';
+      : 'from-emerald-300/90 to-emerald-500/90';
 
   return (
     <>

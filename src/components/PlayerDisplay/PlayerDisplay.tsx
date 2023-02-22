@@ -6,7 +6,6 @@ import Player from '../Player/Player';
 import useGameContext from 'src/hooks/useGameContext';
 import useAuthContext from 'src/hooks/useAuthContext';
 import { getPlayerOpponent } from 'src/utils/helpers';
-import { nanoid } from 'nanoid';
 import MessageTail from '../UI/icons/MessageTail/MessageTail';
 import anime from 'animejs';
 
@@ -17,8 +16,6 @@ const PlayerDisplay = () => {
   const uid = userAuth!.uid!;
 
   const { player, opponent } = getPlayerOpponent(gameState.players, uid);
-  const playerHand = Object.values(gameState.playerCards[player].inHand);
-  const opponentHand = Object.values(gameState.playerCards[opponent].inHand);
   const playerPegging = Object.values(gameState.pegging[player]);
   const opponentPegging = Object.values(gameState.pegging[opponent]);
   const dealer = gameState.dealer;
@@ -34,7 +31,7 @@ const PlayerDisplay = () => {
       gameState.players[player].activePlayer === IsActive.NOT_ACTIVE &&
       message === "👋 Hey! It's our turn to play a card."
     )
-      setMessage('Phewf! I was almost 😴.');
+      setMessage('Nice play! I was almost 😴.');
     if (gameState.players[player].activePlayer === IsActive.NOT_ACTIVE) return;
     const timer = setTimeout(() => {
       setMessage("👋 Hey! It's our turn to play a card.");
@@ -63,6 +60,11 @@ const PlayerDisplay = () => {
       case GameStatus.NEW: {
         if (!gameState.players[opponent].displayName.length) {
           setMessage(`${gameState.players[player].avatar} Waiting for opponent...`);
+          // setTimeout(() => {
+          //   setMessage(
+          //     "👋 We've been waiting awhile... Why not message Chris and see if he can play?! 🎉"
+          //   );
+          // }, 18000);
         }
         break;
       }
@@ -138,10 +140,13 @@ const PlayerDisplay = () => {
   useEffect(() => {
     anime({
       targets: '.animate-message',
-      scale: [0, 1.05, 1],
+      scale: [
+        { value: 0, duration: 0 },
+        { value: 1.05, duration: 200 },
+        { value: 1, duration: 200 }
+      ],
       translateX: [-8, 0],
       translateY: [8, 0],
-      duration: 600,
       easing: 'spring(0.5, 100, 10, 0)'
     });
   }, [message]);
@@ -158,9 +163,7 @@ const PlayerDisplay = () => {
       <div className="flex-shrink">
         <ul className="mt-1 flex max-h-20 flex-col-reverse gap-1 sm:max-h-[6.5rem]">
           {message && (
-            <li
-              key={nanoid()}
-              className="animate-message relative inline-block origin-bottom-left rounded-md bg-gradient-to-br from-emerald-300 to-emerald-500 py-0.5 px-2 text-sm text-stone-800">
+            <li className="animate-message relative inline-block origin-bottom-left rounded-md bg-gradient-to-br from-emerald-300 to-emerald-500 py-0.5 px-2 text-sm text-stone-800">
               {message}
               <MessageTail height="36" width="36" className="absolute left-0" />
             </li>

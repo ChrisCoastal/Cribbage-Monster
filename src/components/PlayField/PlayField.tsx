@@ -381,7 +381,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   }
 
   return (
-    <div className="relative h-screen scale-[0.85] items-center justify-items-center gap-11 px-4 pt-6 sm:scale-100 sm:pt-20">
+    <div className="relative mt-2 h-screen scale-[0.85] items-center justify-items-center gap-11 px-4 sm:mt-20 sm:scale-100">
       <div className="flex flex-col items-center justify-center gap-4">
         <div className="flex justify-between gap-8">
           <div className="flex flex-col items-center justify-start gap-4">

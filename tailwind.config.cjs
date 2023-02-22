@@ -29,7 +29,7 @@ module.exports = {
       },
       fontFamily: {
         sans: ['"Outfit"', ...defaultTheme.fontFamily.sans],
-        molle: ['Molle'],
+        annie: ['Annie Use Your Telescope'],
         outfit: ['Outfit']
       },
       backgroundImage: {
@@ -49,6 +49,8 @@ module.exports = {
         'modal-bounce-in': '0.6s ease-in-out bounce-in forwards',
         radiate: '0.6s ease-in radiate infinite alternate',
         grow: '0.6s ease-in grow',
+        flicker: '6s flicker infinite alternate',
+        'draw-path': 'draw-path 1s ease-out 0.6s forwards',
         'text-grow': '0.6s ease-out text-grow',
         'fade-in': '0.3s ease-in-out fade-in forwards',
         'fade-out': '0.3s ease-in-out fade-out forwards',
@@ -104,6 +106,22 @@ module.exports = {
           '8%': { opacity: '1' },
           '92%': { opacity: '1' },
           '100%': { opacity: '0' }
+        },
+        'draw-path': {
+          from: { strokeDashoffset: '240' },
+          to: { strokeDashoffset: '0' }
+        },
+        flicker: {
+          '0%': { opacity: '1' },
+          '18%': { opacity: '1' },
+          '19%': { opacity: '0.5' },
+          '20%': { opacity: '1' },
+          '49%': { opacity: '1' },
+          '50%': { opacity: '0.5' },
+          '51%': { opacity: '1' },
+          '52%': { opacity: '0.7' },
+          '53%': { opacity: '1' },
+          '100%': { opacity: '1' }
         },
         'move-peg': {
           '0%': { transform: 'scale(1.4)' },

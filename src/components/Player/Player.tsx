@@ -34,10 +34,10 @@ const Player: FC<PlayerProps> = ({
           <>
             <span
               className={`${playerColor} h-2 w-2 rounded-full ring-1 ring-offset-1 ring-offset-stone-800`}></span>
-            <p className="text-sm font-medium text-stone-50">{displayName}</p>
+            <p className="whitespace-nowrap text-sm font-medium text-stone-50">{displayName}</p>
           </>
         ) : (
-          <p className="text-sm font-medium text-stone-800">{displayName || 'no player'}</p>
+          <span className="h-5"></span>
         )}
       </div>
       <div className={`relative `}>

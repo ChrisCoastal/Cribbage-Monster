@@ -7,11 +7,8 @@ type ScrollRestorationProps = {
 
 const ScrollRestoration: FC<ScrollRestorationProps> = ({ scrollY = 0 }) => {
   const { pathname } = useLocation();
-  // const main = document.getElementById('main')!;
 
   useEffect(() => {
-    // if (!main) return;
-    console.log('pathname changed');
     window.scrollTo(scrollY, 0);
   }, [pathname, scrollY]);
 

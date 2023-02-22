@@ -8,13 +8,14 @@ import Overlay from 'src/components/UI/Overlay';
 
 type MenuProps = {
   menuItems: JSX.Element[];
+  scrollY: { pos: number; isDown: boolean };
   className?: string;
   children?: ReactNode;
 };
 
-const Menu: FC<MenuProps> = ({ menuItems, className, children }) => {
+const Menu: FC<MenuProps> = ({ menuItems, scrollY, className, children }) => {
   const [menuIsVisible, setMenuIsVisible] = useState(false);
-  const [scrollY, setScrollY] = useState({ pos: 0, isDown: false });
+  // const [scrollY, setScrollY] = useState({ pos: 0, isDown: false });
   const minMediaSm = useMediaQuery(MEDIA_SIZE.sm);
 
   const wrapperRef = useRef<HTMLSpanElement>(null);
@@ -24,13 +25,13 @@ const Menu: FC<MenuProps> = ({ menuItems, className, children }) => {
     menuIsVisible ? setMenuIsVisible(false) : setMenuIsVisible(true);
   };
 
-  function isScroll() {
-    console.log('scrolling');
+  // function isScroll() {
+  //   console.log('scrolling');
 
-    if (window.scrollY > scrollY.pos) setScrollY({ pos: window.scrollY, isDown: true });
-    if (window.scrollY < scrollY.pos || window.scrollY === 0)
-      setScrollY({ pos: window.scrollY, isDown: false });
-  }
+  //   if (window.scrollY > scrollY.pos) setScrollY({ pos: window.scrollY, isDown: true });
+  //   if (window.scrollY < scrollY.pos || window.scrollY === 0)
+  //     setScrollY({ pos: window.scrollY, isDown: false });
+  // }
 
   useEffect(() => {
     if (!menuIsVisible) return;
@@ -52,13 +53,13 @@ const Menu: FC<MenuProps> = ({ menuItems, className, children }) => {
   }, [menuIsVisible, menuItems.length]);
 
   useEffect(() => {
-    console.log(scrollY);
-    if (scrollY.isDown) setMenuIsVisible(false);
+    // console.log(scrollY);
+    setMenuIsVisible(false);
 
-    window.addEventListener('scroll', isScroll, {
-      passive: true
-    });
-    return () => window.removeEventListener('scroll', isScroll);
+    // window.addEventListener('scroll', isScroll, {
+    //   passive: true
+    // });
+    // return () => window.removeEventListener('scroll', isScroll);
   }, [scrollY.pos]);
 
   const animatedMenuItems = menuItems.map((item, i) => {
@@ -79,7 +80,8 @@ const Menu: FC<MenuProps> = ({ menuItems, className, children }) => {
         ? createPortal(
             <div
               className="menu absolute right-0 z-[1000] flex h-screen w-screen flex-col items-center overflow-hidden bg-stone-800 px-4 text-2xl font-medium text-stone-50"
-              onClick={() => setMenuIsVisible(false)}>
+              onClick={() => setMenuIsVisible(false)}
+              style={{ top: scrollY.pos }}>
               <div className="flex h-16 items-center self-end pb-2">
                 <button onClick={() => toggleMenuHandler}>
                   <CloseIcon height="30" width="30" className=" fill-stone-100" />
