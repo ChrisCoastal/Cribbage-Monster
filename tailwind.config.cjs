@@ -109,7 +109,7 @@ module.exports = {
           '100%': { opacity: '0' }
         },
         'draw-path': {
-          from: { strokeDashoffset: '300' },
+          from: { strokeDashoffset: '240' },
           to: { strokeDashoffset: '0' }
         },
         flicker: {

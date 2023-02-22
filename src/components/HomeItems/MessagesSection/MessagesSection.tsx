@@ -19,6 +19,7 @@ const MessagesSection = () => {
   const avatarRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const isIntersectAvatar = useIntersectionObserver(avatarRef, { threshold: 0.3 });
+  // const isIntersectText = useIntersectionObserver(textRef, { threshold: 0.3 });
   const animateAvatar = isIntersectAvatar ? 'opacity-1 translate-y-0' : 'opacity-0 translate-y-12';
   const animateText = isIntersectAvatar
     ? 'opacity-1 translate-y-0 -rotate-3'
@@ -37,13 +38,13 @@ const MessagesSection = () => {
       <path
         fill="none"
         stroke="#6CC4A9"
-        strokeWidth="2.5"
+        strokeWidth="4"
         strokeLinecap="round"
         strokeMiterlimit="10"
         style={{
-          strokeDasharray: '300',
-          strokeDashoffset: '300',
-          animation: isIntersectAvatar ? 'draw-path 1s ease-out 0.4s forwards' : ''
+          strokeDasharray: '240',
+          strokeDashoffset: '240',
+          animation: 'draw-path 0.6s ease-out 0.4s forwards'
         }}
         d="M3.17,17.24
     c1.8-0.21,4.29-1.12,6.44-1.36c8.36-0.93,16.94-0.78,25.36-0.63c6.4,0.11,12.16-0.34,18.47-1.02c3.75-0.4,7.46,0.23,11.19,0.13
@@ -56,7 +57,7 @@ const MessagesSection = () => {
 
   return (
     <div className="flex flex-col items-center justify-center pb-36 pt-48">
-      <h3 className="mb-4 w-72 text-center text-5xl font-bold text-stone-50 sm:text-6xl md:w-auto lg:text-7xl">
+      <h3 className="mb-8 w-72 text-center text-5xl font-bold text-stone-50 sm:text-6xl md:w-auto lg:text-7xl">
         <span ref={textRef} className="relative inline-block">
           Nothing
           <div
@@ -68,12 +69,12 @@ const MessagesSection = () => {
               Almost nothing
             </h3>
           </div>
-          {line}
+          {isIntersectAvatar ? line : null}
           {/* <img src={line} alt="line" className="absolute top-1/2 w-full scale-105" /> */}
         </span>{' '}
         to be afraid of.
       </h3>
-      <div className={`transition-all delay-700 duration-700`}>
+      <div className={`mb-8 transition-all delay-700 duration-700`}>
         <div ref={avatarRef} className="flex w-[376px] gap-4 py-2 pl-10 pr-4 sm:py-2">
           <Player
             playerPos={PlayerPos.P_ONE}
@@ -96,27 +97,33 @@ const MessagesSection = () => {
           </div>
         </div>
       </div>
-      <div className="mx-16 flex flex-col justify-between gap-4 sm:max-w-4xl sm:flex-row">
-        <div className="flex-1 rounded-lg bg-stone-800 p-6 text-stone-50">
-          <p className="">
-            You&apos;re not alone and that is a good thing! Get monster in game advice and pointers.
-            <PlayButton />
+      <div className="mx-16 flex flex-col justify-between gap-12 sm:flex-row ">
+        {/* <div className="flex max-w-[24rem] flex-1 flex-col justify-between overflow-hidden rounded-lg bg-stone-800 bg-cardbacks text-stone-50">
+          <div className="bg-gradient-to-br from-emerald-300/95 to-emerald-400/95 p-8 text-stone-800">
+            <p className="font-medium">
+              You&apos;re not alone and that is a good thing! Get monster in game advice and
+              pointers.
+            </p>
+          </div>
+          <PlayButton />
+        </div> */}
+        <div className="flex aspect-square max-w-[18rem] flex-col justify-between rounded-lg border border-stone-50/60 bg-stone-800 p-8 text-stone-50">
+          <h4 className="text-2xl font-bold text-emerald-300">Not yet...</h4>
+          <p className="text-sm">
+            Still a little scared? Check out the how to play guide and build up your confidence.
           </p>
+          <Link
+            to={'/rules'}
+            className={`cursor-pointer self-center rounded-md bg-black bg-gradient-to-br from-emerald-300/90 to-emerald-500/90 py-2 px-6 text-center text-xl font-bold tracking-wider text-stone-50 transition-all duration-300 hover:bg-slate-100 hover:shadow-md`}>
+            LEARN
+          </Link>
         </div>
-        <div className="flex-1 rounded-lg bg-stone-800 p-6 text-stone-50">
-          <p className="">
-            Joining Cribbage Monster is free and gives automatic access to all stat tracking and
-            game history.
+        <div className="flex aspect-square max-w-[18rem] flex-col justify-between rounded-lg border border-stone-50/60 bg-stone-800 p-8 text-stone-50">
+          <h4 className="text-2xl font-bold text-emerald-300">Let&apos;s Go!</h4>
+          <p className="text-sm">
+            Joining Cribbage Monster is free! Play online and improve your game now.
           </p>
-          <PlayButton buttonText="JOIN" />
-        </div>
-        <div className="flex-1 rounded-lg bg-stone-800 p-6 text-stone-50">
-          <p className="">
-            Still feeling nervous? Check out the how to play guide and build up your confidence.
-          </p>
-          <Button buttonSize="md" buttonColor="secondary" handler={() => navigate('/rules')}>
-            LEARN TO PLAY
-          </Button>
+          <PlayButton buttonText="JOIN" className="self-center" />
         </div>
       </div>
     </div>

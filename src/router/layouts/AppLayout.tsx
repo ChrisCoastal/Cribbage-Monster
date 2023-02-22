@@ -25,7 +25,7 @@ const AppLayout = () => {
   return (
     <>
       <div className="relative min-h-screen overflow-hidden bg-stone-800">
-        <div id="container" className="pb-12">
+        <div id="container">
           <div id="overlay-root"></div>
           <Nav />
           <main className="main">

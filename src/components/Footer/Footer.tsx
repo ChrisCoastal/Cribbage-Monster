@@ -4,9 +4,9 @@ import gitHubLogo from 'src/assets/logo/github-mark-white.png';
 
 const Footer = () => {
   return (
-    <section className="absolute bottom-0 z-10 flex h-24 w-full items-center justify-between bg-black/20 px-4 text-xs text-stone-50 sm:px-8 sm:text-sm">
+    <section className="flex h-24 w-full items-center justify-between bg-black/20 px-4 text-xs text-stone-50 sm:px-8 sm:text-sm">
       <div className=" w-40 sm:w-auto">
-        <p className="mb-1">Inspired by generations of ♥︎♥︎♥︎ for cribbage.</p>
+        <p>Inspired by generations of ♥︎♥︎♥︎ for cribbage.</p>
       </div>
       <a
         className="flex items-center gap-2"
