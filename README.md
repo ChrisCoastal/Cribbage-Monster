@@ -13,15 +13,23 @@
   <a href="https://github.com/ChrisCoastal/cribbage-monster">
     <img src="src/assets/logo/readme-logo.jpg" alt="Logo">
   </a>
+    <p align="center">
+      A two player online version of the classic card game.
+    <br />
+    <br />
+    </p>
 
-  <a href="https://cribbage.netlify.app/" target="blank">
-    <h3 align="center">Explore a live demo here »</h3>
-  </a>
+  <h3 align="center">
+    <a href="https://cribbage.netlify.app/" target="blank">
+      Explore a live demo here »
+    </a>
+  </h3>
 
   <p align="center">
     A two player online version of the classic card game.
     <br />
-    Thanks for giving this project a star. ⭐️
+    <br />
+    Thanks for giving this project a star! ⭐️
     <br />
     <a href="https://github.com/ChrisCoastal/cribbage-monster/issues">Report Bug</a>
     ·
@@ -82,7 +90,8 @@
 <p align="center">
   <img src='src/assets/game-view.jpg' width="300px" >
 </p>
-Check out the live playable version at <a href="https://cribbage.netlify.app/" target="blank">Cribbage Monster</a>.
+Check out the live playable version at <a href="https://cribbage.netlify.app/" target="_blank">Cribbage Monster</a>.
+Don't know how to play? Learn the <a href="https://cribbage.netlify.app/rules" target="_blank">Rules of Crib</a>.
 
 ## Project
 
@@ -96,7 +105,7 @@ Cribbage Monster started with the idea of building a small app (as a holiday gif
 
 ## Roadmap
 
-There is still more work and ideas I would love to add (or go back and change 😅), but I am pleased with where it is at and excited to move my focus to other work for now.
+There is still more work and ideas I would love to add (or go back and change 😅), but I'm happy with where it is at and excited to move my focus to other work.
 
 - [x] block out pages and routing
 - [x] Firebase auth
@@ -156,6 +165,7 @@ Project Link: [https://github.com/ChrisCoastal/cribbage-monster](https://github.
 ## Acknowledgments
 
 - Thanks to everyone that has put amazing amounts of work and skill into the libraries, packages, and other code that has made this project posible. 🙏
+- Thanks to Dad and Grandpa for 🙏
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 

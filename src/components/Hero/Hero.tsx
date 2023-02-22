@@ -12,7 +12,7 @@ const Hero = () => {
             height="200"
             width="540"
             color="rgb(231 229 228)"
-            className={`-translate-x-20 scale-[.6] sm:-translate-x-9 sm:scale-90 lg:scale-100`}
+            className={`-translate-x-[4.25rem] scale-[.7] sm:-translate-x-9 sm:scale-90 lg:scale-100`}
             aria-role="h1"
             aria-label="Are you a Monster?"
           />

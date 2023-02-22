@@ -77,29 +77,29 @@ const ProgressSection = () => {
           onMouseEnter={() => setDashDetails(true)}
           onMouseLeave={() => setDashDetails(false)}
           className="relative mt-8 max-w-[44rem] transition-all duration-500 md:[transform:rotate3d(0,_-1,_0.1,_30deg)_translate(-12%)] md:hover:[transform:rotate3d(0,_-1,_0.1,_20deg)_translate(-10%)] lg:mx-0">
-          <span className="relative">
+          <div className="relative">
             <img
               src={dashView}
               alt="player dashboard page"
               className="md:translate-x-8 lg:translate-x-0"
             />
             <div
-              className={`${detailsVisible} absolute -top-16 left-4 flex -rotate-12 justify-end gap-1 text-right font-annie text-2xl leading-none tracking-wider text-stone-50 transition-all duration-500 lg:-top-20 lg:text-2xl`}>
+              className={`${detailsVisible} absolute -top-16 left-4 flex -rotate-12 justify-end gap-1 text-right font-annie text-xl leading-none tracking-wider text-stone-50 transition-all duration-500 sm:text-2xl lg:-top-20`}>
               <img src={downArrow1} width="48px" className="scale-x-[-1] lg:-translate-y-1" />
               earn unique avatars <br />
               and badges
             </div>
             <div
-              className={`${detailsVisible} absolute right-6 -top-14 flex rotate-6 gap-1 text-right font-annie text-xl leading-none tracking-wider text-stone-50 transition-all duration-500`}>
+              className={`${detailsVisible} absolute right-2 -top-14 flex rotate-6 gap-1 text-right font-annie text-xl leading-none tracking-wider text-stone-50 transition-all duration-500 sm:right-6`}>
               track progress <br /> and rankings
               <img src={downArrow2} width="36px" className=" translate-y-3" />
             </div>
             <div
-              className={`${detailsVisible} absolute left-24 -bottom-16 flex rotate-3 gap-1 font-annie text-2xl tracking-wider text-stone-50 transition-all duration-500`}>
+              className={`${detailsVisible} absolute left-24 -bottom-16 flex rotate-3 gap-1 font-annie text-xl tracking-wider text-stone-50 transition-all duration-500 sm:text-2xl`}>
               <img src={downArrow1} width="36px" className="-translate-y-3 rotate-180" />
               join tournaments and leagues
             </div>
-          </span>
+          </div>
         </div>
       </div>
     </section>
