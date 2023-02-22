@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
 import { PlayerPos } from 'src/@types';
+
 import ToolTip from 'src/components/UI/ToolTip';
 
 import useGameContext from 'src/hooks/useGameContext';
-import { getPlayerOpponent } from 'src/utils/helpers';
 
 type BoardPegHoleProps = {
   track: PlayerPos | '121';
@@ -18,7 +18,7 @@ const BoardPegHole: FC<BoardPegHoleProps> = ({ track, isPeg, className }) => {
     const pegBase = 'animate-move-peg ring-offset-1 ring-offset-stone-800 ring-1';
     const player1Color = 'bg-purple-500 ring-purple-500';
     const player2Color = 'bg-emerald-400 ring-emerald-400';
-    // const player2Color = gameState.players.player2.color;
+
     if (track === PlayerPos.P_ONE && isPeg) return `${player1Color} ${pegBase}`;
     if (track === PlayerPos.P_TWO && isPeg) return `${player2Color} ${pegBase}`;
     if (track === '121' && isPeg) return `${player2Color} ${pegBase}`;

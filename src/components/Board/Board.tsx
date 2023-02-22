@@ -1,10 +1,10 @@
-import { PlayerPos } from 'src/@types';
+import { FC } from 'react';
+
 import BoardSection from 'src/components/BoardSection/BoardSection';
 import BoardSectionBend from 'src/components/BoardSectionBend/BoardSectionBend';
 import BoardPegHole from '../BoardPegHole/BoardPegHole';
 
 import useGameContext from 'src/hooks/useGameContext';
-import { FC } from 'react';
 
 type BoardProps = {
   className?: string;

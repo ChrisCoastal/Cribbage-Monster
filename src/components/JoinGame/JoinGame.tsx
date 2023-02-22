@@ -1,17 +1,16 @@
 import React, { FC } from 'react';
+import { rtdb } from 'src/firestore.config';
+import { update, ref, get } from 'firebase/database';
 import { useNavigate } from 'react-router-dom';
 
-import { rtdb } from 'src/firestore.config';
-
-import { update, ref, get, child } from 'firebase/database';
-
-import useAuthContext from 'src/hooks/useAuthContext';
-import useSettingsContext from 'src/hooks/useSettingsContext';
+import { GameId, GameStatus, IsActive, Player } from 'src/@types';
 
 import { findPlayerPos, getGameFromList, getGameRef } from 'src/utils/helpers';
 
 import Button from 'src/components/UI/Button';
-import { GameId, GameStatus, IsActive, Player } from 'src/@types';
+
+import useAuthContext from 'src/hooks/useAuthContext';
+import useSettingsContext from 'src/hooks/useSettingsContext';
 
 type JoinGameProps = {
   gameId: GameId;
@@ -40,8 +39,6 @@ const JoinGame: FC<JoinGameProps> = ({ gameId }) => {
 
         const gameFromListRef = getGameFromList(gameId);
         const gameRef = getGameRef(gameId);
-        // export const getGameRef = (gameId: GameId) => ref(rtdb, `games/${gameId}`);
-        // const gameChildRef = child(ref(rtdb), `games/${gameId}`);
         const updates = {
           ['/players']: {
             ...players,
@@ -56,15 +53,6 @@ const JoinGame: FC<JoinGameProps> = ({ gameId }) => {
         };
         update(gameFromListRef, { [playerPos]: { displayName, avatar: userSettingsState.avatar } });
         update(gameRef, updates).then(() => {
-          // update(gamePlayersRef, {
-          //   ...players,
-          //   [playerPos]: {
-          //     avatar: userSettingsState.avatar,
-          //     id: uid,
-          //     displayName: displayName!,
-          //     activePlayer: IsActive.NOT_ACTIVE
-          //   }
-          // }).then(() => {
           navigate(`/game/${gameId}`);
         });
       });

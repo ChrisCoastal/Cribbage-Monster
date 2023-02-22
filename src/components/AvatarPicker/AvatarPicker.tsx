@@ -1,11 +1,9 @@
-import React, { FC, useState } from 'react';
-
+import React, { FC } from 'react';
 import { AvatarSize } from 'src/@types';
 
-import useSettingsContext from 'src/hooks/useSettingsContext';
+import Avatar from 'src/components/Avatar/Avatar';
 
 import { AVATARS } from 'src/utils/constants';
-import Avatar from 'src/components/Avatar/Avatar';
 
 type AvatarPickerProps = {
   userAvatar: string;
@@ -14,8 +12,6 @@ type AvatarPickerProps = {
 };
 
 const AvatarPicker: FC<AvatarPickerProps> = ({ selection, setSelection, userAvatar }) => {
-  const { userSettingsState, dispatchSettings } = useSettingsContext();
-
   function changeAvatarHandler(avatar: string) {
     setSelection(avatar);
   }

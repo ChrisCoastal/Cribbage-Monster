@@ -9,7 +9,6 @@ import carouselImgMobile2 from 'src/assets/carousel-2-mobile.jpg';
 import carouselImgMobile3 from 'src/assets/carousel-3-mobile.jpg';
 import Heading from 'src/components/UI/Heading';
 import Button from 'src/components/UI/Button';
-import Card from 'src/components/UI/Card';
 
 type DashCarouselProps = {
   className?: string;
@@ -20,34 +19,12 @@ const DashCarousel: FC<DashCarouselProps> = ({ className, auto = 10000 }) => {
   const [carouselIndex, setCarouselIndex] = useState<number>(0);
   useInterval(() => incrementCarousel(), auto);
   const carouselPos = ['left-[0%]', 'left-[-100%]', 'left-[-200%]', 'left-[-300%]', 'left-[-400%]'];
-  const slidePos = [
-    'right-[0%]',
-    'right-[-100%]',
-    'right-[-200%]',
-    'right-[-300%]',
-    'right-[-400%]'
-  ];
 
   const slides = [
     { mobile: carouselImgMobile1, lg: carouselImg1 },
     { mobile: carouselImgMobile2, lg: carouselImg2 },
     { mobile: carouselImgMobile3, lg: carouselImg3 }
   ];
-
-  // const slides = [
-  //   <li key={0} className={`absolute w-full`}>
-  //     <p className="absolute left-10 top-10 z-10 animate-fade-up-in">bob</p>
-  //     <img src={carouselImg1}></img>
-  //   </li>,
-  //   <li key={1} className={`absolute right-[-100%] w-full`}>
-  //     <p className="absolute left-10 top-10 z-10">bob</p>
-  //     <img src={carouselImg2}></img>
-  //   </li>,
-  //   <li key={2} className={`absolute right-[-200%] w-full`}>
-  //     <p className="absolute left-10 top-10 z-10">hey</p>
-  //     <img src={carouselImg3}></img>
-  //   </li>
-  // ];
 
   const renderSlides = slides.map((slide, i) => {
     const animateTitle = i === carouselIndex ? 'animate-fade-up-delay-sm' : '';
@@ -58,17 +35,16 @@ const DashCarousel: FC<DashCarouselProps> = ({ className, auto = 10000 }) => {
           Big Prizes!
         </Heading>
         <p
-          className={`absolute left-6 top-[40%] z-10 w-[90%] text-lg font-medium text-stone-50 opacity-0 sm:text-3xl lg:left-10 lg:text-4xl ${animateText}`}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi consequat ligula justo, sed
-          pretium ligula tincidunt ac.
+          className={`absolute left-6 top-[40%] z-10 w-[90%] text-2xl font-medium text-stone-50 opacity-0 sm:text-3xl lg:left-10 lg:text-4xl ${animateText}`}>
+          Join the cribbage tournament league and compete for prizes and prestige!
         </p>
         <Button className="absolute left-6 bottom-[2rem] lg:left-10" buttonSize="md">
           Register Now
         </Button>
-        {/* <picture> */}
-        {/* <source srcSet={slide.lg} type="image/webp" media="@media screen and (min-width: 900px" /> */}
-        <img src={slide.lg} className="h-full w-full object-cover"></img>
-        {/* </picture> */}
+        <picture>
+          <source srcSet={slide.lg} type="image/webp" media="@media screen and (min-width: 900px" />
+          <img src={slide.lg} className="h-full w-full object-cover"></img>
+        </picture>
       </li>
     );
   });

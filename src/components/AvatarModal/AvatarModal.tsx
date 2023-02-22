@@ -20,10 +20,8 @@ type AvatarModalProps = {
 
 const AvatarModal: FC<AvatarModalProps> = ({ Modal, isModal, modalHandler }) => {
   const [avatarSelection, setAvatarSelection] = useState<string | null>(null);
-
   const { userAuth } = useAuthContext();
   const { userSettingsState } = useSettingsContext();
-  // const { isModal, Modal, modalHandler } = useModal();
 
   function saveAvatarHandler() {
     modalHandler(false);

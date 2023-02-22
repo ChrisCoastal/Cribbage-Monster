@@ -1,5 +1,5 @@
 import { createContext, FC, ReactNode, useReducer } from 'react';
-import { GameContextType, GameState } from 'src/@types';
+import { GameContextType } from 'src/@types';
 import { INITIAL_GAME_STATE } from 'src/utils/constants';
 import gameReducer from './gameReducer';
 

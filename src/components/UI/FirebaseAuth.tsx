@@ -6,30 +6,14 @@ import firebase from 'firebase/compat/app';
 import { firebaseAuth } from 'src/firestore.config';
 
 interface FirebaseAuthProps {
-  // The Firebase UI Web UI Config object.
-  // See: https://github.com/firebase/firebaseui-web#configuration
-  // uiConfig: firebaseui.auth.Config;
-  // Callback that will be passed the FirebaseUi instance before it is
-  // started. This allows access to certain configuration options such as
-  // disableAutoSignIn().
   uiCallback?(ui: firebaseui.auth.AuthUI): void;
-  // The Firebase App auth instance to use.
-  // firebaseAuth: any; // As firebaseui-web
   className?: string;
 }
 
 const uiConfig = {
-  // Popup signin flow rather than redirect flow.
-  // signInFlow: 'popup',
   signInFlow: 'redirect',
-  // Redirect to /signedIn after sign in is successful. Alternatively you can provide a callbacks.signInSuccess function.
   signInSuccessUrl: '/dashboard',
-  // We will display Google and Facebook as auth providers.
-  signInOptions: [
-    firebase.auth.EmailAuthProvider.PROVIDER_ID
-    // FIXME: popup not connecting to host
-    // firebase.auth.GoogleAuthProvider.PROVIDER_ID
-  ]
+  signInOptions: [firebase.auth.EmailAuthProvider.PROVIDER_ID]
 };
 
 const FirebaseAuth: FC<FirebaseAuthProps> = ({ className, uiCallback }) => {

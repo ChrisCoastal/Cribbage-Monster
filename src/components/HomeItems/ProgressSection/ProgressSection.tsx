@@ -51,22 +51,22 @@ const ProgressSection = () => {
             </div>
           </div>
           <div className="mx-8 mb-28 mt-8 flex max-w-[29rem] flex-col flex-wrap items-stretch justify-center gap-4 sm:flex-row lg:m-0">
-            <div className="flex flex-1 flex-col justify-around gap-4 rounded-lg border border-stone-50/60 bg-stone-800 p-8 text-stone-50 sm:max-w-[14rem]">
+            <div className="flex flex-1 flex-col justify-around gap-3 rounded-lg border border-stone-50/60 bg-stone-800 p-8 text-stone-50 sm:max-w-[14rem]">
               <p className="self-center text-4xl">🏆</p>
               <h4 className="text-xl font-bold text-emerald-300">Achievements</h4>
               <p className="text-sm">Unlock badges and other in game collectables as you play.</p>
             </div>
-            <div className="flex flex-1 flex-col justify-around gap-4 rounded-lg border border-stone-50/60 bg-stone-800 p-8 text-stone-50 sm:max-w-[14rem]">
+            <div className="flex flex-1 flex-col justify-around gap-3 rounded-lg border border-stone-50/60 bg-stone-800 p-8 text-stone-50 sm:max-w-[14rem]">
               <p className="self-center text-4xl">📉</p>
               <h4 className="text-xl font-bold text-emerald-300">Stat Tracking</h4>
               <p className="text-sm">Analyze your climb towards the top of the leaderboard.</p>
             </div>
-            <div className="flex flex-1 flex-col justify-around gap-4 rounded-lg border border-stone-50/60 bg-stone-800 p-8 text-stone-50 sm:max-w-[14rem]">
+            <div className="flex flex-1 flex-col justify-around gap-3 rounded-lg border border-stone-50/60 bg-stone-800 p-8 text-stone-50 sm:max-w-[14rem]">
               <p className="self-center text-4xl">💰</p>
               <h4 className="text-xl font-bold text-emerald-300">Prizes</h4>
               <p className="text-sm">Leap into serious league competition for monster prizes.</p>
             </div>
-            <div className="flex flex-1 flex-col justify-around gap-4 rounded-lg border border-stone-50/60 bg-stone-800 p-8 text-stone-50 sm:max-w-[14rem]">
+            <div className="flex flex-1 flex-col justify-around gap-3 rounded-lg border border-stone-50/60 bg-stone-800 p-8 text-stone-50 sm:max-w-[14rem]">
               <p className="self-center text-4xl">🎉</p>
               <h4 className="text-xl font-bold text-emerald-300">Monster Fun</h4>
               <p className="text-sm">Meet and play online with other cribbage fanatics anytime.</p>

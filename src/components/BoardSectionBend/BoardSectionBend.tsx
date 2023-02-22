@@ -61,20 +61,6 @@ const BoardSectionTopBend: FC<BoardSectionProps> = ({
     <div className={`${className} ${rotate && 'rotate-180'} relative`}>
       <ul>{renderPegHoles(rotate ? PlayerPos.P_ONE : PlayerPos.P_TWO)}</ul>
       <ul>{renderPegHoles(rotate ? PlayerPos.P_TWO : PlayerPos.P_ONE)}</ul>
-      {/* <ul>
-        <li className="absolute  h-1 w-1 justify-self-center rounded-full bg-white"></li>
-        <li className="absolute  h-1 w-1 justify-self-center rounded-full bg-white"></li>
-        <li className="absolute  h-1 w-1 justify-self-center rounded-full bg-white"></li>
-        <li className="absolute  h-1 w-1 justify-self-center rounded-full bg-white"></li>
-        <li className="absolute  h-1 w-1 justify-self-center rounded-full bg-white"></li>
-      </ul>
-      <ul>
-        <li className="absolute  h-1 w-1 justify-self-center rounded-full bg-white"></li>
-        <li className="absolute  h-1 w-1 justify-self-center rounded-full bg-white"></li>
-        <li className="absolute  h-1 w-1 justify-self-center rounded-full bg-white"></li>
-        <li className="absolute  h-1 w-1 justify-self-center rounded-full bg-white"></li>
-        <li className="absolute  h-1 w-1 justify-self-center rounded-full bg-white"></li>
-      </ul> */}
     </div>
   );
 };

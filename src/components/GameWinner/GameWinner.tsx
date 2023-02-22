@@ -1,15 +1,13 @@
 import React, { FC } from 'react';
-
-import { AvatarSize, PlayerPos } from 'src/@types';
 import Particles from 'react-particles';
 import type { Engine } from 'tsparticles-engine';
 import { loadFull } from 'tsparticles';
-import Avatar from 'src/components/Avatar/Avatar';
-import useGameContext from 'src/hooks/useGameContext';
 
-import { isWinner } from 'src/utils/helpers';
-import Heading from '../UI/Heading';
+import { AvatarSize } from 'src/@types';
+
+import Avatar from 'src/components/Avatar/Avatar';
 import Button from '../UI/Button';
+
 type GameWinnerProps = {
   playerIsWinner: boolean;
   winner: { displayName: string; avatar: string };
@@ -18,33 +16,16 @@ type GameWinnerProps = {
 };
 
 const GameWinner: FC<GameWinnerProps> = ({ playerIsWinner, winner, quitHandler, playHandler }) => {
-  // const { gameState } = useGameContext();
-
+  // init the tsparticles engine
   async function particlesInit(particleEngine: Engine) {
     await loadFull(particleEngine);
   }
-
-  const options = {
-    delay: 500,
-    duration: 4000,
-    particles: {
-      color: {
-        value: '#2349fe'
-      }
-    },
-    preset: 'confetti'
-  };
 
   return (
     <div className="sm:w-[624px]">
       <Particles
         init={particlesInit}
         options={{
-          // background: {
-          //   color: {
-          //     value: '#000000'
-          //   }
-          // },
           fullScreen: {
             enable: true,
             zIndex: 400
@@ -133,24 +114,11 @@ const GameWinner: FC<GameWinnerProps> = ({ playerIsWinner, winner, quitHandler, 
               }
             },
             shape: {
-              type: [
-                'circle',
-                'character',
-                'square',
-                'star',
-                'character',
-                'polygon',
-                'character'
-                // 'character',
-                // 'character',
-                // 'image',
-                // 'image',
-                // 'image'
-              ],
+              type: ['circle', 'character', 'square', 'star', 'character', 'polygon', 'character'],
               options: {
                 // image: [
                 //   {
-                //     src: 'https://particles.js.org/images/fruits/apple.png',
+                //     src: 'TODO: add path if change avatar to image',
                 //     width: 32,
                 //     height: 32,
                 //     particles: {

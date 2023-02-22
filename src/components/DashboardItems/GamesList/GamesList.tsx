@@ -1,23 +1,18 @@
 import React, { FC, useEffect, useState } from 'react';
-
 import { onValue } from 'firebase/database';
-
 import { GameBrief, AvatarSize } from 'src/@types';
-import JoinGame from 'src/components/JoinGame/JoinGame';
 
 import { getGamesList } from 'src/utils/helpers';
-import CreateGame from 'src/components/CreateGame/CreateGame';
+
+import AddIcon from 'src/components/UI/icons/AddIcon/AddIcon';
 import Avatar from 'src/components/Avatar/Avatar';
 import Card from 'src/components/UI/Card';
+import CreateGame from 'src/components/CreateGame/CreateGame';
+import JoinGame from 'src/components/JoinGame/JoinGame';
 import SubHeading from 'src/components/UI/SubHeading';
-import AddIcon from 'src/components/UI/icons/AddIcon/AddIcon';
 import ToolTip from 'src/components/UI/ToolTip';
 
-type GamesListProps = {
-  //
-};
-
-const GamesList: FC<GamesListProps> = () => {
+const GamesList: FC = () => {
   const [games, setGames] = useState<GameBrief[]>([]);
 
   useEffect(() => {
@@ -32,8 +27,6 @@ const GamesList: FC<GamesListProps> = () => {
           updatedGames.push(value);
         });
         setGames(() => updatedGames);
-
-        // dispatchGame({ type: GameReducerTypes.UPDATE, payload: snapshot.val() });
       },
       (error) => console.log(error)
     );
@@ -49,17 +42,26 @@ const GamesList: FC<GamesListProps> = () => {
         <li
           key={game.gameId}
           className="flex items-center justify-between gap-4 rounded-md bg-stone-900 py-2 px-4 font-light text-stone-50">
-          <span className="flex items-center gap-2">
-            <Avatar
-              className={AvatarSize.SM}
-              avatar={game.player1.avatar.length ? game.player1.avatar : game.player2.avatar}
-            />
-            <p className="text-sm font-medium">
-              {game.player1.displayName.length
-                ? game.player1.displayName
-                : game.player2.displayName}
-            </p>
-          </span>
+          <div className="relative flex flex-col gap-1">
+            <span className="flex items-center gap-2">
+              <Avatar
+                className={AvatarSize.SM}
+                avatar={game.player1.avatar.length ? game.player1.avatar : ''}
+              />
+              <p className="text-sm font-medium">
+                {game.player1.displayName.length ? game.player1.displayName : ''}
+              </p>
+            </span>
+            <span className="flex items-center gap-2">
+              <Avatar
+                className={AvatarSize.SM}
+                avatar={game.player2.avatar.length ? game.player2.avatar : ''}
+              />
+              <p className="text-sm font-medium">
+                {game.player2.displayName.length ? game.player1.displayName : ''}
+              </p>
+            </span>
+          </div>
 
           <div className="flex items-center justify-between gap-8">
             <span className=" text-center">
@@ -72,7 +74,6 @@ const GamesList: FC<GamesListProps> = () => {
               <JoinGame gameId={game.gameId} />
             )}
           </div>
-          {/* {!vacantPlayer && <JoinGame gameId={game.gameId} />} */}
         </li>
       );
     });

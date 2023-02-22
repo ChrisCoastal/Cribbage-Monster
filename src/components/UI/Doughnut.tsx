@@ -13,7 +13,7 @@ const Doughnut: FC<DoughnutProps> = ({ degFill, centerText, chartColor = '#a5d' 
     height: '0',
     width: '100%',
     paddingBottom: '100%',
-    // aspectRatio: '1/1',
+    aspectRatio: '1/1',
     borderRadius: '50%',
     background: `conic-gradient(${chartColor} 0deg, ${chartColor} ${
       degFill - degFill * 0.3

@@ -1,8 +1,5 @@
 import React from 'react';
 import Particles from 'react-particles';
-import { createPortal } from 'react-dom';
-
-// type Props = {};
 
 const Confetti = () => {
   return (

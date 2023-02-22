@@ -1,5 +1,5 @@
 import React from 'react';
-import { createPortal } from 'react-dom';
+
 import gitHubLogo from 'src/assets/logo/github-mark-white.png';
 
 const Footer = () => {

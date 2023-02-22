@@ -1,9 +1,7 @@
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import { CardOverlap } from 'src/@types';
-import useGameContext from 'src/hooks/useGameContext';
 
 type CardBoxProps = {
-  // cards: CardType[];
   maxCards: number;
   size: {
     height: string;
@@ -11,12 +9,10 @@ type CardBoxProps = {
   };
   overlap: CardOverlap;
   placement?: string;
-  children?: React.ReactNode;
+  children?: ReactNode;
 };
 
 const CardBox: FC<CardBoxProps> = ({ maxCards, size, overlap, placement, children }) => {
-  const { gameState, dispatchGame } = useGameContext();
-
   const cardCols = [
     'grid-cols-3',
     'grid-cols-4',

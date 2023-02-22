@@ -26,23 +26,23 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/github_username/repo_name">
+  <a href="https://github.com/ChrisCoastal/cribbage-monster">
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
-<h3 align="center">project_title</h3>
+<h3 align="center">Cribbage Monster</h3>
 
   <p align="center">
     project_description
     <br />
-    <a href="https://github.com/github_username/repo_name"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/ChrisCoastal/cribbage-monster"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/github_username/repo_name">View Demo</a>
+    <a href="https://github.com/ChrisCoastal/cribbage-monster">View Demo</a>
     ·
-    <a href="https://github.com/github_username/repo_name/issues">Report Bug</a>
+    <a href="https://github.com/ChrisCoastal/cribbage-monster/issues">Report Bug</a>
     ·
-    <a href="https://github.com/github_username/repo_name/issues">Request Feature</a>
+    <a href="https://github.com/ChrisCoastal/cribbage-monster/issues">Request Feature</a>
   </p>
 </div>
 
@@ -76,22 +76,21 @@
 
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+[![Product Name Screen Shot][product-screenshot]](https://cribbage.netlify.app/)
 
-Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `github_username`, `repo_name`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`
+Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `ChrisCoastal`, `cribbage-monster`, `christopher-allen-3194371b5`, `gmail`, `contactchriscoastal`, `Cribbage Monster`, `project_description`
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Built With
 
-- [Next.js](https://nextjs.org/)
-- [React.js](https://reactjs.org/)
-- [Vue.js](https://vuejs.org/)
-- [Angular](https://angular.io/)
-- [Svelte](https://svelte.dev/)
-- [Laravel](https://laravel.com)
-- [Bootstrap](https://getbootstrap.com)
-- [JQuery](https://jquery.com)
+- [Typescript](https://www.typescriptlang.org/)
+- [Vite](https://vitejs.dev/)
+- [React](https://reactjs.org/)
+- [Firebase](https://firebase.google.com/)
+- [React Router 6.4](https://reactrouter.com/en/main)
+- [Anime.js](https://animejs.com/)
+- [Tailwind](https://tailwindcss.com/)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -99,37 +98,40 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
+Check out the playable version at <a href="https://cribbage.netlify.app/" target='blank'>Cribbage Monster</a>.
+
 To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
+You will need NPM, Yarn, or another package manager to initialize and run Cribbage Monster locally.
 
 - npm
+
   ```sh
   npm install npm@latest -g
   ```
+
+Install Yarn (optional, but recommended) [https://yarnpkg.com/](https://yarnpkg.com/getting-started/install)
 
 ### Installation
 
 1. Get a free API Key at [https://example.com](https://example.com)
 2. Clone the repo
    ```sh
-   git clone https://github.com/github_username/repo_name.git
+   git clone https://github.com/ChrisCoastal/cribbage-monster.git
    ```
-3. Install NPM packages
+3. Install packages
    ```sh
    yarn init
    ```
 4. Start tailwind CLI build process
 
 ```sh
-yarn tailwindcss -i ./src/index.css -o ./dist/index.css --watch
-
+yarn run css
 ```
 
-4. Start a dev server
+5. Start a dev server
    ```sh
    yarn run dev
    ```
@@ -140,6 +142,7 @@ yarn tailwindcss -i ./src/index.css -o ./dist/index.css --watch
 
 ## Usage
 
+<img src='src/assets/game-view.jpg'>
 Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
 
 _For more examples, please refer to the [Documentation](https://example.com)_
@@ -150,12 +153,17 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 ## Roadmap
 
-- [ ] Feature 1
-- [ ] Feature 2
-- [ ] Feature 3
-  - [ ] Nested Feature
+As with many things, this project has taken longer than expected when I first got underway. There is still more work and ideas I would love to add.
 
-See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues).
+- [✅] block out auth, pages, and routing
+- [✅] block out game play UI
+- [✅] write game logic
+- [✅] read/write game and app context from Firebase
+- [✅] flush out UI
+- [ ] add presence for users in game
+- [ ] expand game play options
+
+See the [open issues](https://github.com/ChrisCoastal/cribbage-monster/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -188,9 +196,9 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 ## Contact
 
-Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
+Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - contactchriscoastal@gmail.com
 
-Project Link: [https://github.com/github_username/repo_name](https://github.com/github_username/repo_name)
+Project Link: [https://github.com/ChrisCoastal/cribbage-monster](https://github.com/ChrisCoastal/cribbage-monster)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -207,16 +215,16 @@ Project Link: [https://github.com/github_username/repo_name](https://github.com/
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-[contributors-shield]: https://img.shields.io/github/contributors/github_username/repo_name.svg?style=for-the-badge
-[contributors-url]: https://github.com/github_username/repo_name/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/github_username/repo_name.svg?style=for-the-badge
-[forks-url]: https://github.com/github_username/repo_name/network/members
-[stars-shield]: https://img.shields.io/github/stars/github_username/repo_name.svg?style=for-the-badge
-[stars-url]: https://github.com/github_username/repo_name/stargazers
-[issues-shield]: https://img.shields.io/github/issues/github_username/repo_name.svg?style=for-the-badge
-[issues-url]: https://github.com/github_username/repo_name/issues
-[license-shield]: https://img.shields.io/github/license/github_username/repo_name.svg?style=for-the-badge
-[license-url]: https://github.com/github_username/repo_name/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/ChrisCoastal/cribbage-monster.svg?style=for-the-badge
+[contributors-url]: https://github.com/ChrisCoastal/cribbage-monster/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/ChrisCoastal/cribbage-monster.svg?style=for-the-badge
+[forks-url]: https://github.com/ChrisCoastal/cribbage-monster/network/members
+[stars-shield]: https://img.shields.io/github/stars/ChrisCoastal/cribbage-monster.svg?style=for-the-badge
+[stars-url]: https://github.com/ChrisCoastal/cribbage-monster/stargazers
+[issues-shield]: https://img.shields.io/github/issues/ChrisCoastal/cribbage-monster.svg?style=for-the-badge
+[issues-url]: https://github.com/ChrisCoastal/cribbage-monster/issues
+[license-shield]: https://img.shields.io/github/license/ChrisCoastal/cribbage-monster.svg?style=for-the-badge
+[license-url]: https://github.com/ChrisCoastal/cribbage-monster/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/linkedin_username
-[product-screenshot]: images/screenshot.png
+[linkedin-url]: https://linkedin.com/in/christopher-allen-3194371b5
+[product-screenshot]: src/assets/readme-logo.jpg

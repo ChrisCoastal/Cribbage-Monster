@@ -15,7 +15,6 @@ type MenuProps = {
 
 const Menu: FC<MenuProps> = ({ menuItems, scrollY, className, children }) => {
   const [menuIsVisible, setMenuIsVisible] = useState(false);
-  // const [scrollY, setScrollY] = useState({ pos: 0, isDown: false });
   const minMediaSm = useMediaQuery(MEDIA_SIZE.sm);
 
   const wrapperRef = useRef<HTMLSpanElement>(null);
@@ -24,14 +23,6 @@ const Menu: FC<MenuProps> = ({ menuItems, scrollY, className, children }) => {
   const toggleMenuHandler = () => {
     menuIsVisible ? setMenuIsVisible(false) : setMenuIsVisible(true);
   };
-
-  // function isScroll() {
-  //   console.log('scrolling');
-
-  //   if (window.scrollY > scrollY.pos) setScrollY({ pos: window.scrollY, isDown: true });
-  //   if (window.scrollY < scrollY.pos || window.scrollY === 0)
-  //     setScrollY({ pos: window.scrollY, isDown: false });
-  // }
 
   useEffect(() => {
     if (!menuIsVisible) return;
@@ -53,13 +44,7 @@ const Menu: FC<MenuProps> = ({ menuItems, scrollY, className, children }) => {
   }, [menuIsVisible, menuItems.length]);
 
   useEffect(() => {
-    // console.log(scrollY);
     setMenuIsVisible(false);
-
-    // window.addEventListener('scroll', isScroll, {
-    //   passive: true
-    // });
-    // return () => window.removeEventListener('scroll', isScroll);
   }, [scrollY.pos]);
 
   const animatedMenuItems = menuItems.map((item, i) => {

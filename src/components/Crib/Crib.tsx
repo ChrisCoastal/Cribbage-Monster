@@ -1,9 +1,10 @@
-import { nanoid } from 'nanoid';
 import { FC } from 'react';
 import { CardSize, CardBoxHeight, CardBoxWidth, CardOverlap, CardsIndex } from 'src/@types';
 
+import { nanoid } from 'nanoid';
+
 import PlayingCard from 'src/components/PlayingCard/PlayingCard';
-import CardBox from '../CardBox/CardBox';
+import CardBox from 'src/components/CardBox/CardBox';
 
 type CribProps = {
   cribCards: CardsIndex;
@@ -23,9 +24,7 @@ const Crib: FC<CribProps> = ({ cribCards }) => {
   ));
 
   const placeholder = (
-    <div className="col-span-3 flex items-center justify-center rounded-[8%] border border-solid border-stone-50/60 text-sm font-extralight tracking-wide text-stone-50">
-      {/* crib */}
-    </div>
+    <div className="col-span-3 rounded-[8%] border border-solid border-stone-50/60 text-sm font-extralight tracking-wide text-stone-50"></div>
   );
 
   return (

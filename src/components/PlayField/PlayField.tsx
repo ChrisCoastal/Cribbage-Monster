@@ -1,6 +1,5 @@
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import {
-  AvatarSize,
   CardBoxHeight,
   CardBoxWidth,
   CardOverlap,
@@ -10,14 +9,10 @@ import {
   GameId,
   GameStatus,
   IsActive,
-  PlayerPos,
-  ScoreType,
-  Status,
-  TallyPoints,
-  UserStats
+  Status
 } from 'src/@types';
 
-import { set, push, update, get } from 'firebase/database';
+import { set, push, update } from 'firebase/database';
 
 import {
   expectGo,
@@ -36,16 +31,12 @@ import {
   isCardValid,
   isPegPoints,
   isPlayerActive,
-  isScorePoints,
   getPlayerScoreRef,
   getPone,
   updateCardTotal,
   getGameRef,
   isPegJack,
-  getGameTalliesRef,
-  getTallyRef,
   isWinner,
-  getUserStatsRef,
   getCardValues,
   getGameStatusRef,
   scoreCap,
@@ -62,9 +53,7 @@ import PlayingCard from 'src/components/PlayingCard/PlayingCard';
 
 import useAuthContext from 'src/hooks/useAuthContext';
 import useGameContext from 'src/hooks/useGameContext';
-import useSound from 'use-sound';
-import { INITIAL_USER_STATS } from 'src/utils/constants';
-import PlayerDisplay from '../PlayerDisplay/PlayerDisplay';
+import PlayerDisplay from 'src/components/PlayerDisplay/PlayerDisplay';
 
 type PlayFieldProps = {
   gameId: GameId;
@@ -78,9 +67,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
   const uid = userAuth!.uid!;
 
   const { player, opponent } = getPlayerOpponent(gameState.players, uid);
-  const gameRef = getGameRef(gameId);
   const gameStatusRef = getGameStatusRef(gameId);
-  const gameScore = getGameTalliesRef(gameId);
   const playerHand = Object.values(gameState.playerCards[player].inHand);
   const opponentHand = Object.values(gameState.playerCards[opponent].inHand);
   const playerPlayed = Object.values(gameState.playerCards[player].played);
@@ -111,6 +98,7 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
         set(gameStatusRef, GameStatus.TALLY);
       if (playerWins || opponentWins) set(getGameStatusRef(gameId), GameStatus.WINNER);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameState.status, numCardsPlayed, numCardsCrib]);
 
   useEffect(() => {
@@ -135,35 +123,8 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
         player1: { ...gameState.players.player1, activePlayer: IsActive.ACTIVE },
         player2: { ...gameState.players.player2, activePlayer: IsActive.NOT_ACTIVE }
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameState.playerCards.player1.inHand, gameState.playerCards.player2.inHand]);
-  // useEffect(() => {
-  //   const playersRef = getPlayersRef(gameId);
-  //   if (
-  //     playerHand.length &&
-  //     opponentHand.length &&
-  //     gameState.players.player2.activePlayer === IsActive.NOT_ACTIVE &&
-  //     gameState.players.player1.activePlayer === IsActive.ACTIVE
-  //   )
-  //     update(playersRef, {
-  //       player1: { ...gameState.players.player1, activePlayer: IsActive.NOT_ACTIVE },
-  //       player2: { ...gameState.players.player2, activePlayer: IsActive.ACTIVE }
-  //     });
-  //   if (
-  //     playerHand.length &&
-  //     opponentHand.length &&
-  //     gameState.players.player1.activePlayer === IsActive.NOT_ACTIVE &&
-  //     gameState.players.player2.activePlayer === IsActive.ACTIVE
-  //   )
-  //     update(playersRef, {
-  //       player1: { ...gameState.players.player1, activePlayer: IsActive.ACTIVE },
-  //       player2: { ...gameState.players.player2, activePlayer: IsActive.NOT_ACTIVE }
-  //     });
-  //   if (!playerHand.length && !opponentHand.length)
-  //     update(playersRef, {
-  //       player1: { ...gameState.players.player1, activePlayer: IsActive.NOT_ACTIVE },
-  //       player2: { ...gameState.players.player2, activePlayer: IsActive.NOT_ACTIVE }
-  //     });
-  // }, [playerHand.length, opponentHand.length]);
 
   function addCardToCrib(card: CardType, callback?: () => void): void {
     const playerHandRef = getInHandRef(gameId, player);
@@ -283,8 +244,6 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
     if (!isPlayerActive(gameState.players[player])) return;
     if (!isCardValid(targetCard.playValue, gameState.turnTotals.cardTotal)) return;
     if (gameState.deckCut.status === Status.VALID) return;
-
-    // FIXME: move to useEffect?
     if (playerHand.length > 4) {
       addCardToCrib(targetCard);
       // if 2nd card has just been moved to crib (=== 5), make player inactive
@@ -314,15 +273,8 @@ const PlayField: FC<PlayFieldProps> = ({ gameId }) => {
       const newPeggingPointsRef = push(playerPeggingRef);
       const playerScoreRef = getPlayerScoreRef(gameId, player);
       if (totalPoints > 0) {
-        // const updates = {
-        //   ['/score/' + player]: { cur: scoreCap(playerScore + totalPoints), prev: playerScore },
-        //   ['/pegging/' + player + '/' + newPeggingPointsRef]: { ...pegDetail, totalPoints }
-        // };
-        // update(gameRef, updates);
         set(playerScoreRef, { cur: scoreCap(playerScore + totalPoints), prev: playerScore });
-        update(newPeggingPointsRef, { ...pegDetail, totalPoints }).then(() =>
-          console.log('set pegging points')
-        );
+        update(newPeggingPointsRef, { ...pegDetail, totalPoints });
       }
       if (
         expectGo(opponentHand, updatedCardTotal) &&

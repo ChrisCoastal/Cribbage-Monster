@@ -20,7 +20,6 @@ const Deck: FC<DeckProps> = ({ cutDeck, isPone, callback }) => {
 
   const renderDeck = (
     <PlayingCard
-      // key={nanoid()}
       isFaceUp={isCut}
       cardSize={CardSize.MD}
       cardIndex={0}
