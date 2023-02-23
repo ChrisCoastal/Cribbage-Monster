@@ -58,7 +58,7 @@ const GamesList: FC = () => {
                 avatar={game.player2.avatar.length ? game.player2.avatar : ''}
               />
               <p className="text-sm font-medium">
-                {game.player2.displayName.length ? game.player1.displayName : ''}
+                {game.player2.displayName.length ? game.player2.displayName : ''}
               </p>
             </span>
           </div>
