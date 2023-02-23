@@ -87,7 +87,7 @@ const MessagesSection = () => {
         </div>
       </div>
       <div className="mx-16 flex flex-col justify-between gap-12 sm:flex-row ">
-        <div className="flex aspect-square max-w-[18rem] flex-col justify-between rounded-lg border border-stone-50/60 bg-stone-800 p-8 text-stone-50">
+        <div className="flex max-w-[18rem] flex-col justify-between gap-8 rounded-lg border border-stone-50/60 bg-stone-800 p-8 text-stone-50">
           <h4 className="text-2xl font-bold text-emerald-300">Not yet...</h4>
           <p className="text-sm">
             Still a little scared? Don&apos;t be! Check out the how to play guide and build up your
@@ -99,7 +99,7 @@ const MessagesSection = () => {
             LEARN
           </Link>
         </div>
-        <div className="flex aspect-square max-w-[18rem] flex-col justify-between rounded-lg border border-stone-50/60 bg-stone-800 p-8 text-stone-50">
+        <div className="flex max-w-[18rem] flex-col justify-between gap-8 rounded-lg border border-stone-50/60 bg-stone-800 p-8 text-stone-50">
           <h4 className="text-2xl font-bold text-emerald-300">Let&apos;s Go!</h4>
           <p className="text-sm">
             Joining Cribbage Monster is free! Play online and improve your game now.

@@ -16,7 +16,6 @@
     <p align="center">
       A two player online version of the classic card game.
     <br />
-    <br />
     </p>
 
   <h3 align="center">
@@ -26,7 +25,6 @@
   </h3>
 
   <p align="center">
-    A two player online version of the classic card game.
     <br />
     <br />
     Thanks for giving this project a star! ⭐️
@@ -48,13 +46,17 @@
       </ul>
     </li>
     <li>
-      <a href="#getting-started">Getting Started</a>
+      <a href="#play">Game</a>
       <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
+        <li><a href="#play">Play</a></li>
+        <li><a href="#learn">Learn</a></li>
       </ul>
     </li>
-    <li><a href="#Project">Usage</a></li>
+    <li><a href="#project">Project</a>
+      <ul>
+        <li><a href="#inspiration">Inspiration</a></li>
+      </ul>
+    </li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
@@ -85,19 +87,25 @@
 
 <!-- Play -->
 
-## Play
+## Game
 
 <p align="center">
   <img src='src/assets/game-view.jpg' width="300px" >
 </p>
+
+### Play
+
 Check out the live playable version at <a href="https://cribbage.netlify.app/" target="_blank">Cribbage Monster</a>.
+
+### Learn
+
 Don't know how to play? Learn the <a href="https://cribbage.netlify.app/rules" target="_blank">Rules of Crib</a>.
 
 ## Project
 
 ### Inspiration
 
-Cribbage Monster started with the idea of building a small app (as a holiday gift) that my Dad, brothers, and their families could pursue the family pasttime with.
+Cribbage Monster started with the idea of building a small app (as a holiday gift) so relatives (notably my Dad) could pursue the family pasttime when we weren't together.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -165,7 +173,7 @@ Project Link: [https://github.com/ChrisCoastal/cribbage-monster](https://github.
 ## Acknowledgments
 
 - Thanks to everyone that has put amazing amounts of work and skill into the libraries, packages, and other code that has made this project posible. 🙏
-- Thanks to Dad and Grandpa for 🙏
+- Thanks to Dad and Grandpa for the games.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 

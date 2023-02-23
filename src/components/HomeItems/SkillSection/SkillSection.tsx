@@ -72,9 +72,7 @@ const SkillSection = () => {
           </div>
           <div
             className={`border-1 rounded-lg border-stone-900 bg-stone-800 p-4 text-left shadow-xl`}>
-            <div
-              ref={avatarRef}
-              className="flex w-[80vw] gap-4 py-2 pl-10 pr-4 sm:w-[374px] sm:py-2">
+            <div ref={avatarRef} className="flex w-[374px] gap-4 py-2 pl-10 pr-4">
               <Player
                 playerPos={PlayerPos.P_ONE}
                 isDealer={false}

@@ -18,10 +18,10 @@ const ProgressSection = () => {
   const isIntersect = useIntersectionObserver(lightRefLeft);
 
   const animateLeftLight = isIntersect
-    ? 'opacity-1 -translate-y-1 scale-[160%] md:scale-[180%]'
+    ? 'opacity-1 -translate-y-1'
     : 'opacity-0 translate-y-36 -translate-x-24 scale-75';
   const animateRightLight = isIntersect
-    ? 'opacity-1 translate-y-4 scale-[160%] md:scale-[180%] md:translate-x-6 animate-flicker'
+    ? 'opacity-1 translate-y-3 translate-x-4 animate-flicker'
     : 'opacity-0 translate-y-36 translate-x-24 scale-75';
   const detailsVisible = dashDetails ? 'opacity-100' : 'opacity-0';
 
@@ -33,21 +33,28 @@ const ProgressSection = () => {
 
   return (
     <section className="bg-gradient-to-b from-stone-900 to-stone-800 py-40 lg:py-48">
-      <div className="mx-auto flex max-w-7xl flex-col items-center justify-center [perspective:1600px] lg:flex-row">
+      <div className="mx-auto flex max-w-[82rem] flex-col items-center justify-center [perspective:1600px] lg:flex-row">
         <div className="relative flex w-full flex-col items-center">
           <div className="my-12 mb-20 grid grid-cols-2 grid-rows-1 items-center justify-center lg:mb-28">
-            <h3 className="z-30 col-span-2 col-start-1 row-start-1 text-center text-5xl font-bold text-stone-900 md:text-6xl">
+            <h3 className="z-30 col-span-2 col-start-1 row-start-1 whitespace-nowrap text-center text-6xl font-bold text-stone-900">
               Light up the <br /> shadows.
             </h3>
             <div className="relative col-start-1 row-start-1 h-36 w-36">
               <div
                 ref={lightRefLeft}
-                className={`${animateLeftLight} absolute top-0 left-0 z-10 aspect-square h-full w-full max-w-[400px] rounded-full bg-[radial-gradient(circle,_rgba(245,245,244,0.9)_64%,_rgba(28,25,25,0)_70%)] transition-all duration-[1200ms] sm:w-full `}></div>
+                style={{
+                  height: '0',
+                  width: '100%',
+                  paddingBottom: '100%',
+                  scale: '1.8'
+                }}
+                className={`${animateLeftLight} absolute top-0 left-0 z-10 aspect-square h-full w-full rounded-full bg-[radial-gradient(circle,_rgba(245,245,244,0.9)_64%,_rgba(245,245,244,0.01)_70%)] transition-all duration-[1200ms] sm:w-full `}></div>
             </div>
             <div className="relative col-start-2 row-start-1 h-36 w-36">
               <div
                 ref={lightRefRight}
-                className={`${animateRightLight} absolute top-0 left-0 z-10 aspect-square h-full w-full max-w-[400px] rounded-full bg-[radial-gradient(circle,_rgba(245,245,244,0.9)_64%,_rgba(28,25,25,0)_70%)] transition-all duration-[1200ms] sm:w-full `}></div>
+                style={{ height: '0', width: '100%', paddingBottom: '100%', scale: '1.8' }}
+                className={`${animateRightLight} absolute top-0 left-0 z-10 aspect-square h-full w-full rounded-full bg-[radial-gradient(circle,_rgba(245,245,244,0.9)_64%,_rgba(245,245,244,0.01)_70%)] transition-all duration-[1200ms] sm:w-full `}></div>
             </div>
           </div>
           <div className="mx-8 mb-28 mt-8 flex max-w-[29rem] flex-col flex-wrap items-stretch justify-center gap-4 sm:flex-row lg:m-0">
