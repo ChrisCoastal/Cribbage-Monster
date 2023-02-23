@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-
 import { useNavigate } from 'react-router-dom';
+
+import Button from 'src/components/UI/Button';
 
 import useFirebaseAuth from 'src/hooks/useFirebaseAuth';
 import useAuthContext from 'src/hooks/useAuthContext';
-import Button from 'src/components/UI/Button';
 
 const SignUpPage = () => {
   const [username, setUsername] = useState('');
@@ -14,7 +14,6 @@ const SignUpPage = () => {
   const { createUser } = useFirebaseAuth();
   const { userAuth } = useAuthContext();
   const navigate = useNavigate();
-  // const { setAuth } = useFirebaseAuth();
 
   function redirectAuthUser(uid: string) {
     navigate(`/dashboard/${uid}`);

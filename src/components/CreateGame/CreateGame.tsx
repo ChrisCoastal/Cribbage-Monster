@@ -2,8 +2,7 @@ import { FC, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { nanoid } from 'nanoid';
 
-import { rtdb } from 'src/firestore.config';
-import { ref, serverTimestamp, set } from 'firebase/database';
+import { set } from 'firebase/database';
 
 import { GameBrief, GameReducerTypes, IsActive } from 'src/@types';
 import { INITIAL_GAME_STATE } from 'src/utils/constants';
@@ -11,11 +10,7 @@ import { getGameFromList, getGameRef } from 'src/utils/helpers';
 
 import useAuthContext from 'src/hooks/useAuthContext';
 import useGameContext from 'src/hooks/useGameContext';
-
-import Button from 'src/components/UI/Button';
-import ToolTip from 'src/components/UI/ToolTip';
 import useSettingsContext from 'src/hooks/useSettingsContext';
-import AddIcon from 'src/components/UI/icons/AddIcon/AddIcon';
 
 type CreateGameProps = {
   className?: string;

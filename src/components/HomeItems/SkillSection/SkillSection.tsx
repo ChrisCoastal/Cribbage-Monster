@@ -2,16 +2,10 @@ import React, { useEffect, useState, useRef } from 'react';
 import anime from 'animejs';
 
 import { PlayerPos } from 'src/@types';
+
 import Player from 'src/components/Player/Player';
 import MessageTail from 'src/components/UI/icons/MessageTail/MessageTail';
-import PlayButton from 'src/components/UI/PlayButton';
-import Teeth from 'src/components/UI/icons/Teeth/Teeth';
-import useScrollY from 'src/hooks/useScrollY';
-import { AvatarSize } from 'src/@types';
-import Avatar from 'src/components/Avatar/Avatar';
 
-import useMediaQuery from 'src/hooks/useMediaQuery';
-import { MEDIA_SIZE } from 'src/utils/constants';
 import useIntersectionObserver from 'src/hooks/useIntersectionObserver';
 
 import downArrow1 from 'src/assets/arrow-down-1-dark.svg';
@@ -25,36 +19,20 @@ const messages = [
 ];
 
 const SkillSection = () => {
-  const scrollY = useScrollY();
-  const [teethPos, setTeethPos] = useState(0);
   const containerRef = React.useRef<HTMLDivElement>(null);
-  const sectionTop = containerRef.current?.offsetTop;
-
   const [message, setMessage] = useState<{ text: string; index: number }>({
     text: 'Mmmmlergh ... 👁',
     index: 0
   });
 
   const avatarRef = useRef<HTMLDivElement>(null);
-  const isIntersect = useIntersectionObserver(containerRef, { threshold: 1 });
-  const animate = isIntersect ? 'opacity-1 translate-y-0' : 'opacity-0 translate-y-12';
-  console.log(isIntersect);
-  // const windowWidth = window.innerWidth;
-
-  useEffect(() => {
-    if (!containerRef.current) return;
-    const teethPos = 40 - Math.min(40, Math.abs(containerRef.current?.offsetTop));
-    console.log(scrollY.pos - containerRef.current?.offsetTop);
-
-    setTeethPos(teethPos);
-  }, [scrollY.pos]);
+  const isIntersect = useIntersectionObserver(containerRef);
 
   useEffect(() => {
     if (!isIntersect) return;
     const interval = setInterval(() => {
       anime({
         targets: '.animate-message',
-        // scale: [0, 1.05, 1],
         scale: [
           { value: 0, duration: 0 },
           { value: 1.05, duration: 200 },
@@ -62,7 +40,6 @@ const SkillSection = () => {
         ],
         translateX: [-8, 0],
         translateY: [8, 0],
-        // duration: 600,
         easing: 'spring(0.5, 100, 10, 0)'
       });
       setMessage((prev) => ({
@@ -74,23 +51,10 @@ const SkillSection = () => {
     return () => clearInterval(interval);
   }, [isIntersect, message.text, message.index]);
 
-  // useEffect(() => {
-  //   anime({
-  //     targets: '.animate-message',
-  //     scale: [0, 1.05, 1],
-  //     translateX: [-8, 0],
-  //     translateY: [8, 0],
-  //     duration: 600,
-  //     easing: 'spring(0.5, 100, 10, 0)'
-  //   });
-  // }, [message]);
-
   return (
     <div
       ref={containerRef}
       className="relative bg-emerald-300 bg-gradient-to-br from-emerald-300 to-emerald-400 py-36">
-      {/* <Teeth className="absolute" style={{ top: -80 }} /> */}
-      {/* <Teeth className="absolute -bottom-36 rotate-180" /> */}
       <div className="mx-8 flex flex-col items-center text-center">
         <h3 className="text-5xl font-bold text-stone-900 sm:text-6xl lg:text-7xl">
           Sharp teeth not required.
@@ -106,24 +70,9 @@ const SkillSection = () => {
               analysis.
             </p>
           </div>
-          {/* <div className="rounded-md p-4 text-stone-900">
-            <p className="w-48 text-xl font-medium">
-              Find an opponent to fit your skill level and improve your play with post game analysis
-              and strategy.
-            </p>
-          </div>
-          <div className="rounded-md p-4 text-stone-900">
-            <p className="w-48 text-xl font-medium">
-              Find an opponent to fit your skill level and improve your play with post game analysis
-              and strategy.
-            </p>
-          </div> */}
-          {/* <div className={`${animate} transition-all duration-700`}> */}
           <div
             className={`border-1 rounded-lg border-stone-900 bg-stone-800 p-4 text-left shadow-xl`}>
-            <div
-              ref={avatarRef}
-              className="flex w-[80vw] gap-4 py-2 pl-10 pr-4 sm:w-[374px] sm:py-2">
+            <div ref={avatarRef} className="flex w-[374px] gap-4 py-2 pl-10 pr-4">
               <Player
                 playerPos={PlayerPos.P_ONE}
                 isDealer={false}
@@ -145,29 +94,6 @@ const SkillSection = () => {
           </div>
         </div>
       </div>
-      {/* <div className="mx-auto flex items-center justify-center gap-4">
-        <div className="inline-grid w-56 grid-cols-5 grid-rows-1">
-          <Avatar
-            className={`${AvatarSize.LG} col-span-2 col-start-1 row-start-1 border border-purple-500/60`}
-            avatar="🦁"
-          />
-          <Avatar
-            className={`${AvatarSize.LG} col-span-2 col-start-2 row-start-1 border border-purple-500/60`}
-            avatar="🦑"
-          />
-          <Avatar
-            className={`${AvatarSize.LG} col-span-2 col-start-3 row-start-1 border border-purple-500/60`}
-            avatar="🧙‍♂️"
-          />
-          <Avatar
-            className={`${AvatarSize.LG} col-span-2 col-start-4 row-start-1 border border-purple-500/60`}
-            avatar="👩‍🎤"
-          />
-        </div>
-        <h3 className="w-80 text-2xl font-semibold text-stone-900 sm:text-4xl">
-          Play thousands of users online now.
-        </h3>
-      </div> */}
     </div>
   );
 };

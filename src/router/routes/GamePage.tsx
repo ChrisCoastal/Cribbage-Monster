@@ -1,33 +1,13 @@
-import { useCallback, useEffect } from 'react';
-import { LoaderFunctionArgs, useLoaderData, useBeforeUnload, useNavigate } from 'react-router-dom';
-
+import { useEffect } from 'react';
 import { get, onValue, set, update } from 'firebase/database';
+import { LoaderFunctionArgs, useLoaderData, useNavigate } from 'react-router-dom';
 
-import {
-  GameReducerTypes,
-  GameState,
-  IsActive,
-  Status,
-  PlayerPos,
-  GameStatus,
-  UserStats
-} from 'src/@types';
-
-import useAuthContext from 'src/hooks/useAuthContext';
-import useGameContext from 'src/hooks/useGameContext';
-import useModal from 'src/hooks/useModal';
-
-import Button from 'src/components/UI/Button';
-import Confetti from 'src/components/UI/Confetti';
-
-import HandTally from 'src/components/HandTally/HandTally';
-import PlayField from 'src/components/PlayField/PlayField';
+import { GameReducerTypes, GameState, IsActive, Status, GameStatus, UserStats } from 'src/@types';
 
 import {
   dealHands,
   getGameFromList,
   getGameRef,
-  getGameStatusRef,
   getPlayerOpponent,
   getPlayerRef,
   getPone,
@@ -35,9 +15,16 @@ import {
   isHost,
   isWinner
 } from 'src/utils/helpers';
-import { INITIAL_GAME_STATE, INITIAL_USER_STATS } from 'src/utils/constants';
-import Avatar from 'src/components/Avatar/Avatar';
+import { INITIAL_USER_STATS } from 'src/utils/constants';
+
+import Button from 'src/components/UI/Button';
 import GameWinner from 'src/components/GameWinner/GameWinner';
+import HandTally from 'src/components/HandTally/HandTally';
+import PlayField from 'src/components/PlayField/PlayField';
+
+import useAuthContext from 'src/hooks/useAuthContext';
+import useGameContext from 'src/hooks/useGameContext';
+import useModal from 'src/hooks/useModal';
 
 export async function gameLoader({ params }: LoaderFunctionArgs) {
   try {
@@ -50,19 +37,17 @@ export async function gameLoader({ params }: LoaderFunctionArgs) {
 
 const GamePage = () => {
   const game = useLoaderData() as GameState;
-  const navigate = useNavigate();
   const gameRef = getGameRef(game.gameId);
 
   const { gameState, dispatchGame } = useGameContext();
-
+  const navigate = useNavigate();
   const { userAuth } = useAuthContext();
   const uid = userAuth!.uid!;
+
   const { player, opponent } = getPlayerOpponent(gameState.players, uid);
   const playerWins = isWinner(gameState.score[player].cur);
   const opponentWins = isWinner(gameState.score[opponent].cur);
   const pone = getPone(gameState.dealer);
-  // useInterval(() => update(presenceRef, { presence: serverTimestamp() }), 5000); // TODO: uncomment to add updating timestamp
-  // console.log(playerWins, opponentWins);
 
   const { Modal: TallyModal, isModal: isTallyModal, modalHandler: tallyModalHandler } = useModal();
   const { Modal: WinModal, isModal: isWinModal, modalHandler: winModalHandler } = useModal();
@@ -82,9 +67,7 @@ const GamePage = () => {
     }
 
     return unsubscriber;
-  }, []);
-
-  console.log(gameState.status);
+  }, [dispatchGame, game.gameId]);
 
   useEffect(() => {
     if (gameState.status === GameStatus.TALLY && !isTallyModal) {
@@ -98,13 +81,12 @@ const GamePage = () => {
       tallyModalHandler(false);
     }
     if (gameState.status === GameStatus.DEAL) {
-      // tallyModalHandler(false);
       isHost(player) && dealHandler();
     }
     if (gameState.status === GameStatus.WINNER) {
-      console.log('winner');
       winGameHandler();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameState.status]);
 
   function canStartGame() {
@@ -119,7 +101,6 @@ const GamePage = () => {
   async function dealHandler(newGame?: 'newGame') {
     if (!isHost(player) && !newGame) return;
     const deal = dealHands();
-    // const state = newGame ? INITIAL_GAME_STATE : gameState;
     const update: GameState = {
       ...gameState,
       status: GameStatus.LAY_CRIB,
@@ -209,7 +190,6 @@ const GamePage = () => {
   }
 
   function quitGameHandler() {
-    // winModalHandler(false);
     leaveGameHandler();
     navigate(`/dashboard/${uid}`);
   }
@@ -217,7 +197,6 @@ const GamePage = () => {
   function playAgainHandler() {
     winModalHandler(false);
     const playerRef = getPlayerRef(game.gameId, player);
-    console.log(game.players[opponent]?.playAgain);
 
     if (game.players[opponent]?.playAgain) dealHandler('newGame');
     else update(playerRef, { ...game.players[player], playAgain: true });
@@ -241,7 +220,7 @@ const GamePage = () => {
           isVisible={isTallyModal}
           className={'w-full bg-stone-800 text-stone-50'}
           clickAway={false}>
-          <HandTally player={player} opponent={opponent} dealer={gameState.dealer} pone={pone} />
+          <HandTally player={player} dealer={gameState.dealer} pone={pone} />
         </TallyModal>
       )}
       {isWinModal && (

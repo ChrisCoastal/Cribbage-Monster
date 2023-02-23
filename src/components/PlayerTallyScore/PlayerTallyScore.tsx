@@ -27,7 +27,7 @@ const PlayerTallyScore: FC<PlayerTallyScoreProps> = ({ score }) => {
       );
       return () => clearTimeout(timeout);
     }
-  }, [renderScore, score.cur]);
+  }, [renderScore, score.cur, score.prev]);
 
   return <div className="animate-text text-2xl">{renderScore} / 121</div>;
 };

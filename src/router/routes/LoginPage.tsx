@@ -1,16 +1,14 @@
-import { useCallback, useEffect, useState } from 'react';
-
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import Button from 'src/components/UI/Button';
+
 import useFirebaseAuth from 'src/hooks/useFirebaseAuth';
 import useAuthContext from 'src/hooks/useAuthContext';
-import Button from 'src/components/UI/Button';
-import { get } from 'firebase/database';
-import { getUserSettingsRef } from 'src/utils/helpers';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState<boolean>(false);
 
   const { loginUser } = useFirebaseAuth();
   const { userAuth } = useAuthContext();
@@ -36,6 +34,7 @@ const LoginPage = () => {
   useEffect(() => {
     if (!userAuth?.uid) return;
     redirectAuthUser(userAuth.uid);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userAuth?.uid]);
 
   return (

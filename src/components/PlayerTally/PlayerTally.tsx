@@ -1,9 +1,10 @@
 import React, { FC, ReactNode, useEffect } from 'react';
+import anime from 'animejs';
+
 import {
   CardBoxHeight,
   CardBoxWidth,
   CardOverlap,
-  CardsIndex,
   CardSize,
   CardType,
   AvatarSize,
@@ -13,43 +14,25 @@ import {
   ScoreType
 } from 'src/@types';
 
+import { getCardValues } from 'src/utils/helpers';
+
 import Avatar from 'src/components/Avatar/Avatar';
+import Card from 'src/components/UI/Card';
 import CardBox from 'src/components/CardBox/CardBox';
 import PlayerTallyScore from 'src/components/PlayerTallyScore/PlayerTallyScore';
 import PlayingCard from 'src/components/PlayingCard/PlayingCard';
-import { getCardValues } from 'src/utils/helpers';
-import anime from 'animejs';
-import Card from 'src/components/UI/Card';
 
 type PlayerTallyProps = {
-  // displayName: string;
-  // avatar: string;
-  // cards: CardsIndex;
   tally: Tally;
   score: ScoreType;
   cut: CardType;
-  // scores: ReactNode;
-  // total: ReactNode;
   handType: 'hand' | 'crib';
   className?: string;
   children?: ReactNode;
 };
 
-const PlayerTally: FC<PlayerTallyProps> = ({
-  // displayName,
-  // avatar,
-  // cards,
-  tally,
-  score,
-  cut,
-  // scores,
-  // total,
-  handType,
-  className
-}) => {
+const PlayerTally: FC<PlayerTallyProps> = ({ tally, score, cut, handType, className }) => {
   const cardValues = getCardValues(tally.cards) as CardType[];
-
-  // const { gameState } = useGameContext();
 
   function renderCards(
     cards: CardType[] = [],
@@ -79,24 +62,6 @@ const PlayerTally: FC<PlayerTallyProps> = ({
       overlap={CardOverlap.NONE}
     />
   );
-
-  // const playerScores = {
-  //   prev: gameState.score[playerPos].prev,
-  //   hand: gameState.score[playerPos].prev + player.points.totalPoints,
-  //   crib:
-  //     gameState.score[playerPos].prev +
-  //     player.points.totalPoints +
-  //     (playerIsDealer ? crib.points.totalPoints : 0)
-  // };
-
-  // const opponentScores = {
-  //   prev: gameState.score[opponent.playerPos].prev,
-  //   hand: gameState.score[opponent.playerPos].prev + opponent.points.totalPoints,
-  //   crib:
-  //     gameState.score[opponent.playerPos].prev +
-  //     opponent.points.totalPoints +
-  //     (!playerIsDealer ? crib.points.totalPoints : 0)
-  // };
 
   useEffect(() => {
     setTimeout(() => {
@@ -139,10 +104,9 @@ const PlayerTally: FC<PlayerTallyProps> = ({
     const scores = Object.entries(score).filter(
       (score) => score[1] !== 0 || score[0] === 'totalPoints'
     );
-    // const delay = playerPos === dealer ? scores.length + 2 : 1;
+
     const scoreItems = scores.map((score, i) => {
       const [key, value] = score;
-      // const animate = count === i + delay ? 'animate-text-grow' : '';
       if (key === 'totalPoints')
         return (
           <li key={key} className={`text-2xl tracking-wide animate-item-${i} opacity-0`}>
@@ -165,17 +129,12 @@ const PlayerTally: FC<PlayerTallyProps> = ({
   const renderScores = renderScoreItems(tally.points);
   const totalScore = renderScores.splice(-1, 1);
   const scoreColor =
-    // tally.playerPos === PlayerPos.P_ONE ? 'border-purple-500' : 'border-emerald-400';
-    // const playerOutline =
     tally.playerPos === PlayerPos.P_ONE ? 'outline-purple-500' : 'outline-emerald-400';
 
   return (
     <>
       <Card padding="md" className={`${className}`}>
         <div className="flex items-center gap-2">
-          {/* <div>
-            <Avatar className={AvatarSize.MD} avatar={tally.avatar} />
-          </div> */}
           <div className={`relative `}>
             <span
               className={`absolute h-20 w-20 ${scoreColor} animate-pulse rounded-full outline outline-2
@@ -202,7 +161,6 @@ const PlayerTally: FC<PlayerTallyProps> = ({
         </div>
         <div className="flex items-center justify-between">
           <div>
-            {/* <ul className="grid grid-cols-2 justify-items-start gap-x-4 text-xs">{scores}</ul> */}
             <ul className="mb-6 flex flex-col gap-3 text-sm">{renderScores}</ul>
             <ul className="flex items-center justify-between text-2xl font-bold">{totalScore} </ul>
           </div>

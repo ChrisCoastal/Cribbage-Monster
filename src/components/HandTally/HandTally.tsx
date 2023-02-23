@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState, useRef } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { set } from 'firebase/database';
 
 import { GameStatus, PlayerPos, Tally } from 'src/@types';
@@ -9,12 +9,11 @@ import { getGameRef, isHost, isScorePoints, scoreCap } from 'src/utils/helpers';
 import useGameContext from 'src/hooks/useGameContext';
 type HandTallyProps = {
   player: PlayerPos;
-  opponent: PlayerPos;
   dealer: PlayerPos;
   pone: PlayerPos;
 };
 
-const HandTally: FC<HandTallyProps> = ({ player, opponent, pone, dealer }) => {
+const HandTally: FC<HandTallyProps> = ({ player, pone, dealer }) => {
   const { gameState } = useGameContext();
   const [tallyIndex, setTallyIndex] = useState<number>(0);
   const [tallyPoints, setTallyPoints] = useState<null | Tally>(null);
@@ -23,11 +22,7 @@ const HandTally: FC<HandTallyProps> = ({ player, opponent, pone, dealer }) => {
     player2: { prev: number; cur: number };
   }>({ player1: gameState.score.player1, player2: gameState.score.player2 });
 
-  console.log('tallyIndex', tallyIndex);
-
   useEffect(() => {
-    console.log('tallyIndex', tallyIndex);
-
     const orderOfCount = [pone, dealer, dealer];
     const playerPos = orderOfCount[tallyIndex];
     const isCrib = tallyIndex === 2;
@@ -35,7 +30,6 @@ const HandTally: FC<HandTallyProps> = ({ player, opponent, pone, dealer }) => {
 
     if (endTally) {
       const gameRef = getGameRef(gameState.gameId);
-      console.log(updatedScore);
 
       isHost(player) &&
         set(gameRef, { ...gameState, status: GameStatus.DEAL, score: updatedScore });
@@ -46,8 +40,6 @@ const HandTally: FC<HandTallyProps> = ({ player, opponent, pone, dealer }) => {
       ? isScorePoints(gameState.crib, gameState.deckCut.card!, 'crib')
       : isScorePoints(gameState.playerCards[playerPos].played, gameState.deckCut.card!);
 
-    console.log(points);
-
     const tally: Tally = {
       displayName: gameState.players[playerPos].displayName,
       avatar: gameState.players[playerPos].avatar,
@@ -57,7 +49,6 @@ const HandTally: FC<HandTallyProps> = ({ player, opponent, pone, dealer }) => {
     };
     setTallyPoints(tally);
     const updatedCurScore = scoreCap(updatedScore[playerPos].cur + points.totalPoints);
-    console.log('updatedCur', updatedCurScore);
 
     points.totalPoints &&
       setUpdatedScore((prevScore) => ({
@@ -74,6 +65,7 @@ const HandTally: FC<HandTallyProps> = ({ player, opponent, pone, dealer }) => {
     }, 4600);
 
     return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tallyIndex]);
 
   return (

@@ -1,6 +1,5 @@
-import React, { MouseEvent, FC, ReactNode, useState, useEffect } from 'react';
+import React, { MouseEvent, FC, ReactNode, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { useInterval } from 'src/hooks/useInterval';
 
 type ToolTipProps = {
   text: string;

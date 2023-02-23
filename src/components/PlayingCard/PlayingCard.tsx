@@ -1,9 +1,12 @@
 import React, { FC } from 'react';
 import { CardOverlap, CardSize, CardType, IsActive } from 'src/@types';
+
+import { getPlayerOpponent } from 'src/utils/helpers';
+
+import SuitIcon from 'src/components/UI/icons/SuitIcon/SuitIcon';
+
 import useAuthContext from 'src/hooks/useAuthContext';
 import useGameContext from 'src/hooks/useGameContext';
-import { getPlayerOpponent } from 'src/utils/helpers';
-import SuitIcon from '../UI/icons/SuitIcon/SuitIcon';
 
 type PlayingCardProps = {
   cardSize: string;
@@ -50,7 +53,7 @@ const PlayingCard: FC<PlayingCardProps> = ({
           'col-start-6 col-end-9 row-start-1 z-[30]'
         ];
 
-  const cardRotation = ['-rotate-3', 'rotate-3 -translate-y-1']; // ${cardRotation[cardIndex % 2]}
+  const cardRotation = ['-rotate-3', 'rotate-3 -translate-y-1'];
   const cardRotationHand = [
     'rotate-[-8deg] translate-y-2',
     'rotate-[-4deg] translate-y-1',

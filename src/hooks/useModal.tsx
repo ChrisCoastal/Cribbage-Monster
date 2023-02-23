@@ -1,12 +1,9 @@
 import React, { FC, ReactNode, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import Button from 'src/components/UI/Button';
+import anime from 'animejs';
+
 import AddIcon from 'src/components/UI/icons/AddIcon/AddIcon';
 import SubHeading from 'src/components/UI/SubHeading';
-import useMediaQuery from './useMediaQuery';
-import { MEDIA_SIZE } from 'src/utils/constants';
-
-import anime from 'animejs';
 
 type ModalProps = {
   isVisible: boolean;
@@ -18,7 +15,6 @@ type ModalProps = {
 
 const useModal = () => {
   const [isModal, setIsModal] = useState<boolean>(false);
-  const minMediaSm = useMediaQuery(MEDIA_SIZE.sm);
 
   function modalHandler(isVisible: boolean, canClickAway = true) {
     if (!canClickAway) return;
@@ -37,7 +33,6 @@ const useModal = () => {
         translateX: { value: ['-50%'], duration: 0 },
         translateY: ['-50%'],
         duration: 1000,
-        // delay: 50,
         easing: 'spring(0.5, 100, 10, 0)'
       });
     }, []);

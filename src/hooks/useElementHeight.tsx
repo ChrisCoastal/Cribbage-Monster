@@ -7,7 +7,7 @@ const useElementHeight = () => {
   useEffect(() => {
     if (ref.current === null) return;
     setHeight(ref.current.clientHeight);
-  });
+  }, []);
 
   return <div ref={ref}>{height}</div>;
 };

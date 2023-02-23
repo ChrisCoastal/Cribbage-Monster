@@ -1,42 +1,27 @@
-import { useEffect, useState } from 'react';
-
-import { LoaderFunctionArgs, useNavigate, useLoaderData } from 'react-router-dom';
+import { useEffect } from 'react';
 
 import { get, onValue } from 'firebase/database';
-import { HexColorPicker } from 'react-colorful';
+import { LoaderFunctionArgs, useLoaderData } from 'react-router-dom';
 
-import {
-  AvatarSize,
-  GameBrief,
-  SettingsReducerTypes,
-  UserSettingsState,
-  UserStats
-} from 'src/@types';
+import { AvatarSize, SettingsReducerTypes, UserSettingsState, UserStats } from 'src/@types';
+
+import { getUserSettingsRef, getUserStatsRef } from 'src/utils/helpers';
+
+import Avatar from 'src/components/Avatar/Avatar';
+import Badges from 'src/components/Badges/Badges';
+
+import AvatarModal from 'src/components/AvatarModal/AvatarModal';
+import Card from 'src/components/UI/Card';
+import DashCarousel from 'src/components/DashboardItems/DashCarousel/DashCarousel';
+import Footer from 'src/components/Footer/Footer';
+import GamesList from 'src/components/DashboardItems/GamesList/GamesList';
+import GamesPlayed from 'src/components/DashboardItems/GamesPlayed/GamesPlayed';
+import GamesWon from 'src/components/DashboardItems/GamesWon/GamesWon';
+import SubHeading from 'src/components/UI/SubHeading';
 
 import useAuthContext from 'src/hooks/useAuthContext';
 import useSettingsContext from 'src/hooks/useSettingsContext';
-import useGameContext from 'src/hooks/useGameContext';
 import useModal from 'src/hooks/useModal';
-
-import CreateGame from 'src/components/CreateGame/CreateGame';
-import GamesList from 'src/components/DashboardItems/GamesList/GamesList';
-import DashCarousel from 'src/components/DashboardItems/DashCarousel/DashCarousel';
-import Badges from 'src/components/Badges/Badges';
-import Avatar from 'src/components/Avatar/Avatar';
-import { getGamesList, getUserStatsRef } from 'src/utils/helpers';
-import AvatarPicker from 'src/components/AvatarPicker/AvatarPicker';
-
-import { getUserSettingsRef } from 'src/utils/helpers';
-import Button from 'src/components/UI/Button';
-import AvatarModal from 'src/components/AvatarModal/AvatarModal';
-import Doughnut from 'src/components/UI/Doughnut';
-import GamesWon from 'src/components/DashboardItems/GamesWon/GamesWon';
-import Card from 'src/components/UI/Card';
-import CardBox from 'src/components/CardBox/CardBox';
-import BarChart from 'src/components/UI/BarChart';
-import GamesPlayed from 'src/components/DashboardItems/GamesPlayed/GamesPlayed';
-import SubHeading from 'src/components/UI/SubHeading';
-import Footer from 'src/components/Footer/Footer';
 
 export async function dashboardLoader({ params }: LoaderFunctionArgs) {
   try {
@@ -56,19 +41,15 @@ export async function dashboardLoader({ params }: LoaderFunctionArgs) {
 
 const DashboardPage = () => {
   const { userAuth } = useAuthContext();
-  const { userSettingsState, dispatchSettings } = useSettingsContext();
-  // const [gameState, dispatchGame] = useGameContext();
+  const { dispatchSettings } = useSettingsContext();
+
   const { userSettings, userStats } = useLoaderData() as {
     userSettings: UserSettingsState;
     userStats: UserStats;
   };
+
   const { Modal, isModal, modalHandler } = useModal();
   const isUser = userSettings.uid === userAuth?.uid;
-  const navigate = useNavigate();
-
-  function changeAvatar() {
-    modalHandler(true);
-  }
 
   useEffect(() => {
     if (userSettings.uid !== userAuth?.uid) console.log('no match');
@@ -82,6 +63,7 @@ const DashboardPage = () => {
       (error) => console.log(error)
     );
     return unsubscribe;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const dailyValues = [

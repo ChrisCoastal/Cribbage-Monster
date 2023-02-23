@@ -2,7 +2,6 @@ import React, { FC, MouseEventHandler, ReactNode } from 'react';
 import ToolTip from './ToolTip';
 
 type ButtonProps = {
-  // size: string;
   handler?: MouseEventHandler<HTMLButtonElement>;
   type?: 'button' | 'submit' | 'reset';
   buttonColor?: string;

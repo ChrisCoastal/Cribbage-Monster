@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import { createPortal } from 'react-dom';
 
 type OverlayProps = {
@@ -8,13 +8,6 @@ type OverlayProps = {
 };
 
 const Overlay: FC<OverlayProps> = ({ style, className, onClick }) => {
-  // const [isVisible, setIsVisible] = useState<boolean>(false);
-
-  // function handleClick() {
-  //   setIsVisible((prev) => !prev);
-  //   onClick && onClick();
-  // }
-
   const overlayStyle = style === 'dark' ? 'bg-stone-900' : 'bg-transparent';
 
   return createPortal(

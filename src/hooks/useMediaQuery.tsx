@@ -21,7 +21,6 @@ function useMediaQuery(query: string): boolean {
 
     matchMedia.addEventListener('change', handleChange);
     return () => matchMedia.removeEventListener('change', handleChange);
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
 

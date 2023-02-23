@@ -1,8 +1,4 @@
 import React, { FC } from 'react';
-import { PlayerPos } from 'src/@types';
-
-import useGameContext from 'src/hooks/useGameContext';
-import { getPlayerOpponent } from 'src/utils/helpers';
 
 type ScoreProps = {
   player: {

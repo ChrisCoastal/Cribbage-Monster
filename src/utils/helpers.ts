@@ -7,7 +7,6 @@ import {
   IsActive,
   Player,
   PlayerPos,
-  ScoreType,
   SortBy,
   SortOrder,
   Suit,

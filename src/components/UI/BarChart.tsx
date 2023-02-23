@@ -1,5 +1,6 @@
-import { nanoid } from 'nanoid';
 import React, { FC } from 'react';
+import { nanoid } from 'nanoid';
+
 import ToolTip from './ToolTip';
 
 type BarChartProps = {
@@ -8,14 +9,8 @@ type BarChartProps = {
 };
 
 const BarChart: FC<BarChartProps> = ({ barValues, colLabels }) => {
-  const numCols = barValues.length;
   const maxBarValue = Math.max(...barValues.map((value) => value.totalValue));
   const graphMax = maxBarValue - (maxBarValue % 10) + 10;
-  const barValueTotals: number[] = [];
-
-  // function bars() {
-  //   const maxValue = Math.max(...barValueTotals);
-  // }
 
   const bars = barValues.map((bar, i) => {
     const { totalValue, ...segmentValues } = bar;

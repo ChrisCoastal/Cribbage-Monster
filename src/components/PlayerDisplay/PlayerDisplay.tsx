@@ -22,8 +22,8 @@ const PlayerDisplay = () => {
   const isDealer = player === dealer;
 
   useEffect(() => {
-    console.log('updating display status', gameState.status);
     updateStatusHandler(gameState.status);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameState.status]);
 
   useEffect(() => {
@@ -37,22 +37,21 @@ const PlayerDisplay = () => {
       setMessage("👋 Hey! It's our turn to play a card.");
     }, 18000);
     return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameState.players[player].activePlayer, gameState.players[opponent].activePlayer]);
 
   useEffect(() => {
     if (!playerPegging.length) return;
     const pegging = playerPegging.at(-1)!;
-    console.log('pegging player', pegging);
-
     updatePeggingHandler(pegging, player);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playerPegging.length]);
 
   useEffect(() => {
     if (!opponentPegging.length) return;
     const pegging = opponentPegging.at(-1)!;
-    console.log('pegging opponent', pegging);
-
     updatePeggingHandler(pegging, opponent);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opponentPegging.length]);
 
   function updateStatusHandler(status: GameStatus) {
@@ -60,11 +59,6 @@ const PlayerDisplay = () => {
       case GameStatus.NEW: {
         if (!gameState.players[opponent].displayName.length) {
           setMessage(`${gameState.players[player].avatar} Waiting for opponent...`);
-          // setTimeout(() => {
-          //   setMessage(
-          //     "👋 We've been waiting awhile... Why not message Chris and see if he can play?! 🎉"
-          //   );
-          // }, 18000);
         }
         break;
       }
@@ -117,13 +111,12 @@ const PlayerDisplay = () => {
   }
 
   function updatePeggingHandler(pegging: PeggingType, playerPos: PlayerPos) {
-    console.log('pegging', pegging, playerPos);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { totalPoints, ...points } = pegging;
     const pegText: string[] = [];
 
     for (const point in points) {
       const pointKey = point as keyof typeof points;
-      console.log('key', points[pointKey]);
       if (points[pointKey] === 0) null;
       else pegText.push(`${pointKey === 'go' ? 'a GO' : pointKey} for ${points[pointKey]}`);
     }

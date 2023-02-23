@@ -1,18 +1,19 @@
-import { useState, useEffect } from 'react';
+import React from 'react';
+import useFirebaseAuth from 'src/hooks/useFirebaseAuth';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import useScrollY from 'src/hooks/useScrollY';
 
 import { AvatarSize } from 'src/@types';
 
+import Avatar from 'src/components/Avatar/Avatar';
+import Button from 'src/components/UI/Button';
+import CreateGame from 'src/components/CreateGame/CreateGame';
+import Logo from 'src/components/Logo/Logo';
+import Menu from 'src/components/UI/Menu';
+import MenuIcon from 'src/components/UI/icons/MenuIcon/MenuIcon';
+
 import useAuthContext from 'src/hooks/useAuthContext';
 import useSettingsContext from 'src/hooks/useSettingsContext';
-import useFirebaseAuth from 'src/hooks/useFirebaseAuth';
-import Button from 'src/components/UI/Button';
-import Logo from 'src/components/Logo/Logo';
-import Avatar from 'src/components/Avatar/Avatar';
-import CreateGame from 'src/components/CreateGame/CreateGame';
-import MenuIcon from 'src/components/UI/icons/MenuIcon/MenuIcon';
-import Menu from 'src/components/UI/Menu';
+import useScrollY from 'src/hooks/useScrollY';
 
 const Nav = () => {
   const navigate = useNavigate();
