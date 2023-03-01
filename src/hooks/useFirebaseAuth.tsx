@@ -84,7 +84,6 @@ const useFirebaseAuth = (): AuthContextType => {
     set(userSettingsRef, {
       uid: userData.user.uid,
       displayName: userData.user.displayName,
-      email: userData.user.email,
       avatar: AVATARS.at(-1),
       online: true,
       lastVisibleAt: serverTimestamp()
@@ -95,7 +94,6 @@ const useFirebaseAuth = (): AuthContextType => {
     update(getUserSettingsRef(userData.uid), {
       uid: userData.uid,
       displayName: userData.displayName,
-      email: userData.email,
       avatar: userData.avatar,
       online: true,
       lastVisibleAt: Timestamp

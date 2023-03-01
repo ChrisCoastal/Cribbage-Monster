@@ -34,7 +34,6 @@ export const PAIR_POINTS = [0, 2, 6, 12];
 export const INITIAL_USER_SETTING: UserSettingsState = {
   uid: '',
   displayName: '',
-  email: '',
   avatar: '',
   online: false,
   lastVisibleAt: ''
