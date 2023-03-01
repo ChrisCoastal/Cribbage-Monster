@@ -3,7 +3,7 @@ import { Dispatch } from 'react';
 export type UserSettingsState = {
   uid: string;
   displayName: string;
-  email: string;
+  // email: string;
   avatar: string;
   online: boolean;
   lastVisibleAt: string;

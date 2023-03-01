@@ -78,29 +78,35 @@ const DashboardPage = () => {
 
   return (
     <div className="relative">
-      <div className="absolute h-screen min-h-full w-full bg-cardbacks bg-cover opacity-[0.03]"></div>
-      <div className="relative mx-auto grid w-full auto-rows-fr justify-items-center gap-4 rounded-lg px-4 pt-24 pb-16 md:w-[48rem] md:grid-cols-2 xl:w-[75rem] xl:grid-cols-3">
-        <Card padding="md">
-          <div className="flex flex-col items-center gap-4">
-            {isUser ? (
-              <AvatarModal isModal={isModal} Modal={Modal} modalHandler={modalHandler} />
-            ) : (
-              <Avatar
-                className={`${AvatarSize.LG} lg:h-48 lg:w-48 lg:text-[8.8rem]`}
-                avatar={userSettings.avatar || ''}
-              />
-            )}
+      <div className="min-h-screen">
+        <div className="relative">
+          <div className="absolute h-screen min-h-full w-full bg-cardbacks bg-cover opacity-[0.03]"></div>
+          <div className="relative mx-auto grid w-full auto-rows-fr justify-items-center gap-4 rounded-lg px-4 pt-24 pb-36 md:w-[48rem] md:grid-cols-2 xl:w-[75rem] xl:grid-cols-3">
+            <Card padding="md">
+              <div className="flex flex-col items-center gap-4">
+                {isUser ? (
+                  <AvatarModal isModal={isModal} Modal={Modal} modalHandler={modalHandler} />
+                ) : (
+                  <Avatar
+                    className={`${AvatarSize.LG} lg:h-48 lg:w-48 lg:text-[8.8rem]`}
+                    avatar={userSettings.avatar || ''}
+                  />
+                )}
 
-            <SubHeading>{`${userSettings.displayName}`}</SubHeading>
-            <Badges />
+                <SubHeading>{`${userSettings.displayName}`}</SubHeading>
+                <Badges />
+              </div>
+            </Card>
+            <GamesList />
+            <DashCarousel className="sm:col-span-2 sm:row-start-2 sm:aspect-video" />
+            <GamesWon gamesPlayed={userStats.gamesPlayed} gamesWon={userStats.gamesWon} />
+            <GamesPlayed dailyGames={dailyValues} />
           </div>
-        </Card>
-        <GamesList />
-        <DashCarousel className="sm:col-span-2 sm:row-start-2 sm:aspect-video" />
-        <GamesWon gamesPlayed={userStats.gamesPlayed} gamesWon={userStats.gamesWon} />
-        <GamesPlayed dailyGames={dailyValues} />
+        </div>
       </div>
-      <Footer />
+      <div className="absolute bottom-0 w-full">
+        <Footer />
+      </div>
     </div>
   );
 };
