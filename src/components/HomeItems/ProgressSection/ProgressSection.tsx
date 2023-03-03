@@ -3,9 +3,9 @@ import useMediaQuery from 'src/hooks/useMediaQuery';
 
 import useIntersectionObserver from 'src/hooks/useIntersectionObserver';
 
-import dashView from 'src/assets/dash-view.jpg';
-import downArrow1 from 'src/assets/arrow-down-1.svg';
-import downArrow2 from 'src/assets/arrow-down-2.svg';
+import dashView from 'src/assets/screenshots/dash-view.jpg';
+import downArrow1 from 'src/assets/arrows/arrow-down-1.svg';
+import downArrow2 from 'src/assets/arrows/arrow-down-2.svg';
 
 import { MEDIA_SIZE } from 'src/utils/constants';
 

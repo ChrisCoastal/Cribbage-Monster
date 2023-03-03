@@ -8,7 +8,7 @@ import PlayButton from 'src/components/UI/PlayButton';
 
 import useIntersectionObserver from 'src/hooks/useIntersectionObserver';
 
-import downArrow1 from 'src/assets/arrow-down-1-green.svg';
+import downArrow1 from 'src/assets/arrows/arrow-down-1-green.svg';
 
 const MessagesSection = () => {
   const avatarRef = useRef<HTMLDivElement>(null);

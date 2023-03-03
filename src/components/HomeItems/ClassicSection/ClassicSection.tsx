@@ -1,5 +1,5 @@
 import React from 'react';
-import GameView from 'src/assets/game-view-partial.jpg';
+import GameView from 'src/assets/screenshots/game-view-partial.jpg';
 
 const ClassicSection = () => {
   return (

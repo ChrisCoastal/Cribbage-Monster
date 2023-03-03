@@ -8,7 +8,7 @@ import MessageTail from 'src/components/UI/icons/MessageTail/MessageTail';
 
 import useIntersectionObserver from 'src/hooks/useIntersectionObserver';
 
-import downArrow1 from 'src/assets/arrow-down-1-dark.svg';
+import downArrow1 from 'src/assets/arrows/arrow-down-1-dark.svg';
 
 const SkillSection = () => {
   const containerRef = React.useRef<HTMLDivElement>(null);

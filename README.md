@@ -92,7 +92,7 @@ Cribbage Monster is an online version of the classic card game. The app is built
 ## Game
 
 <p align="center">
-  <img src='src/assets/game-view.jpg' width="300px" >
+  <img src='src/assets/screenshots/game-view.jpg' width="300px" >
 </p>
 
 ### Play

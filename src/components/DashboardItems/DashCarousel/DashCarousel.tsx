@@ -1,12 +1,12 @@
 import React, { FC, useState } from 'react';
 
 import { useInterval } from 'src/hooks/useInterval';
-import carouselImg1 from 'src/assets/carousel-1.jpg';
-import carouselImg2 from 'src/assets/carousel-2.jpg';
-import carouselImg3 from 'src/assets/carousel-3.jpg';
-import carouselImgMobile1 from 'src/assets/carousel-1-mobile.jpg';
-import carouselImgMobile2 from 'src/assets/carousel-2-mobile.jpg';
-import carouselImgMobile3 from 'src/assets/carousel-3-mobile.jpg';
+import carouselImg1 from 'src/assets/carousel/carousel-1.jpg';
+import carouselImg2 from 'src/assets/carousel/carousel-2.jpg';
+import carouselImg3 from 'src/assets/carousel/carousel-3.jpg';
+import carouselImgMobile1 from 'src/assets/carousel/carousel-1-mobile.jpg';
+import carouselImgMobile2 from 'src/assets/carousel/carousel-2-mobile.jpg';
+import carouselImgMobile3 from 'src/assets/carousel/carousel-3-mobile.jpg';
 import Heading from 'src/components/UI/Heading';
 import Button from 'src/components/UI/Button';
 
