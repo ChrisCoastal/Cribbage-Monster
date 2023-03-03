@@ -10,20 +10,21 @@ import useIntersectionObserver from 'src/hooks/useIntersectionObserver';
 
 import downArrow1 from 'src/assets/arrow-down-1-dark.svg';
 
-const messages = [
-  '👋',
-  "Hey! Let's play a game!",
-  "Ha, you think you're scary?! I'm not scared of you!",
-  'Are you worth my time? Not sure you got the 🧠s...',
-  'Who needs teeth anyway...'
-];
-
 const SkillSection = () => {
   const containerRef = React.useRef<HTMLDivElement>(null);
-  const [message, setMessage] = useState<{ text: string; index: number }>({
-    text: 'Mmmmlergh ... 👁',
+  const [message, setMessage] = useState<{ text: JSX.Element; index: number }>({
+    text: <p>Mmmmlergh ... 👁</p>,
     index: 0
   });
+  const messages = [
+    <p key={0}>👋</p>,
+    <p key={1}>Hey! Let&apos;s play a game!</p>,
+    <p key={2}>Ha, you think you&apos;re scary?! I&apos;m not scared of you!</p>,
+    <p key={3}>
+      Are you worth my time? Not sure you got the <span className="text-sm">🧠</span>...
+    </p>,
+    <p key={4}>Who needs teeth anyway...</p>
+  ];
 
   const avatarRef = useRef<HTMLDivElement>(null);
   const isIntersect = useIntersectionObserver(containerRef);
