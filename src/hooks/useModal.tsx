@@ -5,6 +5,8 @@ import anime from 'animejs';
 import AddIcon from 'src/components/UI/icons/AddIcon/AddIcon';
 import SubHeading from 'src/components/UI/SubHeading';
 
+import useScrollY from './useScrollY';
+
 type ModalProps = {
   isVisible: boolean;
   title?: string;
@@ -22,6 +24,9 @@ const useModal = () => {
   }
 
   const Modal: FC<ModalProps> = ({ isVisible, title, clickAway = true, className, children }) => {
+    const scrollY = useScrollY();
+    scrollY.isChange && clickAway && setIsModal(false);
+
     function keyDownHandler(event: React.KeyboardEvent<HTMLDivElement>) {
       if (event.key === 'escape') modalHandler(false);
     }
@@ -43,7 +48,7 @@ const useModal = () => {
           createPortal(
             <>
               <div
-                className={`modal ${className} absolute left-1/2 top-1/2 z-[1000] w-full bg-stone-800 p-4 sm:w-fit sm:rounded-lg`}>
+                className={`modal ${className} absolute left-1/2 top-[50vh] z-[1000] w-full bg-stone-800 p-4 sm:w-fit sm:rounded-lg`}>
                 <div>
                   <div className="flex items-center justify-between gap-8 pb-2">
                     <SubHeading className="pt-1">{title}</SubHeading>

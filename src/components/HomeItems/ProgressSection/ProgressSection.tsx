@@ -3,19 +3,18 @@ import useMediaQuery from 'src/hooks/useMediaQuery';
 
 import useIntersectionObserver from 'src/hooks/useIntersectionObserver';
 
-import dashView from 'src/assets/dash-view.jpg';
-import downArrow1 from 'src/assets/arrow-down-1.svg';
-import downArrow2 from 'src/assets/arrow-down-2.svg';
+import dashView from 'src/assets/screenshots/dash-view.jpg';
+import downArrow1 from 'src/assets/arrows/arrow-down-1.svg';
+import downArrow2 from 'src/assets/arrows/arrow-down-2.svg';
 
 import { MEDIA_SIZE } from 'src/utils/constants';
 
 const ProgressSection = () => {
   const [dashDetails, setDashDetails] = useState(false);
-  const lightRefLeft = useRef<HTMLDivElement>(null);
-  const lightRefRight = useRef<HTMLDivElement>(null);
+  const lightRef = useRef<HTMLDivElement>(null);
 
   const minMediaSm = useMediaQuery(MEDIA_SIZE.md);
-  const isIntersect = useIntersectionObserver(lightRefLeft);
+  const isIntersect = useIntersectionObserver(lightRef);
 
   const animateLeftLight = isIntersect
     ? 'opacity-1 -translate-y-1'
@@ -34,14 +33,13 @@ const ProgressSection = () => {
   return (
     <section className="bg-gradient-to-b from-stone-900 to-stone-800 py-40 lg:py-48">
       <div className="mx-auto flex max-w-[82rem] flex-col items-center justify-center [perspective:1600px] lg:flex-row">
-        <div className="relative flex w-full flex-col items-center">
+        <div className="relative flex w-full flex-col items-center" ref={lightRef}>
           <div className="my-12 mb-20 grid grid-cols-2 grid-rows-1 items-center justify-center lg:mb-28">
             <h3 className="z-30 col-span-2 col-start-1 row-start-1 whitespace-nowrap text-center text-6xl font-bold text-stone-900">
               Light up the <br /> shadows.
             </h3>
             <div className="relative col-start-1 row-start-1 h-36 w-36">
               <div
-                ref={lightRefLeft}
                 style={{
                   height: '0',
                   width: '100%',
@@ -52,7 +50,6 @@ const ProgressSection = () => {
             </div>
             <div className="relative col-start-2 row-start-1 h-36 w-36">
               <div
-                ref={lightRefRight}
                 style={{ height: '0', width: '100%', paddingBottom: '100%', scale: '1.8' }}
                 className={`${animateRightLight} absolute top-0 left-0 z-10 aspect-square h-full w-full rounded-full bg-[radial-gradient(circle,_rgba(245,245,244,0.9)_64%,_rgba(245,245,244,0.01)_70%)] transition-all duration-[1200ms] sm:w-full `}></div>
             </div>

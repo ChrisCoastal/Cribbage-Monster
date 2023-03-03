@@ -33,12 +33,10 @@ module.exports = {
         outfit: ['Outfit']
       },
       backgroundImage: {
-        'cardback-md': `url('src/assets/cardback-md.svg')`,
-        'cardback-sm': `url('src/assets/cardback-sm.svg')`,
-        hero: `url('src/assets/hero.jpg')`,
-        'hero-2': `url('src/assets/hero-2.jpg')`,
-        cardbacks: `url('src/assets/cardbacks.jpg')`,
-        card: `url('src/assets/card.png')`
+        'cardback-md': `url('src/assets/cards/cardback-md.svg')`,
+        'cardback-sm': `url('src/assets/cards/cardback-sm.svg')`,
+        cardbacks: `url('src/assets/backgrounds/cardbacks.jpg')`,
+        card: `url('src/assets/backgrounds/card.png')`
       },
       animation: {
         'fade-up-delay-xs': '0.3s ease-out 0.2s fade-up-in-xs both',

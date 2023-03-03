@@ -69,6 +69,8 @@
 
 ## About The Project
 
+Cribbage Monster is an online version of the classic card game. The app is built with React and uses Firebase Realtime Database for storage and providing updates to clients via websocket.
+
 [![Product Name Screen Shot][product-screenshot]](https://cribbage.netlify.app/)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -90,22 +92,33 @@
 ## Game
 
 <p align="center">
-  <img src='src/assets/game-view.jpg' width="300px" >
+  <img src='src/assets/screenshots/game-view.jpg' width="300px" >
 </p>
 
 ### Play
 
-Check out the live playable version at <a href="https://cribbage.netlify.app/" target="_blank">Cribbage Monster</a>.
+You can check out the live playable version at <a href="https://cribbage.netlify.app/" target="_blank">Cribbage Monster</a>.
 
 ### Learn
 
-Don't know how to play? Learn the <a href="https://cribbage.netlify.app/rules" target="_blank">Rules of Crib</a>.
+Don't know how to play? Cribbage is a great card game! You can start here with learning the <a href="https://cribbage.netlify.app/rules" target="_blank">Rules of Crib</a>.
 
 ## Project
 
 ### Inspiration
 
-Cribbage Monster started with the idea of building a small app (as a holiday gift) so relatives (notably my Dad) could pursue the family pasttime when we weren't together.
+Cribbage Monster started with the idea of building a small app as a holiday gift for relatives (notably my Dad), so that we can enjoy the family pastime when we aren't together.
+
+### Features
+
+Some highlights from what I wanted to accomplish and include in the project:
+
+- create a multipage app with auth protected routing
+- design a layout for gameplay that would scale well for desktop and mobile
+- subscribing clients to a backend via websocket for multiplayer gameplay
+- experiment with svg animations using Anime.js
+- create some basic demo dashboard components
+- cleaning up old game data with cloud functions
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -113,14 +126,14 @@ Cribbage Monster started with the idea of building a small app (as a holiday gif
 
 ## Roadmap
 
-There is still more work and ideas I would love to add (or go back and change 😅), but I'm happy with where it is at and excited to move my focus to other work.
+There is still more work and ideas I would love to add (or go back and change 😅), but I'm happy with where the project is at in terms of what I set out to make and am excited move on to other projects.
 
 - [x] block out pages and routing
 - [x] Firebase auth
 - [x] block out game play UI
 - [x] game logic
 - [x] read/write game and app context from Firebase backend
-- [x] websocket state updates between game clients
+- [x] websocket subscription for in game clients
 - [x] game cleanup via cloud functions
 - [x] flush out UI
 - [ ] presence for users in game
@@ -129,7 +142,7 @@ There is still more work and ideas I would love to add (or go back and change �
 - [ ] computer opponent(s)
 - [ ] ... 🏁
 
-See the [open issues](https://github.com/ChrisCoastal/cribbage-monster/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/ChrisCoastal/cribbage-monster/issues) for a list of open issues.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -140,7 +153,6 @@ See the [open issues](https://github.com/ChrisCoastal/cribbage-monster/issues) f
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
 If you have a suggestion that would make Cribbage Monster better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
 
 1. Fork the Project
 2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
@@ -172,8 +184,7 @@ Project Link: [https://github.com/ChrisCoastal/cribbage-monster](https://github.
 
 ## Acknowledgments
 
-- Thanks to everyone that has put amazing amounts of work and skill into the libraries, packages, and other code that has made this project posible. 🙏
-- Thanks to Dad and Grandpa for the games.
+- Thank you to anyone responsible for the libraries, packages, and other code that has made this project posible. 🙏
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 

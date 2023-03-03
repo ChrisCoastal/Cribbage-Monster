@@ -24,8 +24,7 @@ const Player: FC<PlayerProps> = ({
     playerPos === PlayerPos.P_ONE
       ? 'bg-purple-500 ring-purple-500'
       : 'bg-emerald-400 ring-emerald-400';
-  const playerOutline =
-    playerPos === PlayerPos.P_ONE ? 'outline-purple-500' : 'outline-emerald-400';
+  const playerOutline = playerPos === PlayerPos.P_ONE ? 'ring-purple-500' : 'ring-emerald-400';
 
   return (
     <div className={`${className} col-start-3 flex flex-col items-center justify-center gap-1`}>
@@ -43,7 +42,7 @@ const Player: FC<PlayerProps> = ({
       <div className={`relative `}>
         <span
           className={`absolute h-16 w-16 md:h-20 md:w-20 ${
-            isActive ? `${playerOutline} animate-pulse rounded-full outline outline-2` : ''
+            isActive ? `${playerOutline} animate-pulse rounded-full ring-2` : ''
           }`}></span>
         <Avatar
           className={`${AvatarSize.MD} ${
