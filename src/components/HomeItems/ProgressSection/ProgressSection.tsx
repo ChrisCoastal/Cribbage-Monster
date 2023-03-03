@@ -33,7 +33,7 @@ const ProgressSection = () => {
   return (
     <section className="bg-gradient-to-b from-stone-900 to-stone-800 py-40 lg:py-48">
       <div className="mx-auto flex max-w-[82rem] flex-col items-center justify-center [perspective:1600px] lg:flex-row">
-        <div className="relative flex w-full flex-col items-center" ref={lightRef}>
+        <div className="relative flex flex-1 flex-col items-center" ref={lightRef}>
           <div className="my-12 mb-20 grid grid-cols-2 grid-rows-1 items-center justify-center lg:mb-28">
             <h3 className="z-30 col-span-2 col-start-1 row-start-1 whitespace-nowrap text-center text-6xl font-bold text-stone-900">
               Light up the <br /> shadows.
@@ -58,29 +58,29 @@ const ProgressSection = () => {
             <div className="flex flex-1 flex-col justify-around gap-3 rounded-lg border border-stone-50/60 bg-stone-800 p-8 text-stone-50 sm:max-w-[14rem]">
               <p className="self-center text-4xl">🏆</p>
               <h4 className="text-xl font-bold text-emerald-300">Achievements</h4>
-              <p className="text-sm">Unlock badges and other in game collectables as you play.</p>
+              <p className="text-sm">Unlock badges and in game collectables.</p>
             </div>
             <div className="flex flex-1 flex-col justify-around gap-3 rounded-lg border border-stone-50/60 bg-stone-800 p-8 text-stone-50 sm:max-w-[14rem]">
               <p className="self-center text-4xl">📉</p>
               <h4 className="text-xl font-bold text-emerald-300">Stat Tracking</h4>
-              <p className="text-sm">Analyze your climb towards the top of the leaderboard.</p>
+              <p className="text-sm">Analyze your climb towards the top.</p>
             </div>
             <div className="flex flex-1 flex-col justify-around gap-3 rounded-lg border border-stone-50/60 bg-stone-800 p-8 text-stone-50 sm:max-w-[14rem]">
               <p className="self-center text-4xl">💰</p>
               <h4 className="text-xl font-bold text-emerald-300">Prizes</h4>
-              <p className="text-sm">Leap into serious league competition for monster prizes.</p>
+              <p className="text-sm">League competition with big prizes.</p>
             </div>
             <div className="flex flex-1 flex-col justify-around gap-3 rounded-lg border border-stone-50/60 bg-stone-800 p-8 text-stone-50 sm:max-w-[14rem]">
               <p className="self-center text-4xl">🎉</p>
               <h4 className="text-xl font-bold text-emerald-300">Monster Fun</h4>
-              <p className="text-sm">Meet and play online with other cribbage fanatics anytime.</p>
+              <p className="text-sm">Play online with other monsters anytime.</p>
             </div>
           </div>
         </div>
         <div
           onMouseEnter={() => setDashDetails(true)}
           onMouseLeave={() => setDashDetails(false)}
-          className="relative mt-8 max-w-[44rem] transition-all duration-500 md:[transform:rotate3d(0,_-1,_0.1,_30deg)_translate(-12%)] md:hover:[transform:rotate3d(0,_-1,_0.1,_20deg)_translate(-10%)] lg:mx-0">
+          className="relative mt-8 max-w-[44rem] flex-1 transition-all duration-500 md:[transform:rotate3d(0,_-1,_0.1,_30deg)_translate(-12%)] md:hover:[transform:rotate3d(0,_-1,_0.1,_20deg)_translate(-10%)] lg:ml-8">
           <div className="relative">
             <img
               src={dashView}
