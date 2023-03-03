@@ -109,19 +109,16 @@ Don't know how to play? Cribbage is a great card game! You can start here with l
 
 Cribbage Monster started with the idea of building a small app as a holiday gift for relatives (notably my Dad), so that we can enjoy the family pastime when we aren't together.
 
-### Build
-
 ### Features
 
 Some highlights from what I wanted to accomplish and include in the project:
 
 - create a multipage app with auth protected routing
+- design a layout for gameplay that would scale well for desktop and mobile
 - subscribing clients to a backend via websocket for multiplayer gameplay
-- experiment with svg animations
-
-### Learning
-
-I've had some great expected and unexpected learning moments while building this project.
+- experiment with svg animations using Anime.js
+- create some basic demo dashboard components
+- cleaning up old game data with cloud functions
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
