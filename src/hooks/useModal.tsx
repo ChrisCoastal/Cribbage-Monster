@@ -43,7 +43,7 @@ const useModal = () => {
           createPortal(
             <>
               <div
-                className={`modal ${className} absolute left-1/2 top-1/2 z-[1000] w-full bg-stone-800 p-4 sm:w-fit sm:rounded-lg`}>
+                className={`modal ${className} absolute left-1/2 top-[50vh] z-[1000] w-full bg-stone-800 p-4 sm:w-fit sm:rounded-lg`}>
                 <div>
                   <div className="flex items-center justify-between gap-8 pb-2">
                     <SubHeading className="pt-1">{title}</SubHeading>
