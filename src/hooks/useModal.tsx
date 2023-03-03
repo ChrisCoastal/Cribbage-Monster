@@ -5,6 +5,8 @@ import anime from 'animejs';
 import AddIcon from 'src/components/UI/icons/AddIcon/AddIcon';
 import SubHeading from 'src/components/UI/SubHeading';
 
+import useScrollY from './useScrollY';
+
 type ModalProps = {
   isVisible: boolean;
   title?: string;
@@ -22,6 +24,9 @@ const useModal = () => {
   }
 
   const Modal: FC<ModalProps> = ({ isVisible, title, clickAway = true, className, children }) => {
+    const scrollY = useScrollY();
+    scrollY.isChange && clickAway && setIsModal(false);
+
     function keyDownHandler(event: React.KeyboardEvent<HTMLDivElement>) {
       if (event.key === 'escape') modalHandler(false);
     }
