@@ -71,7 +71,7 @@
 
 Cribbage Monster is an online version of the classic card game. The app is built with React and uses Firebase Realtime Database for storage and providing updates to clients via websocket.
 
-[![Product Name Screen Shot][product-screenshot]](https://cribbage.netlify.app/)
+<!-- [![Product Name Screen Shot][product-screenshot]](https://cribbage.netlify.app/) -->
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
