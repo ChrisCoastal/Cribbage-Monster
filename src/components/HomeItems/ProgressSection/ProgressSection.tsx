@@ -35,8 +35,8 @@ const ProgressSection = () => {
   }, []);
 
   return (
-    <section className="bg-gradient-to-b from-stone-900 to-stone-800 py-40 lg:py-48" ref={lightRef}>
-      <div className="mx-auto flex max-w-[82rem] flex-col items-center justify-center [perspective:1600px] lg:flex-row">
+    <section className="bg-gradient-to-b from-stone-900 to-stone-800 py-24 xl:py-44" ref={lightRef}>
+      <div className="mx-auto flex max-w-[82rem] scale-[85%] flex-col items-center justify-center gap-8 [perspective:1600px] lg:flex-row xl:scale-100">
         <div className="relative flex flex-1 flex-col items-center">
           <div className="my-12 mb-20 grid grid-cols-2 grid-rows-1 items-center justify-center lg:mb-28">
             <h3 className="z-30 col-span-2 col-start-1 row-start-1 whitespace-nowrap text-center text-6xl font-bold text-stone-900">
@@ -84,7 +84,7 @@ const ProgressSection = () => {
         <div
           onMouseEnter={() => setDashDetails(true)}
           onMouseLeave={() => setDashDetails(false)}
-          className="relative mt-8 max-w-[44rem] flex-1 transition-all duration-500 md:[transform:rotate3d(0,_-1,_0.1,_30deg)_translate(-12%)] md:hover:[transform:rotate3d(0,_-1,_0.1,_20deg)_translate(-10%)] lg:ml-8">
+          className="relative mt-8 max-w-[44rem] flex-1 transition-all duration-500 md:[transform:rotate3d(0,_-1,_0.1,_30deg)_translate(-12%)] md:hover:[transform:rotate3d(0,_-1,_0.1,_20deg)_translate(-10%)]">
           <div className="relative">
             <img
               src={dashView}
