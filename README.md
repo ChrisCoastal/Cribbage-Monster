@@ -26,7 +26,6 @@
 
   <p align="center">
     <br />
-    <br />
     Thanks for giving this project a star! ⭐️
     <br />
     <a href="https://github.com/ChrisCoastal/cribbage-monster/issues">Report Bug</a>
@@ -46,7 +45,7 @@
       </ul>
     </li>
     <li>
-      <a href="#play">Game</a>
+      <a href="#game">Game</a>
       <ul>
         <li><a href="#play">Play</a></li>
         <li><a href="#learn">Learn</a></li>
@@ -55,6 +54,7 @@
     <li><a href="#project">Project</a>
       <ul>
         <li><a href="#inspiration">Inspiration</a></li>
+        <li><a href="#inspiration">Features</a></li>
       </ul>
     </li>
     <li><a href="#roadmap">Roadmap</a></li>
@@ -92,7 +92,7 @@ Cribbage Monster is an online version of the classic card game. The app is built
 ## Game
 
 <p align="center">
-  <img src='src/assets/screenshots/game-view.jpg' width="300px" >
+  <img src='src/assets/screenshots/game-view.jpg'>
 </p>
 
 ### Play
@@ -113,11 +113,14 @@ Cribbage Monster started with the idea of building a small app as a holiday gift
 
 Some highlights from what I wanted to accomplish and include in the project:
 
-- create a multipage app with auth protected routing
-- design a layout for gameplay that would scale well for desktop and mobile
-- subscribing clients to a backend via websocket for multiplayer gameplay
-- experiment with svg animations using Anime.js
-- create some basic demo dashboard components
+- create a multipage app with auth protected routing (React Router and Firebase)
+- using Firebase Realtime Database Rules for data validation
+- design a UI for gameplay that translates directly from mobile to desktop
+- subscribing clients to the database via websocket for multiplayer gameplay
+- experimenting with Anime.js for creating svg animations (and menu transitions)
+- trying different strategies for conditional styles and animations with Tailwind
+- building some basic dashboard components (rather than using VISX, MUI, or etc.)
+- checking for dirty / clean disconnects from games
 - cleaning up old game data with cloud functions
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -126,7 +129,11 @@ Some highlights from what I wanted to accomplish and include in the project:
 
 ## Roadmap
 
-There is still more work and ideas I would love to add (or go back and change 😅), but I'm happy with where the project is at in terms of what I set out to make and am excited move on to other projects.
+<p align="center">
+  <img src='src/assets/screenshots/board-view.jpg' >
+</p>
+
+There is still more work and ideas I would love to add (or go back and change 😅), but I'm happy with where the project is at in terms of what I set out to make and I look forawrd to moving my focus to other projects.
 
 - [x] block out pages and routing
 - [x] Firebase auth
@@ -137,6 +144,7 @@ There is still more work and ideas I would love to add (or go back and change �
 - [x] game cleanup via cloud functions
 - [x] flush out UI
 - [ ] presence for users in game
+- [ ] improve type safety and validation for data from API
 - [ ] custom avatar illustrations
 - [ ] expand game play options
 - [ ] computer opponent(s)
@@ -150,9 +158,9 @@ See the [open issues](https://github.com/ChrisCoastal/cribbage-monster/issues) f
 
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you would like to make or suggest are welcomed!
 
-If you have a suggestion that would make Cribbage Monster better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+If you have a suggestion that would make Cribbage Monster better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement". Note that you will not be able to run the project locally without setting up at dev backend with Firebase. If you would like assistance with this, please note that when opening an issue.
 
 1. Fork the Project
 2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
@@ -174,6 +182,8 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 ## Contact
 
+Think you can beat me at a game or would like to reach out? I'm happy to hear from you!
+
 ChrisCoastal: contactchriscoastal@gmail.com 🌊
 
 Project Link: [https://github.com/ChrisCoastal/cribbage-monster](https://github.com/ChrisCoastal/cribbage-monster)
@@ -184,7 +194,9 @@ Project Link: [https://github.com/ChrisCoastal/cribbage-monster](https://github.
 
 ## Acknowledgments
 
-- Thank you to anyone responsible for the libraries, packages, and other code that has made this project posible. 🙏
+- Thank you to everyone responsible for the libraries, packages, and other code that has made this project possible. 🙏
+- Thanks as always to the authors of the innumerable articles, Stack Overflow answers, and other resources that were life savers. ⛑
+- Thanks to my Mom and Dad for teaching me how to play cards. 🃕🂵🂥🃋 🃅
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 

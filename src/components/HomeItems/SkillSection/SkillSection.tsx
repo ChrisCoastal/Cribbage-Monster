@@ -21,7 +21,8 @@ const SkillSection = () => {
     <p key={1}>Hey! Let&apos;s play a game!</p>,
     <p key={2}>Ha, you think you&apos;re scary?! I&apos;m not scared of you!</p>,
     <p key={3}>
-      Are you worth my time? Not sure you got the <span className="text-sm">🧠</span>...
+      Are you worth my time? Not sure you got the <span className="text-2xs md:text-sm">🧠</span>
+      ...
     </p>,
     <p key={4}>Who needs teeth anyway...</p>
   ];
@@ -73,7 +74,7 @@ const SkillSection = () => {
           </div>
           <div
             className={`border-1 rounded-lg border-stone-900 bg-stone-800 p-4 text-left shadow-xl`}>
-            <div ref={avatarRef} className="flex w-[374px] gap-4 py-2 pl-10 pr-4">
+            <div ref={avatarRef} className="flex w-[350px] gap-4 py-2 pl-10 pr-4 sm:w-[374px]">
               <Player
                 playerPos={PlayerPos.P_ONE}
                 isDealer={false}
