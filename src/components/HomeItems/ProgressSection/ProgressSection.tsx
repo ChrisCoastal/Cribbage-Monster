@@ -35,8 +35,8 @@ const ProgressSection = () => {
   }, []);
 
   return (
-    <section className="bg-gradient-to-b from-stone-900 to-stone-800 py-40 lg:py-48" ref={lightRef}>
-      <div className="mx-auto flex max-w-[82rem] scale-90 flex-col items-center justify-center gap-8 [perspective:1600px] lg:flex-row xl:scale-100">
+    <section className="bg-gradient-to-b from-stone-900 to-stone-800 py-24 xl:py-44" ref={lightRef}>
+      <div className="mx-auto flex max-w-[82rem] scale-[85%] flex-col items-center justify-center gap-8 [perspective:1600px] lg:flex-row xl:scale-100">
         <div className="relative flex flex-1 flex-col items-center">
           <div className="my-12 mb-20 grid grid-cols-2 grid-rows-1 items-center justify-center lg:mb-28">
             <h3 className="z-30 col-span-2 col-start-1 row-start-1 whitespace-nowrap text-center text-6xl font-bold text-stone-900">
