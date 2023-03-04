@@ -26,7 +26,6 @@
 
   <p align="center">
     <br />
-    <br />
     Thanks for giving this project a star! ⭐️
     <br />
     <a href="https://github.com/ChrisCoastal/cribbage-monster/issues">Report Bug</a>
@@ -46,7 +45,7 @@
       </ul>
     </li>
     <li>
-      <a href="#play">Game</a>
+      <a href="#game">Game</a>
       <ul>
         <li><a href="#play">Play</a></li>
         <li><a href="#learn">Learn</a></li>
@@ -55,6 +54,7 @@
     <li><a href="#project">Project</a>
       <ul>
         <li><a href="#inspiration">Inspiration</a></li>
+        <li><a href="#inspiration">Features</a></li>
       </ul>
     </li>
     <li><a href="#roadmap">Roadmap</a></li>
@@ -92,7 +92,7 @@ Cribbage Monster is an online version of the classic card game. The app is built
 ## Game
 
 <p align="center">
-  <img src='src/assets/screenshots/game-view.jpg' width="360px" >
+  <img src='src/assets/screenshots/game-view.jpg'>
 </p>
 
 ### Play
@@ -185,6 +185,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 Think you can beat me at a game or would like to reach out? I'm happy to hear from you!
 
 ChrisCoastal: contactchriscoastal@gmail.com 🌊
+
 Project Link: [https://github.com/ChrisCoastal/cribbage-monster](https://github.com/ChrisCoastal/cribbage-monster)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -194,7 +195,7 @@ Project Link: [https://github.com/ChrisCoastal/cribbage-monster](https://github.
 ## Acknowledgments
 
 - Thank you to everyone responsible for the libraries, packages, and other code that has made this project possible. 🙏
-- Thanks as always to the authors of the innumerable articles, Stack Overflow answers, and other resources that were huge time savers 🙏.
+- Thanks as always to the authors of the innumerable articles, Stack Overflow answers, and other resources that were life savers. ⛑
 - Thanks to my Mom and Dad for teaching me how to play cards. 🃕🂵🂥🃋 🃅
 
 <p align="right">(<a href="#top">back to top</a>)</p>
