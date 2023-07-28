@@ -41,7 +41,7 @@ const Nav = () => {
       <Link to={`/`}>Home</Link>
     </li>,
     <li key={1}>
-      <CreateGame className="tracking-wide transition-all duration-200 hover:text-emerald-300 md:text-base">
+      <CreateGame className="whitespace-nowrap tracking-wide transition-all duration-200 hover:text-emerald-300 md:text-base">
         Create Game
       </CreateGame>
     </li>,
