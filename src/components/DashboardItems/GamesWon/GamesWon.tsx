@@ -10,8 +10,9 @@ type GamesWonProps = {
 };
 
 const GamesWon: FC<GamesWonProps> = ({ gamesPlayed, gamesWon }) => {
-  const winRatio = Math.round((gamesWon / gamesPlayed) * 360);
-  const centerText = `${Math.round((gamesWon / gamesPlayed) * 100)}%`;
+  const winLossRatio = Math.round(gamesWon / (gamesPlayed || 1));
+  const winRatio = winLossRatio * 360;
+  const centerText = `${winLossRatio * 100}%`;
 
   return (
     <Card padding="md">
