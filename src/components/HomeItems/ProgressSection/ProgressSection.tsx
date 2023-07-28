@@ -17,7 +17,7 @@ const ProgressSection = () => {
   const isIntersect = useIntersectionObserver(lightRef, {
     root: null,
     rootMargin: '0px',
-    threshold: 0.3
+    threshold: 0.6
   });
 
   const animateLeftLight = isIntersect
@@ -32,7 +32,7 @@ const ProgressSection = () => {
     if (!minMediaSm) {
       setDashDetails(true);
     }
-  }, []);
+  }, [minMediaSm]);
 
   return (
     <section className="bg-gradient-to-b from-stone-900 to-stone-800 py-24 xl:py-44" ref={lightRef}>
