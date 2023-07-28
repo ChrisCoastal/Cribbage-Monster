@@ -89,7 +89,7 @@ const GamesList: FC = () => {
             </ToolTip>
           </CreateGame>
         </div>
-        <ul className="flex max-h-80 flex-col gap-2 overflow-scroll text-stone-50">
+        <ul className="flex max-h-80 flex-col gap-2 overflow-x-hidden text-stone-50">
           {gamesListItems.length ? (
             gamesListItems
           ) : (
