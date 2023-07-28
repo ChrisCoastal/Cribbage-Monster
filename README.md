@@ -11,7 +11,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/ChrisCoastal/cribbage-monster">
-    <img src="src/assets/logo/readme-logo.jpg" alt="Logo">
+    <img src="https://github.com/ChrisCoastal/Cribbage-Monster/blob/readme/assets/readme-logo.jpg" alt="Logo">
   </a>
     <p align="center">
       A two player online version of the classic card game.
@@ -92,7 +92,7 @@ Cribbage Monster is an online version of the classic card game. The app is built
 ## Game
 
 <p align="center">
-  <img src='src/assets/screenshots/game-view.jpg'>
+  <img src='https://github.com/ChrisCoastal/Cribbage-Monster/blob/readme/assets/game-view.jpg'>
 </p>
 
 ### Play
@@ -130,7 +130,7 @@ Some highlights from what I wanted to accomplish and include in the project:
 ## Roadmap
 
 <p align="center">
-  <img src='src/assets/screenshots/board-view.jpg' >
+  <img src='https://github.com/ChrisCoastal/Cribbage-Monster/blob/readme/assets/board-view.jpg' >
 </p>
 
 There is still more work and ideas I would love to add (or go back and change 😅), but I'm happy with where the project is at in terms of what I set out to make and I look forawrd to moving my focus to other projects.

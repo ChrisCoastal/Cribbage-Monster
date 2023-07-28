@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 
 const useScrollY = () => {
   const [scrollY, setScrollY] = useState({ pos: 0, isChange: false, isDown: false });
 
-  const isScroll = useCallback(
+  useEffect(() => {
     function isScroll() {
       if (window.scrollY > scrollY.pos)
         setScrollY({ pos: window.scrollY, isChange: true, isDown: true });
@@ -11,14 +11,11 @@ const useScrollY = () => {
         setScrollY({ pos: window.scrollY, isChange: true, isDown: false });
       if (window.scrollY === scrollY.pos || window.scrollY === 0)
         setScrollY({ pos: window.scrollY, isChange: false, isDown: false });
-    },
-    [scrollY.pos]
-  );
+    }
 
-  useEffect(() => {
     window.addEventListener('scroll', isScroll, { passive: true });
     return () => window.removeEventListener('scroll', isScroll);
-  }, [scrollY.pos, isScroll]);
+  }, [scrollY.pos]);
 
   return scrollY;
 };

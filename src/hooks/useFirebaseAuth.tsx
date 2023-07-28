@@ -15,10 +15,11 @@ import { User } from 'firebase/auth';
 import { AuthContextType, UserSettingsState } from 'src/@types';
 
 import { AVATARS } from 'src/utils/constants';
-import { getUserSettingsRef } from 'src/utils/helpers';
+import { getUserSettingsRef, getUserStatsRef } from 'src/utils/helpers';
 
 const useFirebaseAuth = (): AuthContextType => {
   const [userAuth, setUserAuth] = useState<User | null>(null);
+
   const updateDisplayName = async (newDisplayName: string) => {
     await updateProfile(firebaseAuth.currentUser!, {
       displayName: newDisplayName
@@ -79,25 +80,31 @@ const useFirebaseAuth = (): AuthContextType => {
   };
 
   async function setUserDoc(userData: UserCredential) {
-    console.log('setting', userData.user.uid);
     const userSettingsRef = getUserSettingsRef(userData.user.uid);
-    set(userSettingsRef, {
+    const userStatsRef = getUserStatsRef(userData.user.uid);
+    await set(userSettingsRef, {
       uid: userData.user.uid,
       displayName: userData.user.displayName,
       avatar: AVATARS.at(-1),
       online: true,
       lastVisibleAt: serverTimestamp()
-    }).then((data) => console.log(data, 'updated user doc'));
+    });
+    await set(userStatsRef, {
+      gamesPlayed: 0,
+      dailyGames: [],
+      gamesWon: 0,
+      bestHand: null
+    });
   }
 
-  function updateUserDoc(userData: UserSettingsState) {
+  async function updateUserDoc(userData: UserSettingsState) {
     update(getUserSettingsRef(userData.uid), {
       uid: userData.uid,
       displayName: userData.displayName,
       avatar: userData.avatar,
       online: true,
       lastVisibleAt: Timestamp
-    }).then((data) => console.log(data, 'updated user doc'));
+    });
   }
 
   const logoutUser = (callback: VoidFunction) =>
